@@ -7,7 +7,7 @@ echo "========================================================="
 echo ""
 
 # Define target installation directory
-INSTALL_DIR="/opt/cloudtrader"
+INSTALL_DIR="/opt/cloudtraderpro"
 GITHUB_RAW_URL="https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main"
 
 echo "[*] Creating target directory at $INSTALL_DIR..."
