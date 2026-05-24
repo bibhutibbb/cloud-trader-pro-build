@@ -1,0 +1,9 @@
+{
+    "dashboard_password": "your_secure_web_password",
+    "local_api_key": "shared_secret_for_tkinter_app",
+    "active_broker": "flattrade",
+    "jwt_secret": "long_random_string_for_web_tokens",
+    "session_timeout_minutes": 86400,
+    "server_port": 8002,
+    "license_key": "your_license_key"
+}

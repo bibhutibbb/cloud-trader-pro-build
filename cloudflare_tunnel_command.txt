@@ -1,0 +1,15 @@
+# ==============================================================================
+# CLOUDFLARE TUNNEL CONFIGURATION FILE
+# ==============================================================================
+# Instructions:
+# 1. Go to your Cloudflare Zero Trust Dashboard -> Access -> Tunnels.
+# 2. Create a new tunnel or choose an existing one.
+# 3. Under "Install and run a connector", choose "Docker".
+# 4. Copy the entire command shown in the box (starts with "docker run...").
+# 5. Paste the entire command below this line, then save this file.
+# 6. Run setup.bat (Windows) or setup.sh (Linux/Ubuntu).
+#
+# Note: You can also paste just the token itself if you prefer.
+# ==============================================================================
+
+# Paste your command or token here:

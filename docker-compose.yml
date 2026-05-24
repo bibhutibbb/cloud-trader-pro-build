@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  cloud-trader:
+    image: bibhutibbb/cloudtraderpro:latest
+    container_name: cloud-trader-pro
+    restart: always
+    ports:
+      - "8002:8002"
+    volumes:
+      # Persist configuration and license activations so they survive container updates
+      - ./configs:/app/configs
+      # Persist application logs on the host machine for review
+      - ./logs:/app/logs
+      # Persist downloaded symbol masters to avoid redownloading on reboots
+      - ./symbolmaster:/app/symbolmaster
+    environment:
+      - TZ=Asia/Kolkata
