@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Trader Pro - Installation & Deployment Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&amp;family=Inter:wght@300;400;500;600;700;800&amp;family=Outfit:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --panel-bg: #141620;
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --primary-grad: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+            --accent-color: #7c3aed;
+            --accent-glow: rgba(124, 58, 237, 0.25);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --text-heading: #ffffff;
+            --code-bg: #1e2030;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        a {
+            color: #60a5fa;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: #93c5fd;
+            text-decoration: underline;
+        }
+
+        /* Layout Structure */
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #0d0f17;
+            border-right: 1px solid var(--panel-border);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            overflow-y: auto;
+        }
+
+        .logo-area {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .logo-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--primary-grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-subtitle {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--text-muted);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .nav-item a:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+        }
+
+        .nav-item.active a {
+            background: var(--primary-grad);
+            color: #ffffff;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        /* Main Content Styling */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 3rem 4rem;
+            max-width: 1200px;
+            min-width: 0;
+        }
+
+        /* Typography & Headings */
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-heading);
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+        }
+
+        h1 {
+            font-size: 2.75rem;
+            letter-spacing: -1px;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #ffffff, #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 1.85rem;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 0.75rem;
+            margin-top: 3.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        h3 {
+            font-size: 1.35rem;
+            margin-top: 2rem;
+            color: #e5e7eb;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+            font-size: 1.05rem;
+        }
+
+        .lead-text {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+        }
+
+        /* Custom Tabs */
+        .tabs-container {
+            margin: 2rem 0;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .tab-headers {
+            display: flex;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--panel-border);
+            padding: 0.5rem 0.5rem 0;
+        }
+
+        .tab-header {
+            padding: 0.75rem 1.5rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .tab-header:hover {
+            color: var(--text-main);
+        }
+
+        .tab-header.active {
+            color: #ffffff;
+            background: var(--primary-grad);
+        }
+
+        .tab-contents {
+            padding: 2rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Nested Tabs inside contents */
+        .subtabs-container {
+            margin-top: 1rem;
+        }
+
+        .subtab-headers {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .subtab-header {
+            padding: 0.5rem 1.25rem;
+            border-radius: 20px;
+            border: 1px solid var(--panel-border);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-muted);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+        }
+
+        .subtab-header:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+        }
+
+        .subtab-header.active {
+            background: var(--primary-grad);
+            border-color: transparent;
+            color: #ffffff;
+        }
+
+        .subtab-content {
+            display: none;
+        }
+
+        .subtab-content.active {
+            display: block;
+        }
+
+        /* Code Blocks & Copy functionality */
+        .code-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background-color: #171822;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .code-lang {
+            font-family: 'Fira Code', monospace;
+            text-transform: uppercase;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            padding: 1.25rem;
+            overflow-x: auto;
+            margin: 0;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            color: #e5e7eb;
+        }
+
+        /* In-line Code */
+        p code, li code {
+            background-color: rgba(255, 255, 255, 0.08);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #f3f4f6;
+        }
+
+        /* Callouts / Alerts */
+        .callout {
+            border-left: 4px solid;
+            padding: 1.25rem 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .callout-title {
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout.important {
+            background: rgba(59, 130, 246, 0.08);
+            border-color: var(--info);
+            color: #dbeafe;
+        }
+
+        .callout.important .callout-title {
+            color: #60a5fa;
+        }
+
+        .callout.warning {
+            background: rgba(245, 158, 11, 0.08);
+            border-color: var(--warning);
+            color: #fef3c7;
+        }
+
+        .callout.warning .callout-title {
+            color: #fbbf24;
+        }
+
+        .callout.note {
+            background: rgba(124, 58, 237, 0.08);
+            border-color: var(--accent-color);
+            color: #f5f3ff;
+        }
+
+        .callout.note .callout-title {
+            color: #a78bfa;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.75rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+        }
+
+        li strong {
+            color: var(--text-heading);
+        }
+
+        /* Divider */
+        hr {
+            border: 0;
+            height: 1px;
+            background: var(--panel-border);
+            margin: 3.5rem 0;
+        }
+
+        /* Badge contacts */
+        .contact-badges {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .badge-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .badge-whatsapp {
+            background-color: #25d366;
+            color: #ffffff !important;
+        }
+
+        .badge-whatsapp:hover {
+            background-color: #20ba5a;
+            transform: translateY(-2px);
+        }
+
+        .badge-web {
+            background: var(--primary-grad);
+            color: #ffffff !important;
+        }
+
+        .badge-web:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px var(--accent-glow);
+        }
+
+        .credits {
+            margin-top: 5rem;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--panel-border);
+            padding-top: 2rem;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .heart-icon {
+            color: var(--danger);
+            animation: pulse 1.2s infinite;
+            display: inline-block;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .mobile-header, .sidebar-header-mobile, .sidebar-overlay {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .mobile-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 60px;
+                background-color: rgba(13, 15, 23, 0.85);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border-bottom: 1px solid var(--panel-border);
+                padding: 0 1.5rem;
+                z-index: 98;
+            }
+
+            .mobile-logo-title {
+                font-family: 'Outfit', sans-serif;
+                font-size: 1.25rem;
+                font-weight: 800;
+                background: var(--primary-grad);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .menu-toggle-btn {
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid var(--panel-border);
+                color: var(--text-main);
+                padding: 6px;
+                border-radius: 6px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
+            }
+
+            .menu-toggle-btn:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.6);
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+                z-index: 99;
+                display: none;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+                opacity: 1;
+            }
+
+            .sidebar-header-mobile {
+                display: flex;
+                justify-content: flex-end;
+                margin-bottom: 1rem;
+            }
+
+            .close-menu-btn {
+                background: none;
+                border: none;
+                color: var(--text-muted);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 4px;
+                transition: color 0.2s;
+            }
+
+            .close-menu-btn:hover {
+                color: var(--text-main);
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                width: min(280px, 80vw);
+                height: 100vh;
+                z-index: 100;
+                transform: translateX(-100%);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                border-right: 1px solid var(--panel-border);
+                box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+                display: flex;
+                flex-direction: column;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .logo-title, .logo-subtitle, .nav-text {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 5.5rem 1.5rem 2rem;
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+                overflow-x: hidden;
+            }
+
+            .nav-item a {
+                justify-content: flex-start;
+                padding: 0.75rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Top Header Bar -->
+    <div class="mobile-header">
+        <span class="mobile-logo-title">Cloud Trader Pro</span>
+        <button class="menu-toggle-btn" id="menuToggle" aria-label="Toggle Navigation">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Overlay for mobile drawer -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header-mobile">
+                <button class="close-menu-btn" id="closeMenu" aria-label="Close Navigation">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="logo-area">
+                <span class="logo-title">Cloud Trader Pro</span>
+                <span class="logo-subtitle">Installation Guide</span>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item active" data-target="overview"><a href="#overview"><span class="nav-text">Architecture Overview</span></a></li>
+                <li class="nav-item" data-target="docker-deploy"><a href="#docker-deploy"><span class="nav-text">Docker Deployment</span></a></li>
+                <li class="nav-item" data-target="python-deploy"><a href="#python-deploy"><span class="nav-text">Local Python setup</span></a></li>
+                <li class="nav-item" data-target="troubleshooting"><a href="#troubleshooting"><span class="nav-text">Troubleshooting</span></a></li>
+                <li class="nav-item" data-target="networking"><a href="#networking"><span class="nav-text">Cloudflare & Network</span></a></li>
+                <li class="nav-item" data-target="tkinter-client"><a href="#tkinter-client"><span class="nav-text">Tkinter Desktop App</span></a></li>
+                <li class="nav-item" data-target="alternative-access"><a href="#alternative-access"><span class="nav-text">Without Domain</span></a></li>
+                <li class="nav-item" data-target="support"><a href="#support"><span class="nav-text">Support & Contact</span></a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header>
+                <h1>Cloud Trader Pro</h1>
+                <p class="lead-text">Enterprise-Grade Algorithmic Trading Infrastructure Installation & Deployment Guide</p>
+            </header>
+
+            <!-- Section 1: Overview -->
+            <section id="overview">
+                <h2>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    System Architecture Overview
+                </h2>
+                <p>Cloud Trader Pro operates under a robust, <strong>Headless Decoupled Architecture</strong> which segregates core trading mechanisms from standard user-facing controllers:</p>
+                <ul>
+                    <li><strong>Headless Backend (Server):</strong> A background engine running autonomously. It maintains persistent broker links, handles live web socket market ticks, and runs algo strategies.</li>
+                    <li><strong>Web Dashboard (Remote):</strong> A modern browser portal served by the backend to manage credentials and track status remotely.</li>
+                    <li><strong>Tkinter Desktop UI (Local):</strong> A specialized desktop console for professional scalping and detailed configuration connecting directly to the server backend.</li>
+                </ul>
+            </section>
+
+            <!-- Section 2: Docker Deployment -->
+            <section id="docker-deploy">
+                <h2>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                    Option 1: Docker Deployment (Recommended)
+                </h2>
+                <p>Using Docker encapsulates the application, libraries, and runtime environment. It eliminates the need to manually install Python or configure dependencies on the host system.</p>
+
+                <!-- Sub-tabs for OS selection in Docker -->
+                <div class="subtabs-container">
+                    <div class="subtab-headers">
+                        <button class="subtab-header active" data-sub="docker-ubuntu">Ubuntu Linux Server</button>
+                        <button class="subtab-header" data-sub="docker-windows">Windows PC</button>
+                    </div>
+
+                    <div class="subtab-content active" id="docker-ubuntu">
+                        <h3>1. Install Docker on Ubuntu Linux:</h3>
+                        <p>Execute the following commands to install Docker Engine and Docker Compose:</p>
+                        <div class="code-container">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <button class="copy-btn" onclick="copyCode(this)">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <pre><code># Update package list and install prerequisites
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y curl bzip2 tar git
+
+# Install Docker Engine and the Compose plugin
+sudo apt install -y docker.io docker-compose-v2
+
+# Start and enable the service to boot automatically
+sudo systemctl enable --now docker</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="subtab-content" id="docker-windows">
+                        <h3>1. Install Docker Desktop on Windows:</h3>
+                        <ul>
+                            <li>Download the official installer: <a href="https://www.docker.com/products/docker-desktop/" target="_blank">Docker Desktop for Windows</a>.</li>
+                            <li>Run the installer and make sure that the option to enable the <strong>WSL 2 backend</strong> is checked.</li>
+                            <li>Restart your computer if prompted by the installation wizard.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>2. Prepare Deployment Directory</h3>
+                <p>Create a dedicated folder and move the deployment assets inside it:</p>
+                <div class="subtabs-container">
+                    <div class="subtab-headers">
+                        <button class="subtab-header active" data-sub="dir-ubuntu">Ubuntu Linux</button>
+                        <button class="subtab-header" data-sub="dir-windows">Windows (PowerShell)</button>
+                    </div>
+                    <div class="subtab-content active" id="dir-ubuntu">
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                            <pre><code>sudo mkdir -p /opt/cloudtraderpro
+cd /opt/cloudtraderpro</code></pre>
+                        </div>
+                    </div>
+                    <div class="subtab-content" id="dir-windows">
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                            <pre><code>mkdir C:\CloudTraderPro
+cd C:\CloudTraderPro</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <p>Copy the following configuration assets from the release package to this folder:</p>
+                <ul>
+                    <li><code>docker-compose.yml</code></li>
+                    <li><code>cloudflare_tunnel_command.txt</code></li>
+                    <li><code>setup.sh</code> (for Linux) or <code>setup.bat</code> / <code>setup.ps1</code> (for Windows)</li>
+                    <li>The <code>configs/</code> directory containing settings samples.</li>
+                    <li>The <code>cloudtraderpro_v1.tar</code> file (if deploying a portable release).</li>
+                </ul>
+
+                <h3>3. Configure App Settings</h3>
+                <p>Go to the <code>configs/</code> folder, rename <code>app_settings.json.sample</code> to <code>app_settings.json</code>, and configure your parameters:</p>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span class="code-lang">json</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>{
+    "dashboard_password": "your_secure_web_password",
+    "local_api_key": "shared_secret_for_tkinter_app",
+    "active_broker": "flattrade", 
+    "jwt_secret": "long_random_string_for_web_tokens",
+    "session_timeout_minutes": 86400,
+    "server_port": 8002,
+    "license_key": "your_license_key"
+}</code></pre>
+                </div>
+                <div class="callout important">
+                    <span class="callout-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        Important Notice
+                    </span>
+                    <p>Always customize the default dashboard password, local api key, and jwt secret. The <code>license_key</code> field is required to cryptographically validate your software license upon server startup.</p>
+                </div>
+
+                <h3>4. Boot and Manage the Server</h3>
+                <p>If using a portable tarball file, load the image into Docker first:</p>
+                <div class="subtabs-container">
+                    <div class="subtab-headers">
+                        <button class="subtab-header active" data-sub="load-ubuntu">Ubuntu Linux</button>
+                        <button class="subtab-header" data-sub="load-windows">Windows (PowerShell)</button>
+                    </div>
+                    <div class="subtab-content active" id="load-ubuntu">
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                            <pre><code>sudo docker load -i cloudtraderpro_v1.tar
+sudo docker compose up -d</code></pre>
+                        </div>
+                    </div>
+                    <div class="subtab-content" id="load-windows">
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                            <pre><code>docker load -i cloudtraderpro_v1.tar
+docker compose up -d</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>5. Stopping & Removing Containers</h3>
+                <p>If you need to stop the server or clean up container resources, select your OS for the appropriate commands:</p>
+                <div class="subtabs-container">
+                    <div class="subtab-headers">
+                        <button class="subtab-header active" data-sub="lifecycle-ubuntu">Ubuntu Linux</button>
+                        <button class="subtab-header" data-sub="lifecycle-windows">Windows (PowerShell)</button>
+                    </div>
+                    <div class="subtab-content active" id="lifecycle-ubuntu">
+                        <p><strong>Stop the running containers (keeps data intact):</strong></p>
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                            <pre><code>sudo docker compose stop</code></pre>
+                        </div>
+                        <p><strong>Stop and completely remove containers (frees up ports & network):</strong></p>
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                            <pre><code>sudo docker compose down</code></pre>
+                        </div>
+                        <p><strong>Remove containers and delete loaded image (to free up disk space):</strong></p>
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                            <pre><code>sudo docker compose down
+sudo docker rmi cloudtraderpro:1.0</code></pre>
+                        </div>
+                    </div>
+                    <div class="subtab-content" id="lifecycle-windows">
+                        <p><strong>Stop the running containers (keeps data intact):</strong></p>
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                            <pre><code>docker compose stop</code></pre>
+                        </div>
+                        <p><strong>Stop and completely remove containers (frees up ports & network):</strong></p>
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                            <pre><code>docker compose down</code></pre>
+                        </div>
+                        <p><strong>Remove containers and delete loaded image (to free up disk space):</strong></p>
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                            <pre><code>docker compose down
+docker rmi cloudtraderpro:1.0</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Local Python Setup -->
+            <section id="python-deploy">
+                <h2>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></svg>
+                    Option 2: Local Python setup
+                </h2>
+                <p>If you wish to bypass Docker containerization and run Python directly, follow these steps.</p>
+                
+                <h3>Prerequisites:</h3>
+                <ul>
+                    <li>Install <strong>Python 3.12+</strong></li>
+                    <li>Install the <strong><code>uv</code></strong> package manager (recommended for fast dependencies synchronization).</li>
+                </ul>
+
+                <h3>1. Install `uv` Package Manager:</h3>
+                <div class="subtabs-container">
+                    <div class="subtab-headers">
+                        <button class="subtab-header active" data-sub="uv-linux">Linux / macOS</button>
+                        <button class="subtab-header" data-sub="uv-windows">Windows (PowerShell)</button>
+                    </div>
+                    <div class="subtab-content active" id="uv-linux">
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                            <pre><code>curl -LsSf https://astral.sh/uv/install.sh | sh
+source $HOME/.local/bin/env</code></pre>
+                        </div>
+                    </div>
+                    <div class="subtab-content" id="uv-windows">
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                            <pre><code>powershell -c "irm https://astral.sh/uv/install.ps1 | iex"</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>2. Install Tkinter & Dependencies:</h3>
+                <p>On Linux systems, python's built-in Tkinter package must be installed globally:</p>
+                <div class="code-container">
+                    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                    <pre><code>sudo apt update
+sudo apt install -y python3-tk</code></pre>
+                </div>
+
+                <h3>3. Sync Packages & Boot Server:</h3>
+                <p>Navigate to the project root and run:</p>
+                <div class="code-container">
+                    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                    <pre><code># Synchronize environment excluding development utilities
+uv sync --no-dev
+
+# Run backend server
+uv run python run_server.py</code></pre>
+                </div>
+            </section>
+
+            <!-- Section 4: Troubleshooting -->
+            <section id="troubleshooting">
+                <h2>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                    Troubleshooting & Diagnostics
+                </h2>
+
+                <div class="tabs-container">
+                    <div class="tab-headers">
+                        <button class="tab-header active" onclick="switchTab(event, 'cpu-error')">Older CPU Crash</button>
+                        <button class="tab-header" onclick="switchTab(event, 'ssl-error')">Windows SSL Issues</button>
+                        <button class="tab-header" onclick="switchTab(event, 'logs-debug')">Logs & Management</button>
+                    </div>
+
+                    <div class="tab-contents">
+                        <!-- Older CPU Crash Tab -->
+                        <div class="tab-content active" id="cpu-error">
+                            <h3>"Illegal Instruction" / NumPy Compatibility Crash</h3>
+                            <p>Recent compiled packages for NumPy and Pandas require advanced CPU capabilities (like AVX instruction sets). On older CPUs, this triggers compatibility crashes.</p>
+                            
+                            <p><strong>Solution:</strong> Since end-users cannot rebuild the prepackaged Docker image themselves, you must run the server using <strong>Local Python Deployment (Option 2)</strong>, and force older, compatible package versions using:</p>
+                            <div class="code-container">
+                                <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                                <pre><code>uv add "numpy&lt;2.0" "pandas&lt;2.3"</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- Windows SSL Issues Tab -->
+                        <div class="tab-content" id="ssl-error">
+                            <h3>SSL Certificate Validation Errors (Windows)</h3>
+                            <p>If the Windows host machine fails to fetch symbols or connect to broker APIs due to SSL/TLS handshake exceptions, the local Certificate Authority store may be outdated.</p>
+                            
+                            <p><strong>Solution:</strong> Run PowerShell with <strong>Administrative Privileges</strong> and run these commands to update root certificates:</p>
+                            <div class="code-container">
+                                <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                                <pre><code>certutil -generateSSTFromWU roots.sst
+certutil -addstore -f root roots.sst
+del roots.sst</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- Logs & Management Tab -->
+                        <div class="tab-content" id="logs-debug">
+                            <h3>Docker Container Inspection</h3>
+                            <p>Inspect the state and console logging of your running docker services:</p>
+                            <div class="code-container">
+                                <div class="code-header"><span class="code-lang">docker cli</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                                <pre><code># Track live server stdout/stderr stream
+docker compose logs -f
+
+# Jump into container CLI shell for directory analysis
+docker exec -it cloud-trader-pro bash</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5: Networking & Cloudflare -->
+            <section id="networking">
+                <h2>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+                    Networking & Cloudflare Tunnel
+                </h2>
+                <p>Exposing the local FastAPI endpoint to the public internet securely (with SSL/TLS) is essential for receiving broker callbacks. A <strong>Cloudflare Zero Trust Tunnel</strong> is the recommended way to set this up.</p>
+
+                <h3>1. Obtain Tunnel Token:</h3>
+                <ul>
+                    <li>Access your <a href="https://one.dash.cloudflare.com/" target="_blank">Cloudflare Zero Trust Console</a>.</li>
+                    <li>Go to <strong>Access</strong> -> <strong>Tunnels</strong> -> <strong>Create a Tunnel</strong>.</li>
+                    <li>Under the "Docker" configuration guide, copy the full <code>docker run...</code> command (or copy just the raw token string).</li>
+                </ul>
+
+                <h3>2. Run Automatic Setup helper:</h3>
+                <p>Open <code>cloudflare_tunnel_command.txt</code> in a text editor and paste the copied token or the entire command. Save the file and run the installer script:</p>
+                <div class="subtabs-container">
+                    <div class="subtab-headers">
+                        <button class="subtab-header active" data-sub="setup-ubuntu">Ubuntu Linux</button>
+                        <button class="subtab-header" data-sub="setup-windows">Windows (PowerShell)</button>
+                    </div>
+                    <div class="subtab-content active" id="setup-ubuntu">
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                            <pre><code>chmod +x setup.sh
+sudo ./setup.sh</code></pre>
+                        </div>
+                    </div>
+                    <div class="subtab-content" id="setup-windows">
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                            <pre><code># Double-click setup.bat or run:
+.\setup.ps1</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <p>The helper automatically updates the <code>.env</code> file, establishes a <code>docker-compose.override.yml</code> containing the Cloudflare Tunnel container sidecar, and initiates the service stack.</p>
+
+                <h3>3. Configure Route Hostname:</h3>
+                <ul>
+                    <li>In the Cloudflare dashboard, edit your active tunnel and go to the <strong>Public Hostname</strong> tab.</li>
+                    <li>Click <strong>Add a public hostname</strong> and set:
+                        <ul>
+                            <li><strong>Subdomain:</strong> e.g., <code>trader</code></li>
+                            <li><strong>Domain:</strong> Your registered domain (e.g., <code>domain.com</code>)</li>
+                            <li><strong>Type:</strong> <code>HTTP</code></li>
+                            <li><strong>URL:</strong> <code>cloud-trader-pro:8002</code></li>
+                        </ul>
+                    </li>
+                    <li>Save settings. Now, your server dashboard is publicly available over secure HTTPS at <code>https://trader.domain.com</code>.</li>
+                    <li><strong>Broker Portal Bindings:</strong> Set your broker redirect Callback URI to:
+                        <code>https://trader.domain.com/api/auth/callback</code>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Section 6: Tkinter Desktop Client -->
+            <section id="tkinter-client">
+                <h2>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                    Tkinter Desktop Client Setup
+                </h2>
+                <p>The Tkinter desktop application (<code>main.py</code>) is designed to run on a <strong>local machine (Windows PC or local Linux Desktop)</strong>. It cannot display a graphical interface if run directly on a headless Ubuntu Linux Server without a desktop environment; however, it can connect remotely to a backend hosted on an Ubuntu Server.</p>
+                
+                <div class="callout note">
+                    <span class="callout-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        Development Status
+                    </span>
+                    <p>A compiled standalone Windows <code>.exe</code> package is planned for future release. Currently, the Tkinter app is executed using Python. Both the Python execution method and the future standalone <code>.exe</code> require proper connection secrets to communicate with the server backend.</p>
+                </div>
+
+                <h3>Starting the Desktop Client:</h3>
+                <p>Navigate to the project root directory on your local machine and run:</p>
+                <div class="code-container">
+                    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                    <pre><code>uv run python main.py</code></pre>
+                </div>
+
+                <h3>Configuring connection secrets (`configs/cf_secrets.json`):</h3>
+                <p>Create or edit the <code>configs/cf_secrets.json</code> file in your local application directory to configure the remote server coordinates and bypass Cloudflare Access policies:</p>
+                
+                <div class="code-container">
+                    <div class="code-header"><span class="code-lang">json</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                    <pre><code>{
+    "base_url": "https://trader.yourdomain.com",
+    "ws_url": "wss://trader.yourdomain.com/ws",
+    "use_cloudflare": true,
+    "local_api_key": "must_match_app_settings_on_server",
+    "CF-Access-Client-Id": "your-cloudflare-client-id.access",
+    "CF-Access-Client-Secret": "your-cloudflare-client-secret-hex-string"
+}</code></pre>
+                </div>
+
+                <ul>
+                    <li><strong><code>base_url</code> & <code>ws_url</code>:</strong> The connection endpoints pointing to your server:
+                        <ul>
+                            <li><strong>Local Python setup / SSH Port Forwarding:</strong> Use <code>"base_url": "http://localhost:8002"</code> and <code>"ws_url": "ws://localhost:8002/ws"</code> (with <code>"use_cloudflare": false</code>).</li>
+                            <li><strong>Cloudflare Tunnel Remote setup:</strong> Use <code>"base_url": "https://trader.yourdomain.com"</code> and <code>"ws_url": "wss://trader.yourdomain.com/ws"</code> (with <code>"use_cloudflare": true</code>).</li>
+                        </ul>
+                    </li>
+                    <li><strong><code>local_api_key</code>:</strong> Must match the <code>local_api_key</code> value in the remote server's <code>app_settings.json</code>.</li>
+                    <li><strong><code>CF-Access-Client-Id</code> & <code>CF-Access-Client-Secret</code>:</strong> If you are protecting your domain via a Cloudflare Access Policy (SSO), you must configure a **Service Token** in your Cloudflare Zero Trust Console and paste the resulting credentials here. This allows the Tkinter client to authenticate cryptographically and bypass the browser login gate.</li>
+                    <li><strong><code>use_cloudflare</code>:</strong> Set to <code>true</code> to pass the Access headers, or <code>false</code> if connecting locally via <code>localhost</code> (e.g. over SSH Port Forwarding).</li>
+                </ul>
+            </section>
+
+            <!-- Section 7: Alternative Access -->
+            <section id="alternative-access">
+                <h2>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    Alternative Access Methods (Without a Domain)
+                </h2>
+                <p>If you do not own a custom domain, you can deploy the app using one of these three options:</p>
+                
+                <h3>Option A: Cloudflare Quick Tunnels (Random Temporary Domain)</h3>
+                <p>Run a temporary public tunnel without creating an account. Add this service block to your <code>docker-compose.yml</code> file:</p>
+                <div class="code-container">
+                    <div class="code-header"><span class="code-lang">yaml</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                    <pre><code>quick-tunnel:
+  image: cloudflare/cloudflared:latest
+  command: tunnel --url http://cloud-trader-pro:8002</code></pre>
+                </div>
+                <p>Boot up the container and check the container log to locate the generated URL link:</p>
+                <div class="code-container">
+                    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                    <pre><code>docker compose logs quick-tunnel</code></pre>
+                </div>
+                <p>Look for a line containing: <code>https://some-random-words.trycloudflare.com</code>.</p>
+
+                <h3>Option B: SSH Port Forwarding (Recommended for Private Access)</h3>
+                <p>Keep your firewall ports locked and secure. Establish an encrypted tunnel from your local PC to the remote server by running:</p>
+                <div class="code-container">
+                    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                    <pre><code>ssh -N -L 8002:localhost:8002 user@YOUR_SERVER_IP</code></pre>
+                </div>
+                <p>Now, open <code>http://localhost:8002</code> in your local browser to access the server safely.</p>
+
+                <h3>Option C: Request a Subdomain from the Developer/Admin (Easiest)</h3>
+                <p>If you do not own a domain, you can request the developer/admin to provision a custom subdomain (e.g. <code>yourname.shoonyatrader.in</code>) on their own network infrastructure. They can link this subdomain directly to your Cloudflare Tunnel connector.</p>
+            </section>
+
+            <!-- Section 8: Support & Contact -->
+            <section id="support">
+                <h2>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                    Support & Developer Contact
+                </h2>
+                <p>If you encounter configuration difficulties or require subdomain registration assistance, reach out directly:</p>
+                <div class="contact-badges">
+                    <a href="https://wa.me/917001041694" target="_blank" class="badge-link badge-whatsapp">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.624 5.393-12.014 12.022-12.014 3.205.001 6.222 1.249 8.497 3.524 2.275 2.275 3.52 5.29 3.517 8.496-.003 6.625-5.393 12.015-12.022 12.015-2.007-.001-3.982-.503-5.733-1.464L0 24zm6.59-4.846c1.6.95 3.18 1.449 4.825 1.451 5.436 0 9.86-4.42 9.864-9.864.002-2.637-1.019-5.116-2.88-6.978-1.859-1.859-4.336-2.88-6.97-2.882-5.437 0-9.863 4.42-9.866 9.864-.001 1.772.475 3.504 1.378 5.027L1.932 21.05l5.225-1.37a9.78 9.78 0 0 0-4.51 4.544zM16.92 14.54c-.26-.13-1.536-.757-1.774-.844-.239-.087-.412-.13-.586.13-.173.26-.67.843-.82 1.017-.15.174-.3.195-.56.065-.26-.13-1.097-.404-2.09-1.29-.77-.687-1.29-1.537-1.44-1.798-.15-.26-.016-.401.115-.53.118-.117.26-.304.39-.456.13-.15.173-.26.26-.433.086-.173.043-.325-.022-.456-.065-.13-.586-1.41-.803-1.93-.21-.51-.444-.44-.586-.448-.15-.008-.325-.008-.5-.008-.174 0-.455.065-.693.303-.24.238-.91.888-.91 2.166 0 1.278.93 2.512 1.06 2.685.13.173 1.83 2.793 4.43 3.916.62.268 1.102.428 1.48.548.62.195 1.19.167 1.638.1.5-.075 1.536-.628 1.753-1.235.217-.606.217-1.126.152-1.234-.065-.11-.239-.196-.5-.326z"/></svg>
+                        WhatsApp Support
+                    </a>
+                    <a href="https://www.shoonyatrader.in" target="_blank" class="badge-link badge-web">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        Official Website
+                    </a>
+                </div>
+            </section>
+
+            <!-- Footer with Credits -->
+            <footer class="credits">
+                <p>Developed with <span class="heart-icon">❤️</span> by Bibhuti</p>
+                <p style="font-size: 0.8rem; margin-top: 0.5rem; color: #6b7280;">© 2026 Shoonyatrader.in. All proprietary rights reserved.</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Interactive Navigation Scripts -->
+    <script>
+        // Mobile Sidebar Drawer Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const closeMenu = document.getElementById('closeMenu');
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const navLinks = document.querySelectorAll('.nav-menu a');
+
+        function openSidebar() {
+            sidebar.classList.add('active');
+            sidebarOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        if (menuToggle) menuToggle.addEventListener('click', openSidebar);
+        if (closeMenu) closeMenu.addEventListener('click', closeSidebar);
+        if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 1024) {
+                    closeSidebar();
+                }
+            });
+        });
+
+        // Copy Code Functionality
+        function copyCode(btn) {
+            const container = btn.closest('.code-container');
+            const codeEl = container.querySelector('code');
+            const textToCopy = codeEl.innerText;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = `
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span style="color:#10b981">Copied!</span>
+                `;
+                btn.style.borderColor = "#10b981";
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.style.borderColor = "";
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // Section Tab Switcher
+        function switchTab(evt, tabId) {
+            const container = evt.currentTarget.closest('.tabs-container');
+            
+            // Deactivate all tab headers
+            const headers = container.querySelectorAll('.tab-header');
+            headers.forEach(header => header.classList.remove('active'));
+            
+            // Deactivate all tab content blocks
+            const contents = container.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Activate current
+            evt.currentTarget.classList.add('active');
+            container.querySelector(`#${tabId}`).classList.add('active');
+        }
+
+        // Subtab Switcher
+        document.querySelectorAll('.subtab-header').forEach(button => {
+            button.addEventListener('click', () => {
+                const container = button.closest('.subtabs-container');
+                const subId = button.getAttribute('data-sub');
+
+                container.querySelectorAll('.subtab-header').forEach(btn => btn.classList.remove('active'));
+                container.querySelectorAll('.subtab-content').forEach(con => con.classList.remove('active'));
+
+                button.classList.add('active');
+                container.querySelector(`#${subId}`).classList.add('active');
+            });
+        });
+
+        // Highlight Active Sidebar Section on scroll
+        const sections = document.querySelectorAll('section');
+        const navItems = document.querySelectorAll('.nav-item');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 120)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-target') === current) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

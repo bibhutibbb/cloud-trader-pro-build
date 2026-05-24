@@ -34,6 +34,7 @@ Download-File "docker-compose.yml" "docker-compose.yml"
 Download-File "cloudflare_tunnel_command.txt" "cloudflare_tunnel_command.txt"
 Download-File "setup.ps1" "setup.ps1"
 Download-File "setup.bat" "setup.bat"
+Download-File "Installation.html" "Installation.html"
 
 # Download config template samples
 Download-File "configs/app_settings.json.sample" "configs/app_settings.json.sample"

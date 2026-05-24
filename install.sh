@@ -31,6 +31,7 @@ download_file() {
 download_file "docker-compose.yml" "docker-compose.yml"
 download_file "cloudflare_tunnel_command.txt" "cloudflare_tunnel_command.txt"
 download_file "setup.sh" "setup.sh"
+download_file "Installation.html" "Installation.html"
 
 # Download config template samples
 download_file "configs/app_settings.json.sample" "configs/app_settings.json.sample"
