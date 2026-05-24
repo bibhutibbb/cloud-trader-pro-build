@@ -862,6 +862,56 @@ docker rmi cloudtraderpro:1.0</code></pre>
                         </div>
                     </div>
                 </div>
+
+                <hr style="margin: 2.5rem 0; border: 0; border-top: 1px solid var(--panel-border);" />
+
+                <h3>Step 5: Updating the Docker Container (When a New Version is Released)</h3>
+                <p>When a new version of the Cloud Trader Pro image is uploaded to Docker Hub, you can update your setup easily without losing your configurations, databases, or logs (since they are stored outside the container in your host directories).</p>
+                
+                <div class="subtabs-container" style="margin-top: 1.5rem;">
+                    <div class="subtab-headers">
+                        <button class="subtab-header active" data-sub="update-ubuntu">Ubuntu Linux Server</button>
+                        <button class="subtab-header" data-sub="update-windows">Windows PC</button>
+                    </div>
+
+                    <div class="subtab-content active" id="update-ubuntu">
+                        <p>Navigate to your deployment directory and run the standard update sequence:</p>
+                        <div class="code-container">
+                            <div class="code-header">
+                                <span class="code-lang">bash</span>
+                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            </div>
+                            <pre><code>cd /opt/cloudtraderpro
+sudo docker compose pull
+sudo docker compose up -d</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="subtab-content" id="update-windows">
+                        <p>Open PowerShell, navigate to your deployment directory, and pull/start the new container:</p>
+                        <div class="code-container">
+                            <div class="code-header">
+                                <span class="code-lang">powershell</span>
+                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            </div>
+                            <pre><code>cd C:\CloudTraderPro
+docker compose pull
+docker compose up -d</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout important" style="margin-top: 1.5rem;">
+                    <span class="callout-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></svg>
+                        How it works & Custom Port Persistence:
+                    </span>
+                    <ul style="margin: 0.5rem 0 0 1.25rem; font-size: 0.95rem; color: var(--text-muted); list-style-type: disc;">
+                        <li style="margin-bottom: 0.4rem;"><strong>Local Configurations Safe:</strong> Your API keys, passwords, and other credentials inside <code>configs/app_settings.json</code> are stored on the host machine and are never modified or overwritten by image updates.</li>
+                        <li style="margin-bottom: 0.4rem;"><strong>Port Settings Remain Intact:</strong> If you mapped a custom host port (e.g. <code>8003:8002</code>) in your local <code>docker-compose.yml</code>, that file will not be changed. Your custom port mapping will continue to function on the new container version.</li>
+                        <li style="margin-bottom: 0;"><strong>Caution with Installer Script:</strong> If you update by re-running the full installer script (<code>install.sh</code>/<code>install.ps1</code>), it will download a fresh copy of <code>docker-compose.yml</code> from GitHub, which will overwrite your custom port settings. If you do this, you will need to re-apply your port mapping changes in <code>docker-compose.yml</code>.</li>
+                    </ul>
+                </div>
             </section>
 
             <!-- Section 3: Local Python Setup -->
