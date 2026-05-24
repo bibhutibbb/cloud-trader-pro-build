@@ -56,8 +56,6 @@ Write-Host "[OK] Token successfully saved to .env file." -ForegroundColor Cyan
 
 # Create docker-compose.override.yml dynamically to add the cloudflare tunnel sidecar service
 $overrideContent = @'
-version: '3.8'
-
 services:
   cloudflare-tunnel:
     image: cloudflare/cloudflared:latest

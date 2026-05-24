@@ -57,8 +57,6 @@ echo "[OK] Token successfully saved to .env file."
 
 # Create docker-compose.override.yml dynamically to add the cloudflare tunnel sidecar service
 cat << 'EOF' > docker-compose.override.yml
-version: '3.8'
-
 services:
   cloudflare-tunnel:
     image: cloudflare/cloudflared:latest
