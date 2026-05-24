@@ -14,5 +14,9 @@ services:
       - ./logs:/app/logs
       # Persist downloaded symbol masters to avoid redownloading on reboots
       - ./symbolmaster:/app/symbolmaster
+      # Persist historicaldatas download location
+      - ./datafetcher/historicaldatas:/app/datafetcher/historicaldatas
+      # Persist Backtesting folder location
+      - ./backtester/backtest_histories:/app/backtester/backtest_histories
     environment:
       - TZ=Asia/Kolkata

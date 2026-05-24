@@ -14,6 +14,8 @@ echo "[*] Creating target directory at $INSTALL_DIR..."
 sudo mkdir -p "$INSTALL_DIR/configs"
 sudo mkdir -p "$INSTALL_DIR/logs"
 sudo mkdir -p "$INSTALL_DIR/symbolmaster"
+sudo mkdir -p "$INSTALL_DIR/datafetcher/historicaldatas"
+sudo mkdir -p "$INSTALL_DIR/backtester/backtest_histories"
 
 # Function to download files safely
 download_file() {

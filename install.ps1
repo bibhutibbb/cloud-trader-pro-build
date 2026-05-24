@@ -11,6 +11,8 @@ Write-Host "[*] Creating target directory at $INSTALL_DIR..." -ForegroundColor C
 New-Item -ItemType Directory -Force -Path "$INSTALL_DIR\configs" | Out-Null
 New-Item -ItemType Directory -Force -Path "$INSTALL_DIR\logs" | Out-Null
 New-Item -ItemType Directory -Force -Path "$INSTALL_DIR\symbolmaster" | Out-Null
+New-Item -ItemType Directory -Force -Path "$INSTALL_DIR\datafetcher\historicaldatas" | Out-Null
+New-Item -ItemType Directory -Force -Path "$INSTALL_DIR\backtester\backtest_histories" | Out-Null
 
 function Download-File {
     param (
