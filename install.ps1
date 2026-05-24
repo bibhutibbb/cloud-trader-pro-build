@@ -63,9 +63,21 @@ if ($response -match "^[Yy]$") {
 } else {
     Write-Host ""
     Write-Host "=========================================================" -ForegroundColor Green
-    Write-Host "[OK] Files downloaded. To start the application manually:" -ForegroundColor Green
-    Write-Host "   1. Go to: $INSTALL_DIR" -ForegroundColor Green
-    Write-Host "   2. Configure configs\app_settings.json" -ForegroundColor Green
-    Write-Host "   3. Run: docker compose up -d" -ForegroundColor Green
+    Write-Host "       CLOUD TRADER PRO BACKEND - SETUP CHECKLIST        " -ForegroundColor Green
+    Write-Host "=========================================================" -ForegroundColor Green
+    Write-Host "   1. Configure settings:" -ForegroundColor Green
+    Write-Host "      Open and edit: $INSTALL_DIR\configspp_settings.json" -ForegroundColor Green
+    Write-Host "      Add your API keys, passwords, and license." -ForegroundColor Green
+    Write-Host "" -ForegroundColor Green
+    Write-Host "   2. Start the Server (Localhost Mode):" -ForegroundColor Green
+    Write-Host "      Run: cd $INSTALL_DIR; docker compose up -d" -ForegroundColor Green
+    Write-Host "      Access your dashboard at: http://localhost" -ForegroundColor Green
+    Write-Host "" -ForegroundColor Green
+    Write-Host "   3. Optional - Setup Remote Access (Cloudflare Tunnel):" -ForegroundColor Green
+    Write-Host "      Paste your Docker run command into cloudflare_tunnel_command.txt" -ForegroundColor Green
+    Write-Host "      Then run: cd $INSTALL_DIR; .\setup.ps1" -ForegroundColor Green
+    Write-Host "" -ForegroundColor Green
+    Write-Host "   4. Detailed manual and walkthroughs:" -ForegroundColor Green
+    Write-Host "      Open $INSTALL_DIR\Installation.html in your browser." -ForegroundColor Green
     Write-Host "=========================================================" -ForegroundColor Green
 }
