@@ -16,6 +16,7 @@ sudo mkdir -p "$INSTALL_DIR/logs"
 sudo mkdir -p "$INSTALL_DIR/symbolmaster"
 sudo mkdir -p "$INSTALL_DIR/datafetcher/historicaldatas"
 sudo mkdir -p "$INSTALL_DIR/backtester/backtest_histories"
+sudo mkdir -p "$INSTALL_DIR/img"
 
 # Function to download files safely
 download_file() {
@@ -34,6 +35,10 @@ download_file "docker-compose.yml" "docker-compose.yml"
 download_file "cloudflare_tunnel_command.txt" "cloudflare_tunnel_command.txt"
 download_file "setup.sh" "setup.sh"
 download_file "Installation.html" "Installation.html"
+
+# Download image assets
+download_file "img/shoonya_scalper.ico" "img/shoonya_scalper.ico"
+download_file "img/shoonya_scalper.png" "img/shoonya_scalper.png"
 
 # Download config template samples
 download_file "configs/app_settings.json.sample" "configs/app_settings.json.sample"
