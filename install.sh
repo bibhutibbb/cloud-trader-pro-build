@@ -56,8 +56,9 @@ if [ ! -f "$INSTALL_DIR/configs/app_settings.json" ]; then
     echo "    Make sure to edit this file later to add your license key and passwords."
 fi
 
-# Grant ownership of the installation directory to the active user
-sudo chown -R $USER:$USER "$INSTALL_DIR"
+# Grant ownership of the installation directory to the active user (correctly resolving sudo context)
+REAL_USER=${SUDO_USER:-$USER}
+sudo chown -R "$REAL_USER":"$REAL_USER" "$INSTALL_DIR"
 
 echo ""
 echo "[*] Configuration files downloaded successfully."
