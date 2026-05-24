@@ -901,6 +901,16 @@ docker compose up -d</code></pre>
                     </div>
                 </div>
 
+                <div class="callout warning" style="margin-top: 1.5rem;">
+                    <span class="callout-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        Linux Command Chaining Tip
+                    </span>
+                    <p>If you choose to chain commands together with <code>&&</code> on Linux, remember that <code>sudo</code> only applies to the command immediately following it. You must prepend <code>sudo</code> to <strong>both</strong> parts of the command line, for example:<br />
+                    <code>sudo docker compose down && sudo docker compose up -d</code><br />
+                    Omitting the second <code>sudo</code> will trigger a <em>Permission Denied</em> socket error.</p>
+                </div>
+
                 <div class="callout important" style="margin-top: 1.5rem;">
                     <span class="callout-title">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></svg>
