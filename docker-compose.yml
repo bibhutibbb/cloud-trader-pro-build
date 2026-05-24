@@ -2,6 +2,7 @@ services:
   cloud-trader:
     image: bibhutibbb/cloudtraderpro:latest
     container_name: cloud-trader-pro
+    hostname: cloudtraderpro-server
     restart: always
     ports:
       - "8002:8002"
