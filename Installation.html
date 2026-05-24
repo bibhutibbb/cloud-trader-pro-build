@@ -993,14 +993,29 @@ docker compose up -d</code></pre>
                     Option 2: Local Python setup
                 </h2>
                 <p>If you wish to bypass Docker containerization and run Python directly, follow these steps.</p>
-                
+
+                <div class="callout important" style="margin-top: 1.5rem;">
+                    <span class="callout-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        Source Code Distribution Notice
+                    </span>
+                    <p>The core application source code is proprietary and is not hosted on the public GitHub build repository. To deploy locally, you must first obtain the official application distribution package (ZIP file) by contacting the developer directly.</p>
+                </div>
+
+                <h3>1. Obtain & Extract the Application Package:</h3>
+                <ul>
+                    <li>Contact the developer to request the official Cloud Trader Pro distribution ZIP file.</li>
+                    <li>Extract the received ZIP archive into a dedicated directory of your choice (e.g. <code>C:\CloudTraderPro</code> or <code>/opt/cloudtraderpro</code>).</li>
+                    <li>Open your terminal or PowerShell inside the extracted directory to run the following setup commands.</li>
+                </ul>
+
                 <h3>Prerequisites:</h3>
                 <ul>
                     <li>Install <strong>Python 3.12+</strong></li>
                     <li>Install the <strong><code>uv</code></strong> package manager (recommended for fast dependencies synchronization).</li>
                 </ul>
 
-                <h3>1. Install `uv` Package Manager:</h3>
+                <h3>2. Install `uv` Package Manager:</h3>
                 <div class="subtabs-container">
                     <div class="subtab-headers">
                         <button class="subtab-header active" data-sub="uv-linux">Linux / macOS</button>
@@ -1021,7 +1036,7 @@ source $HOME/.local/bin/env</code></pre>
                     </div>
                 </div>
 
-                <h3>2. Install Tkinter & Dependencies:</h3>
+                <h3>3. Install Tkinter & Dependencies:</h3>
                 <p>On Linux systems, python's built-in Tkinter package must be installed globally:</p>
                 <div class="code-container">
                     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
@@ -1029,7 +1044,7 @@ source $HOME/.local/bin/env</code></pre>
 sudo apt install -y python3-tk</code></pre>
                 </div>
 
-                <h3>3. Sync Packages & Boot Server:</h3>
+                <h3>4. Sync Packages & Boot Server:</h3>
                 <p>Navigate to the project root and run:</p>
                 <div class="code-container">
                     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>

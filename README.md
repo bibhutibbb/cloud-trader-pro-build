@@ -225,13 +225,23 @@ Navigate to your deployment directory (e.g., `/opt/cloudtraderpro` on Linux or `
 ---
 
 ## 🐍 Option 2: Local Python Development Deployment (Alternative)
+
 If you prefer running Cloud Trader Pro directly in Python without Docker, follow these instructions.
 
-### Prerequisites:
+> [!IMPORTANT]
+> **Source Code Distribution Notice:** 
+> The core source code files are proprietary and are not hosted on the public GitHub build repository. To deploy locally, you must first obtain the official application distribution package (ZIP file) by contacting the developer directly.
+
+### Step 1: Obtain & Extract the Application Package
+1. Contact the developer to request the official Cloud Trader Pro distribution ZIP file.
+2. Once received, extract the ZIP archive into your desired deployment folder (e.g. `C:\CloudTraderPro` or `/opt/cloudtraderpro`).
+3. Open your terminal or PowerShell inside the extracted directory to run the following setup commands.
+
+### Step 2: Install Prerequisites
 *   Python 3.12 installed on your system.
 *   The **`uv`** package manager (highly recommended for faster dependency resolution).
 
-### Step 1: Install `uv` Package Manager
+### Step 3: Install `uv` Package Manager
 *   **Linux / macOS:**
     ```bash
     curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -242,14 +252,14 @@ If you prefer running Cloud Trader Pro directly in Python without Docker, follow
     powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
     ```
 
-### Step 2: Install Tkinter & System Packages
+### Step 4: Install Tkinter & System Packages
 *   **Ubuntu Linux:**
     ```bash
     sudo apt update
     sudo apt install -y python3-tk
     ```
 
-### Step 3: Synchronize Dependencies & Run
+### Step 5: Synchronize Dependencies & Run
 Navigate to the root project directory and run:
 ```bash
 # Sync virtual environment automatically using uv (skipping development tools)
