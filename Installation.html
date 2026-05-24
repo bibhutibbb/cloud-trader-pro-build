@@ -795,8 +795,29 @@ cd C:\CloudTraderPro</code></pre>
                     <p>Always customize the default dashboard password, local api key, and jwt secret. The <code>license_key</code> field is required to cryptographically validate your software license upon server startup.</p>
                 </div>
 
-                <h3>4. Boot and Manage the Server</h3>
-                <p>If using a portable tarball file, load the image into Docker first:</p>
+                <h3>4. Boot and Manage the Server (Docker Hub)</h3>
+                <p>The provided <code>docker-compose.yml</code> file is preconfigured to automatically pull the official production image directly from <strong>Docker Hub</strong> (<code>bibhutibbb/cloudtraderpro:latest</code>). Simply run the command to start the containers:</p>
+                <div class="subtabs-container">
+                    <div class="subtab-headers">
+                        <button class="subtab-header active" data-sub="boot-ubuntu">Ubuntu Linux</button>
+                        <button class="subtab-header" data-sub="boot-windows">Windows (PowerShell)</button>
+                    </div>
+                    <div class="subtab-content active" id="boot-ubuntu">
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                            <pre><code>sudo docker compose up -d</code></pre>
+                        </div>
+                    </div>
+                    <div class="subtab-content" id="boot-windows">
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                            <pre><code>docker compose up -d</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>5. Alternative: Loading via Distributed .tar File (Offline Setup)</h3>
+                <p>If you received an offline container package (e.g., <code>cloudtraderpro_v1.tar</code>) instead of pulling from Docker Hub, load it into Docker first before starting:</p>
                 <div class="subtabs-container">
                     <div class="subtab-headers">
                         <button class="subtab-header active" data-sub="load-ubuntu">Ubuntu Linux</button>
@@ -818,7 +839,7 @@ docker compose up -d</code></pre>
                     </div>
                 </div>
 
-                <h3>5. Stopping & Removing Containers</h3>
+                <h3>6. Stopping & Removing Containers</h3>
                 <p>If you need to stop the server or clean up container resources, select your OS for the appropriate commands:</p>
                 <div class="subtabs-container">
                     <div class="subtab-headers">
@@ -840,7 +861,7 @@ docker compose up -d</code></pre>
                         <div class="code-container">
                             <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
                             <pre><code>sudo docker compose down
-sudo docker rmi cloudtraderpro:1.0</code></pre>
+sudo docker rmi bibhutibbb/cloudtraderpro:latest</code></pre>
                         </div>
                     </div>
                     <div class="subtab-content" id="lifecycle-windows">
@@ -858,7 +879,7 @@ sudo docker rmi cloudtraderpro:1.0</code></pre>
                         <div class="code-container">
                             <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
                             <pre><code>docker compose down
-docker rmi cloudtraderpro:1.0</code></pre>
+docker rmi bibhutibbb/cloudtraderpro:latest</code></pre>
                         </div>
                     </div>
                 </div>

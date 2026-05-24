@@ -82,65 +82,80 @@ Before running the container, configure the application settings and activate yo
 
 ---
 
-### Step 4: Loading & Running the Application
+### Step 4: Starting the Application (Docker Hub)
 
-Depending on how you received the application image, choose **Method A** or **Method B**.
+By default, the provided `docker-compose.yml` file is preconfigured to automatically pull the official production image directly from **Docker Hub** (`bibhutibbb/cloudtraderpro:latest`).
 
-#### **Method A: From a Distributed `.tar` File**
-If your developer provided you with a packaged `cloudtraderpro_v1.tar` file, load it using:
+Simply navigate to your deployment folder and run:
 *   **Ubuntu / Linux:**
     ```bash
-    sudo docker load -i cloudtraderpro_v1.tar
-    ```
-*   **Windows (PowerShell):**
-    ```powershell
-    docker load -i cloudtraderpro_v1.tar
-    ```
-
-#### **Method B: From Docker Hub or GitHub Container Registry (Future Shipping)**
-If the image is hosted online, Docker will automatically download it when you start the server. Ensure your `docker-compose.yml` points to the correct repository image:
-*   **Docker Hub:** `image: your-dockerhub-username/cloudtraderpro:latest`
-*   **GitHub Registry:** `image: ghcr.io/your-github-username/cloudtraderpro:latest`
-
-#### **Booting and Managing the Server:**
-Once the image is loaded, start the application in the background:
-*   **Ubuntu / Linux:**
-    ```bash
-    # Start the containers
     sudo docker compose up -d
     ```
 *   **Windows (PowerShell):**
     ```powershell
-    # Start the containers
     docker compose up -d
     ```
 
-#### **Stopping and Removing the Server:**
+Docker will automatically pull the latest image layers from Docker Hub, configure the networks, and start the trading backend.
+
+---
+
+### Alternative: Offline Deployment (From Distributed `.tar` File)
+If your developer provided you with a packaged offline container image file (e.g. `cloudtraderpro_v1.tar`):
+
+1. **Load the image file into Docker:**
+   *   **Ubuntu / Linux:**
+       ```bash
+       sudo docker load -i cloudtraderpro_v1.tar
+       ```
+   *   **Windows (PowerShell):**
+       ```powershell
+       docker load -i cloudtraderpro_v1.tar
+       ```
+2. **Start the server:**
+   *   **Ubuntu / Linux:**
+       ```bash
+       sudo docker compose up -d
+       ```
+   *   **Windows (PowerShell):**
+       ```powershell
+       docker compose up -d
+       ```
+
+---
+
+### Step 5: Stopping & Removing Containers
 If you need to stop the server or clean up the container resources:
-*   **Stop the running containers (keeping data intact):**
-    ```bash
-    # Linux
-    sudo docker compose stop
-    # Windows
-    docker compose stop
-    ```
+
+*   **Stop the running containers (keeping configuration and database data intact):**
+    *   **Ubuntu / Linux:**
+        ```bash
+        sudo docker compose stop
+        ```
+    *   **Windows (PowerShell):**
+        ```powershell
+        docker compose stop
+        ```
 *   **Stop and completely remove the containers (freeing up ports/resources):**
-    ```bash
-    # Linux
-    sudo docker compose down
-    # Windows
-    docker compose down
-    ```
-*   **Remove the container and delete the loaded image (to free up disk space):**
-    ```bash
-    # Linux
-    sudo docker compose down
-    sudo docker rmi cloudtraderpro:1.0
-    
-    # Windows
-    docker compose down
-    docker rmi cloudtraderpro:1.0
-    ```
+    *   **Ubuntu / Linux:**
+        ```bash
+        sudo docker compose down
+        ```
+    *   **Windows (PowerShell):**
+        ```powershell
+        docker compose down
+        ```
+*   **Remove the containers and delete the loaded image (to free up disk space):**
+    *   **Ubuntu / Linux:**
+        ```bash
+        sudo docker compose down
+        sudo docker rmi bibhutibbb/cloudtraderpro:latest
+        ```
+    *   **Windows (PowerShell):**
+        ```powershell
+        docker compose down
+        docker rmi bibhutibbb/cloudtraderpro:latest
+        ```
 
 ---
 
