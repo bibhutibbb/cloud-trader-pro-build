@@ -38,25 +38,51 @@ sudo systemctl enable --now docker
 
 ---
 
-### Step 2: Prepare the Deployment Directory
-Create a dedicated folder for your deployment files and copy the configuration assets.
+### Step 2: Download Deployment Files from GitHub
 
-*   **Linux / Ubuntu:**
+Instead of manually copying orchestration assets, you can download all required files (such as `docker-compose.yml`, configuration templates, and setup helper scripts) directly from our public GitHub build repository.
+
+Choose **Method A (Automated)** or **Method B (Manual)**:
+
+#### **Method A: Automated One-Line Installer (Recommended)**
+Run this command in your terminal to automatically create folders, download files, and configure permissions:
+*   **Ubuntu / Linux:**
     ```bash
-    sudo mkdir -p /opt/cloudtraderpro
-    cd /opt/cloudtraderpro
+    curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/install.sh | bash
     ```
-*   **Windows:**
-    Create a folder named `C:\CloudTraderPro` and open PowerShell/CMD in that folder.
-
-Copy the following files and directories from the distribution package into your directory:
-*   `docker-compose.yml`
-*   `cloudflare_tunnel_command.txt`
-*   `setup.sh` (for Ubuntu) or `setup.bat` / `setup.ps1` (for Windows)
-*   `configs/` (the configuration directory)
-*   `cloudtraderpro_v1.tar` (if installing via distributed tarball file)
+*   **Windows (PowerShell run as Administrator):**
+    ```powershell
+    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/install.ps1'))
+    ```
 
 ---
+
+#### **Method B: Manual Download**
+If you prefer to download files manually, run these commands to set up the directories and download individual files:
+*   **Ubuntu / Linux:**
+    ```bash
+    sudo mkdir -p /opt/cloudtraderpro/configs
+    cd /opt/cloudtraderpro
+
+    sudo curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/docker-compose.yml -o docker-compose.yml
+    sudo curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/setup.sh -o setup.sh && sudo chmod +x setup.sh
+    sudo curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/cloudflare_tunnel_command.txt -o cloudflare_tunnel_command.txt
+    sudo curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/configs/app_settings.json.sample -o configs/app_settings.json.sample
+    ```
+*   **Windows (PowerShell):**
+    ```powershell
+    New-Item -ItemType Directory -Force -Path "C:\CloudTraderPro\configs"
+    Set-Location "C:\CloudTraderPro"
+
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/docker-compose.yml" -OutFile "docker-compose.yml"
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/setup.ps1" -OutFile "setup.ps1"
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/setup.bat" -OutFile "setup.bat"
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/cloudflare_tunnel_command.txt" -OutFile "cloudflare_tunnel_command.txt"
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/configs/app_settings.json.sample" -OutFile "configs\app_settings.json.sample"
+    ```
+
+---
+
 
 ### Step 3: Configure settings & License Activation
 Before running the container, configure the application settings and activate your license.

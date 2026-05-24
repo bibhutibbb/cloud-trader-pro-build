@@ -739,36 +739,77 @@ sudo systemctl enable --now docker</code></pre>
                     </div>
                 </div>
 
-                <h3>2. Prepare Deployment Directory</h3>
-                <p>Create a dedicated folder and move the deployment assets inside it:</p>
+                <h3>2. Download Deployment Files from GitHub</h3>
+                <p>Instead of manually copying orchestration assets, you can download all necessary files (like <code>docker-compose.yml</code>, configuration templates, and setup helper scripts) directly from our public GitHub build repository. Select your preferred method below:</p>
+                
                 <div class="subtabs-container">
                     <div class="subtab-headers">
-                        <button class="subtab-header active" data-sub="dir-ubuntu">Ubuntu Linux</button>
-                        <button class="subtab-header" data-sub="dir-windows">Windows (PowerShell)</button>
+                        <button class="subtab-header active" data-sub="dl-automated">Automated Installer (Recommended)</button>
+                        <button class="subtab-header" data-sub="dl-manual">Manual Download</button>
                     </div>
-                    <div class="subtab-content active" id="dir-ubuntu">
-                        <div class="code-container">
-                            <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-                            <pre><code>sudo mkdir -p /opt/cloudtraderpro
-cd /opt/cloudtraderpro</code></pre>
+
+                    <!-- Subtab: Automated -->
+                    <div class="subtab-content active" id="dl-automated">
+                        <p>Run the one-line installer command on your host to automatically create folders, download files, and configure permissions:</p>
+                        
+                        <div class="subtabs-container" style="margin-top: 1rem;">
+                            <div class="subtab-headers">
+                                <button class="subtab-header active" data-sub="dl-auto-ubuntu">Ubuntu Linux Server</button>
+                                <button class="subtab-header" data-sub="dl-auto-windows">Windows PC (Admin)</button>
+                            </div>
+                            <div class="subtab-content active" id="dl-auto-ubuntu">
+                                <div class="code-container">
+                                    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                                    <pre><code>curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/install.sh | bash</code></pre>
+                                </div>
+                            </div>
+                            <div class="subtab-content" id="dl-auto-windows">
+                                <div class="code-container">
+                                    <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                                    <pre><code>Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/install.ps1'))</code></pre>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="subtab-content" id="dir-windows">
-                        <div class="code-container">
-                            <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-                            <pre><code>mkdir C:\CloudTraderPro
-cd C:\CloudTraderPro</code></pre>
+
+                    <!-- Subtab: Manual -->
+                    <div class="subtab-content" id="dl-manual">
+                        <p>If you prefer to download files manually, run these commands to set up the directories and download the individual files from GitHub:</p>
+                        
+                        <div class="subtabs-container" style="margin-top: 1rem;">
+                            <div class="subtab-headers">
+                                <button class="subtab-header active" data-sub="dl-man-ubuntu">Ubuntu Linux Server</button>
+                                <button class="subtab-header" data-sub="dl-man-windows">Windows (PowerShell)</button>
+                            </div>
+                            <div class="subtab-content active" id="dl-man-ubuntu">
+                                <div class="code-container">
+                                    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                                    <pre><code>sudo mkdir -p /opt/cloudtraderpro/configs
+cd /opt/cloudtraderpro
+
+sudo curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/docker-compose.yml -o docker-compose.yml
+sudo curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/setup.sh -o setup.sh && sudo chmod +x setup.sh
+sudo curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/cloudflare_tunnel_command.txt -o cloudflare_tunnel_command.txt
+sudo curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/configs/app_settings.json.sample -o configs/app_settings.json.sample</code></pre>
+                                </div>
+                            </div>
+                            <div class="subtab-content" id="dl-man-windows">
+                                <div class="code-container">
+                                    <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                                    <pre><code>New-Item -ItemType Directory -Force -Path "C:\CloudTraderPro\configs"
+Set-Location "C:\CloudTraderPro"
+
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/docker-compose.yml" -OutFile "docker-compose.yml"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/setup.ps1" -OutFile "setup.ps1"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/setup.bat" -OutFile "setup.bat"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/cloudflare_tunnel_command.txt" -OutFile "cloudflare_tunnel_command.txt"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/configs/app_settings.json.sample" -OutFile "configs\app_settings.json.sample"</code></pre>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <p>Copy the following configuration assets from the release package to this folder:</p>
-                <ul>
-                    <li><code>docker-compose.yml</code></li>
-                    <li><code>cloudflare_tunnel_command.txt</code></li>
-                    <li><code>setup.sh</code> (for Linux) or <code>setup.bat</code> / <code>setup.ps1</code> (for Windows)</li>
-                    <li>The <code>configs/</code> directory containing settings samples.</li>
-                    <li>The <code>cloudtraderpro_v1.tar</code> file (if deploying a portable release).</li>
-                </ul>
+
 
                 <h3>3. Configure App Settings</h3>
                 <p>Go to the <code>configs/</code> folder, rename <code>app_settings.json.sample</code> to <code>app_settings.json</code>, and configure your parameters:</p>
