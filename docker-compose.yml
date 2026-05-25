@@ -1,6 +1,7 @@
 services:
   cloud-trader:
     image: bibhutibbb/cloudtraderpro:latest
+    container_name: cloud-trader-pro
     hostname: cloudtraderpro-server
     restart: always
     ports:
@@ -8,6 +9,8 @@ services:
     volumes:
       # Persist configuration and license activations so they survive container updates
       - ./configs:/app/configs
+      # Mount host's stable machine-id to prevent licensing issues on container restarts
+      - /etc/machine-id:/etc/machine-id:ro
       # Persist application logs on the host machine for review
       - ./logs:/app/logs
       # Persist downloaded symbol masters to avoid redownloading on reboots
