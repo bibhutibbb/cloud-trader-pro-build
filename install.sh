@@ -15,7 +15,7 @@ if [ -n "$1" ]; then
         INSTALL_DIR="/opt/$1"
     fi
 else
-    read -p "Enter installation folder name under /opt/ [$DEFAULT_SUBDIR]: " custom_subdir
+    read -p "Enter installation folder name under /opt/ [$DEFAULT_SUBDIR]: " custom_subdir < /dev/tty
     SUBDIR="${custom_subdir:-$DEFAULT_SUBDIR}"
     # Strip any leading slashes if entered by user
     SUBDIR="${SUBDIR#/}"
