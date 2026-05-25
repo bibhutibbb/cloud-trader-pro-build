@@ -812,7 +812,13 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trade
 
 
                 <h3>3. Configure App Settings</h3>
-                <p>Go to the <code>configs/</code> folder, rename <code>app_settings.json.sample</code> to <code>app_settings.json</code>, and configure your parameters:</p>
+                <p>Go to the <code>configs/</code> folder, rename <code>app_settings.json.sample</code> to <code>app_settings.json</code>, and configure your parameters. On Ubuntu/Linux, you can copy the sample settings and edit it directly using <code>nano</code>:</p>
+                <div class="code-container">
+                    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                    <pre><code>cd /opt/cloudtraderpro
+sudo cp configs/app_settings.json.sample configs/app_settings.json
+sudo nano configs/app_settings.json</code></pre>
+                </div>
                 <div class="code-container">
                     <div class="code-header">
                         <span class="code-lang">json</span>
@@ -823,11 +829,23 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trade
     "local_api_key": "shared_secret_for_tkinter_app",
     "active_broker": "flattrade", 
     "jwt_secret": "long_random_string_for_web_tokens",
-    "session_timeout_minutes": 86400,
+    "session_timeout_minutes": 1440,
     "server_port": 8002,
     "license_key": "your_license_key"
 }</code></pre>
                 </div>
+
+                <h3>⚙️ Configuration Parameters Explained:</h3>
+                <ul style="margin: 0.5rem 0 1.5rem 1.25rem; font-size: 0.95rem; color: var(--text-muted); list-style-type: disc;">
+                    <li style="margin-bottom: 0.5rem;"><strong><code>dashboard_password</code>:</strong> The password used to log in to the web browser dashboard interface. Choose a strong, unique password.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong><code>local_api_key</code>:</strong> A shared secret key used to authenticate and connect the local Tkinter desktop application securely with the remote server. Both the server's <code>app_settings.json</code> and the client's <code>cf_secrets.json</code> must share this exact key.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong><code>active_broker</code>:</strong> Specifies the broker to be used by the trading system. Supported values are <code>"flattrade"</code> or <code>"upstox"</code>.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong><code>jwt_secret</code>:</strong> A long random secret key used by the backend to sign web tokens (JSON Web Tokens) for the dashboard session. Change this to a secure random string (e.g. 32 characters) to secure your browser session tokens.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong><code>session_timeout_minutes</code>:</strong> The duration (in minutes) for which your login session remains active in the browser dashboard before requiring re-authentication. The default is set to <code>1440</code> minutes (exactly 24 hours / 1 day).</li>
+                    <li style="margin-bottom: 0.5rem;"><strong><code>server_port</code>:</strong> The port number on which the FastAPI backend web server runs and listens for incoming requests. The default is <code>8002</code>.</li>
+                    <li style="margin-bottom: 0;"><strong><code>license_key</code>:</strong> The cryptographically signed license key generated for your account. This is required to unlock the trading engine and activate automated strategies.</li>
+                </ul>
+
                 <div class="callout important">
                     <span class="callout-title">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
@@ -1130,7 +1148,13 @@ docker exec -it cloud-trader-pro bash</code></pre>
                 </ul>
 
                 <h3>2. Run Automatic Setup helper:</h3>
-                <p>Open <code>cloudflare_tunnel_command.txt</code> in a text editor and paste the copied token or the entire command. Save the file and run the installer script:</p>
+                <p>Open <code>cloudflare_tunnel_command.txt</code> in a text editor and paste the copied token or the entire command. On Ubuntu Linux, you can open and edit the file directly using <code>nano</code>:</p>
+                <div class="code-container">
+                    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                    <pre><code>cd /opt/cloudtraderpro
+sudo nano cloudflare_tunnel_command.txt</code></pre>
+                </div>
+                <p>Save the file and run the installer script:</p>
                 <div class="subtabs-container">
                     <div class="subtab-headers">
                         <button class="subtab-header active" data-sub="setup-ubuntu">Ubuntu Linux</button>

@@ -89,6 +89,12 @@ Before running the container, configure the application settings and activate yo
 
 1. Navigate to the `configs/` folder.
 2. Rename `app_settings.json.sample` to `app_settings.json` (or edit the existing one).
+   *   **Ubuntu / Linux:**
+       ```bash
+       cd /opt/cloudtraderpro
+       sudo cp configs/app_settings.json.sample configs/app_settings.json
+       sudo nano configs/app_settings.json
+       ```
 3. Open `app_settings.json` in a text editor and fill in your details:
 
 ```json
@@ -97,11 +103,20 @@ Before running the container, configure the application settings and activate yo
     "local_api_key": "shared_secret_for_tkinter_app",
     "active_broker": "flattrade", 
     "jwt_secret": "long_random_string_for_web_tokens",
-    "session_timeout_minutes": 86400,
+    "session_timeout_minutes": 1440,
     "server_port": 8002,
-    "license_key": "your_keygen_license_key"
+    "license_key": "your_license_key"
 }
 ```
+
+#### ⚙️ Configuration Parameters Explained:
+*   **`dashboard_password`**: The password used to log in to the web browser dashboard interface. Choose a strong, unique password.
+*   **`local_api_key`**: A shared secret key used to authenticate and connect the local Tkinter desktop application securely with the remote server. Both the server's `app_settings.json` and the client's `cf_secrets.json` must share this exact key.
+*   **`active_broker`**: Specifies the broker to be used by the trading system. Supported values are `"flattrade"` or `"upstox"`.
+*   **`jwt_secret`**: A long random secret key used by the backend to sign web tokens (JSON Web Tokens) for the dashboard session. Change this to a secure random string (e.g. 32 characters) to secure your browser session tokens.
+*   **`session_timeout_minutes`**: The duration (in minutes) for which your login session remains active in the browser dashboard before requiring re-authentication. The default is set to `1440` minutes (exactly 24 hours / 1 day).
+*   **`server_port`**: The port number on which the FastAPI backend web server runs and listens for incoming requests. The default is `8002`.
+*   **`license_key`**: The cryptographically signed license key generated for your account. This is required to unlock the trading engine and activate automated strategies.
 
 > [!IMPORTANT]
 > Change the default passwords/secrets to highly secure, random strings to prevent unauthorized access. The `license_key` is required to authenticate and unlock core trading routines.
@@ -332,7 +347,11 @@ The application requires a secure HTTPS connection for both UI access and Broker
 ### Step 2: Configure the Tunnel Sidecar (Automatic Setup)
 To configure the tunnel companion container automatically:
 
-1. Open `cloudflare_tunnel_command.txt` in a text editor.
+1. Open `cloudflare_tunnel_command.txt` in a text editor. On Ubuntu Linux, you can open and edit it using `nano`:
+   ```bash
+   cd /opt/cloudtraderpro
+   sudo nano cloudflare_tunnel_command.txt
+   ```
 2. Paste the **entire** `docker run` command copied from Cloudflare (or paste the raw token string).
 3. Run the automated script:
     *   **Ubuntu / Linux:**
