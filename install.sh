@@ -6,13 +6,20 @@ echo "       INSTALLING CLOUD TRADER PRO BACKEND               "
 echo "========================================================="
 echo ""
 
-# Define target installation directory (Allow custom path via first argument, prompt user if empty, fallback to default)
-DEFAULT_DIR="/opt/cloudtraderpro"
+# Define target installation directory (Allow custom path via first argument, prompt for subfolder name under /opt/ if empty)
+DEFAULT_SUBDIR="cloudtraderpro"
 if [ -n "$1" ]; then
-    INSTALL_DIR="$1"
+    if [[ "$1" =~ ^/ ]]; then
+        INSTALL_DIR="$1"
+    else
+        INSTALL_DIR="/opt/$1"
+    fi
 else
-    read -p "Enter target installation directory [$DEFAULT_DIR]: " custom_dir
-    INSTALL_DIR="${custom_dir:-$DEFAULT_DIR}"
+    read -p "Enter installation folder name under /opt/ [$DEFAULT_SUBDIR]: " custom_subdir
+    SUBDIR="${custom_subdir:-$DEFAULT_SUBDIR}"
+    # Strip any leading slashes if entered by user
+    SUBDIR="${SUBDIR#/}"
+    INSTALL_DIR="/opt/$SUBDIR"
 fi
 
 echo "[*] Installing to: $INSTALL_DIR"
