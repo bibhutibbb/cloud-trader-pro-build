@@ -60,7 +60,6 @@ cat << 'EOF' > docker-compose.override.yml
 services:
   cloudflare-tunnel:
     image: cloudflare/cloudflared:latest
-    container_name: cloudflare-tunnel
     restart: always
     command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
 EOF
