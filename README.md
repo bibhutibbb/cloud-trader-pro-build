@@ -375,12 +375,21 @@ The setup script will automatically extract the token, update your `.env` config
     *   **Type:** `HTTP`
     *   **URL:** `cloud-trader-pro:8002` (routing requests internally inside the Docker network).
 4. Save the Hostname configuration.
-5. In your Broker Developer Portal (Flattrade / Upstox), register the callback URL to point to your secure domain:
-   `https://trader.yourdomain.com/api/auth/callback`
 
 ---
 
-### Step 4: Starting & Connecting the Local Desktop Client (Tkinter App)
+### Step 4: Broker-Side Handshake
+1. Log into the Developer Portal for your Active Broker (**Flattrade** or **Upstox**).
+2. Select your App and locate the **Redirect URL** field.
+3. Update the redirect URL according to your setup:
+   * **For Remote Server / Cloudflare Tunnel:** `https://trader.yourdomain.com/api/auth/callback`
+   * **For Local Windows PC Setup (No Domain):** `http://localhost:8002/api/auth/callback` *(Note: If you changed the default server port, replace `8002` with your custom port).*
+4. > [!IMPORTANT]
+   > **Critical:** Ensure there are no trailing slashes or spaces. The URL must match the broker registration exactly.
+
+---
+
+### Step 5: Starting & Connecting the Local Desktop Client (Tkinter App)
 The Tkinter desktop application (`main.py`) is designed to run on a **local machine (Windows PC or local Linux Desktop)**. It cannot display a graphical interface if run directly on a headless Ubuntu Linux Server without a desktop environment; however, it can connect remotely to a backend hosted on an Ubuntu Server.
 
 > [!NOTE]

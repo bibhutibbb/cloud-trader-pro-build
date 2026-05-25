@@ -1189,8 +1189,26 @@ sudo ./setup.sh</code></pre>
                         </ul>
                     </li>
                     <li>Save settings. Now, your server dashboard is publicly available over secure HTTPS at <code>https://trader.domain.com</code>.</li>
-                    <li><strong>Broker Portal Bindings:</strong> Set your broker redirect Callback URI to:
-                        <code>https://trader.domain.com/api/auth/callback</code>
+                </ul>
+
+                <h3>4. Broker-Side Handshake:</h3>
+                <ul>
+                    <li>Log into the Developer Portal for your Active Broker (<strong>Flattrade</strong> or <strong>Upstox</strong>).</li>
+                    <li>Select your App and locate the <strong>Redirect URL</strong> field.</li>
+                    <li>Update the redirect URL according to your setup:
+                        <ul>
+                            <li style="margin-top: 0.25rem;"><strong>For Remote Server / Cloudflare Tunnel:</strong> <code>https://trader.yourdomain.com/api/auth/callback</code></li>
+                            <li style="margin-top: 0.25rem; margin-bottom: 0.5rem;"><strong>For Local Windows PC Setup (No Domain):</strong> <code>http://localhost:8002/api/auth/callback</code> <span style="color: var(--text-muted); font-size: 0.9rem;">(Note: If you customized your server port, replace <code>8002</code> with your custom port)</span>.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="callout important" style="margin-top: 0.5rem; margin-bottom: 0;">
+                            <span class="callout-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                Critical Requirement
+                            </span>
+                            <p style="margin-bottom: 0;">Ensure there are no trailing slashes or spaces. The URL must match the broker registration exactly.</p>
+                        </div>
                     </li>
                 </ul>
             </section>
