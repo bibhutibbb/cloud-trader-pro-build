@@ -662,6 +662,8 @@
                 <li class="nav-item active" data-target="overview"><a href="#overview"><span class="nav-text">Architecture Overview</span></a></li>
                 <li class="nav-item" data-target="docker-deploy"><a href="#docker-deploy"><span class="nav-text">Docker Deployment</span></a></li>
                 <li class="nav-item" data-target="python-deploy"><a href="#python-deploy"><span class="nav-text">Local Python setup</span></a></li>
+                <li class="nav-item" data-target="historical-data"><a href="#historical-data"><span class="nav-text">Importing Data</span></a></li>
+                <li class="nav-item" data-target="notifications"><a href="#notifications"><span class="nav-text">Notification Webhooks</span></a></li>
                 <li class="nav-item" data-target="troubleshooting"><a href="#troubleshooting"><span class="nav-text">Troubleshooting</span></a></li>
                 <li class="nav-item" data-target="networking"><a href="#networking"><span class="nav-text">Cloudflare & Network</span></a></li>
                 <li class="nav-item" data-target="tkinter-client"><a href="#tkinter-client"><span class="nav-text">Tkinter Desktop App</span></a></li>
@@ -760,7 +762,7 @@ sudo systemctl enable --now docker</code></pre>
                             <div class="subtab-content active" id="dl-auto-ubuntu">
                                 <div class="code-container">
                                     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-                                    <pre><code>curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/install.sh | bash</code></pre>
+                                    <pre><code>curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/install.sh | sudo bash</code></pre>
                                 </div>
                             </div>
                             <div class="subtab-content" id="dl-auto-windows">
@@ -1071,6 +1073,168 @@ uv sync --no-dev
 
 # Run backend server
 uv run python run_server.py</code></pre>
+                </div>
+            </section>
+
+            <!-- Section 3b: Importing Historical Data -->
+            <section id="historical-data">
+                <h2>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                    Pre-loading Historical Backtesting Data
+                </h2>
+                <p>If you have purchased or generated historical backtesting data (saved as <code>.parquet</code> files), you can easily pre-load them into the system. This allows immediate backtesting without having to fetch the files over the live broker API.</p>
+
+                <h3>Target Directories:</h3>
+                <p>The files must be placed in specific directories depending on your installation type:</p>
+                
+                <div class="subtabs-container">
+                    <div class="subtab-headers">
+                        <button class="subtab-header active" data-sub="dir-ubuntu">Ubuntu Linux (Docker Server)</button>
+                        <button class="subtab-header" data-sub="dir-windows">Windows PC (Local Setup)</button>
+                    </div>
+                    <div class="subtab-content active" id="dir-ubuntu">
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">Directory Path</span></div>
+                            <pre><code>/opt/cloudtraderpro/datafetcher/historicaldatas/</code></pre>
+                        </div>
+                    </div>
+                    <div class="subtab-content" id="dir-windows">
+                        <div class="code-container">
+                            <div class="code-header"><span class="code-lang">Directory Path</span></div>
+                            <pre><code>C:\CloudTraderPro\datafetcher\historicaldatas\</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>How to Upload Files to a Linux VPS:</h3>
+                <p>Choose one of the following methods to transfer the files from your local computer to your remote server:</p>
+
+                <div class="tabs-container">
+                    <div class="tab-headers">
+                        <button class="tab-header active" onclick="switchTab(event, 'sftp-method')">Method A: SFTP (FileZilla / WinSCP)</button>
+                        <button class="tab-header" onclick="switchTab(event, 'scp-method')">Method B: Command Line (SCP)</button>
+                    </div>
+
+                    <div class="tab-contents">
+                        <!-- SFTP Tab -->
+                        <div class="tab-content active" id="sftp-method">
+                            <h4 style="color: #ffffff; margin-bottom: 0.75rem;">SFTP Transfer (Recommended - Graphical)</h4>
+                            <ol style="margin-left: 1.25rem; color: var(--text-main);">
+                                <li style="margin-bottom: 0.5rem;">Download and install a free SFTP client such as <strong>FileZilla</strong> or <strong>WinSCP</strong>.</li>
+                                <li style="margin-bottom: 0.5rem;">Connect to your VPS using your SSH credentials (IP Address, username <code>ubuntu</code>, and your private key file).</li>
+                                <li style="margin-bottom: 0.5rem;">On the remote server side, navigate to the target directory: <code>/opt/cloudtraderpro/datafetcher/historicaldatas/</code>.</li>
+                                <li style="margin-bottom: 0;">Drag and drop your <code>.parquet</code> files from your local file explorer into the remote directory.</li>
+                            </ol>
+                        </div>
+
+                        <!-- SCP Tab -->
+                        <div class="tab-content" id="scp-method">
+                            <h4 style="color: #ffffff; margin-bottom: 0.75rem;">SCP Command Line Transfer</h4>
+                            <p>From your local machine's terminal or PowerShell, run the following command to copy the files directly:</p>
+                            <div class="code-container">
+                                <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                                <pre><code>scp -i /path/to/key.pem -r /local/path/to/data/*.parquet ubuntu@YOUR_VPS_IP:/opt/cloudtraderpro/datafetcher/historicaldatas/</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout warning">
+                    <span class="callout-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        Critical Guidelines
+                    </span>
+                    <ul style="margin: 0.5rem 0 0 1.25rem; font-size: 0.95rem; color: #fef3c7; list-style-type: disc;">
+                        <li style="margin-bottom: 0.5rem;"><strong>Do Not Rename Files:</strong> The backtest engine expects files to be named exactly according to their symbol/token names (e.g., <code>NSE_26000.parquet</code>). Changing the names will make them invisible to the backtest parser.</li>
+                        <li style="margin-bottom: 0;"><strong>No Server Restart Required:</strong> Because the directories are volume-bound in Docker, files are detected instantly by the backtester as soon as they are placed in the folder.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section 3c: Notification Webhooks -->
+            <section id="notifications">
+                <h2>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                    Configuring Notification Webhooks
+                </h2>
+                <p>Cloud Trader Pro has an integrated asynchronous alert engine. When trades are placed, positions are squared off, or safety guards trigger, alerts are sent instantly to your personal device. Because they run in the background, they add zero latency to your execution speed.</p>
+
+                <div class="tabs-container">
+                    <div class="tab-headers">
+                        <button class="tab-header active" onclick="switchTab(event, 'telegram-webhook')">Telegram Bot Alerts</button>
+                        <button class="tab-header" onclick="switchTab(event, 'discord-webhook')">Discord Webhooks</button>
+                    </div>
+
+                    <div class="tab-contents">
+                        <!-- Telegram Setup -->
+                        <div class="tab-content active" id="telegram-webhook">
+                            <h3 style="color: #ffffff; margin-bottom: 0.75rem;">Step-by-Step Telegram Setup</h3>
+                            <p style="margin-bottom: 1rem;">Telegram routes messages securely using your unique <strong>Chat ID</strong> and a <strong>Bot Token</strong>. Setting it up takes less than 2 minutes and is completely private (no phone numbers are shared with the API).</p>
+                            
+                            <ol style="margin-left: 1.5rem; line-height: 1.8; color: var(--text-main);">
+                                <li style="margin-bottom: 0.75rem;">
+                                    <strong>Create the Telegram Bot (The Sender):</strong>
+                                    <ul>
+                                        <li>Search for <code>@BotFather</code> (the official bot builder) in Telegram and press <strong>Start</strong>.</li>
+                                        <li>Send the command <code>/newbot</code>.</li>
+                                        <li>Follow the prompts to specify a display name (e.g., <code>My Alerts Bot</code>) and a unique username ending in "bot" (e.g., <code>MyCloudTraderAlertBot</code>).</li>
+                                        <li>Copy the **HTTP API Token** returned by BotFather (e.g., <code>738194:ABCde...</code>).</li>
+                                    </ul>
+                                </li>
+                                <li style="margin-bottom: 0.75rem;">
+                                    <strong>Activate your Bot (Anti-Spam Requirement):</strong>
+                                    <ul>
+                                        <li>Click your new bot's link (e.g., <code>t.me/MyCloudTraderAlertBot</code>) or search for its username.</li>
+                                        <li>Click <strong>Start</strong> or send a message. <em>Note: If you skip this, Telegram's privacy shield will block the bot from sending you alerts.</em></li>
+                                    </ul>
+                                </li>
+                                <li style="margin-bottom: 0.75rem;">
+                                    <strong>Retrieve your personal Chat ID (The Destination):</strong>
+                                    <ul>
+                                        <li>Search for <code>@userinfobot</code> in Telegram and press <strong>Start</strong>.</li>
+                                        <li>Copy the numeric <strong>Id</strong> returned in the chat response (e.g., <code>987654321</code>).</li>
+                                    </ul>
+                                </li>
+                                <li style="margin-bottom: 0;">
+                                    <strong>Link & Save Settings:</strong>
+                                    <ul>
+                                        <li>Open your Cloud Trader Pro Web Dashboard and navigate to the <strong>Application Configuration</strong> page.</li>
+                                        <li>Toggle on <strong>Telegram Bot Notifications</strong>.</li>
+                                        <li>Paste your <strong>Telegram Bot Token</strong> and <strong>Telegram Chat ID</strong> in the input fields.</li>
+                                        <li>Click <strong>Save Settings</strong>.</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+
+                        <!-- Discord Setup -->
+                        <div class="tab-content" id="discord-webhook">
+                            <h3 style="color: #ffffff; margin-bottom: 0.75rem;">Step-by-Step Discord Webhook Setup</h3>
+                            <p style="margin-bottom: 1rem;">Discord Webhooks allow Cloud Trader Pro to post rich-format embedded messages straight to a designated text channel inside your own Discord Server.</p>
+                            
+                            <ol style="margin-left: 1.5rem; line-height: 1.8; color: var(--text-main);">
+                                <li style="margin-bottom: 0.75rem;">
+                                    <strong>Generate a Discord Incoming Webhook:</strong>
+                                    <ul>
+                                        <li>Open Discord and navigate to your server.</li>
+                                        <li>Right-click the channel where you want notifications and select <strong>Edit Channel</strong>.</li>
+                                        <li>Go to the <strong>Integrations</strong> tab on the left and select <strong>Webhooks</strong>.</li>
+                                        <li>Click <strong>Create Webhook</strong> (or <strong>New Webhook</strong>).</li>
+                                        <li>Give the webhook a name (e.g., <code>Trader Alerts</code>) and click <strong>Copy Webhook URL</strong>.</li>
+                                    </ul>
+                                </li>
+                                <li style="margin-bottom: 0;">
+                                    <strong>Save coordinates in Web App:</strong>
+                                    <ul>
+                                        <li>Open the <strong>Application Configuration</strong> page on the web dashboard.</li>
+                                        <li>Toggle on <strong>Discord Webhook Notifications</strong>.</li>
+                                        <li>Paste your copied <strong>Webhook URL</strong> in the corresponding field.</li>
+                                        <li>Click <strong>Save Settings</strong>.</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
                 </div>
             </section>
 

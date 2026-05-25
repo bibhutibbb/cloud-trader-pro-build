@@ -48,7 +48,7 @@ Choose **Method A (Automated)** or **Method B (Manual)**:
 Run this command in your terminal to automatically create folders, download files, and configure permissions:
 *   **Ubuntu / Linux:**
     ```bash
-    curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/install.sh | bash
+    curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/install.sh | sudo bash
     ```
 *   **Windows (PowerShell run as Administrator):**
     ```powershell
@@ -283,6 +283,94 @@ uv sync --no-dev
 # Run the backend server
 uv run python run_server.py
 ```
+
+---
+
+## 📊 Pre-loading Historical Backtesting Data (Parquet Files)
+If you have purchased or generated historical backtesting data (saved as `.parquet` files), you can easily pre-load them into the system. This allows immediate backtesting without having to fetch the files over the live broker API.
+
+### **Where to Place the Files:**
+*   **Ubuntu Linux (Docker Server):** `/opt/cloudtraderpro/datafetcher/historicaldatas/`
+*   **Windows PC (Local Setup):** `C:\CloudTraderPro\datafetcher\historicaldatas\`
+
+---
+
+### **How to Upload the Files to a Linux VPS:**
+
+#### **Method A: SFTP (FileZilla / WinSCP) — Recommended (Graphical)**
+1.  Download and install a free SFTP client (like **FileZilla** or **WinSCP**).
+2.  Connect to your server using your SSH credentials (IP, username `ubuntu`, and private key file).
+3.  On the remote server, navigate to: `/opt/cloudtraderpro/datafetcher/historicaldatas/`.
+4.  Drag and drop your Parquet files from your local computer into that folder.
+
+#### **Method B: Command Line (SCP)**
+From your local machine's terminal, copy the files directly using:
+```bash
+scp -i /path/to/key.pem -r /local/path/to/data/*.parquet ubuntu@YOUR_VPS_IP:/opt/cloudtraderpro/datafetcher/historicaldatas/
+```
+
+---
+
+### **⚠️ Critical Guidelines:**
+1.  **Do Not Rename Files:** The backtest engine expects files to be named exactly according to their symbol/token names (e.g. `NSE_26000.parquet`). Changing the names will make them invisible to the backtester.
+2.  **No Server Restart Required:** Because directories are volume-bound, files are detected instantly the moment they are placed in the folder.
+
+---
+
+## 🔔 Configuring Notification Webhooks (Telegram & Discord)
+
+Cloud Trader Pro features an asynchronous notification dispatcher. When a trade is executed, positions are closed, or cooling-down safeguards are triggered, the system instantly delivers rich notifications to your personal devices without adding latency to low-latency trading loops.
+
+### 1. Telegram Bot Alerts
+
+Telegram notifications do not require you to provide your phone number. Instead, they use a **Bot Token** (the sender identity) and your personal **Chat ID** (the destination address).
+
+```mermaid
+graph TD
+    A[1. Chat with @BotFather] -->|Create Bot| B(Get Bot Token)
+    C[2. Search for new Bot] -->|Click Start| D(Grant Message Permission)
+    E[3. Chat with @userinfobot] -->|Click Start| F(Get Chat ID)
+    G[4. Paste Token & Chat ID in App Config] -->|Save| H(Asynchronous Trade Alerts)
+```
+
+#### Step-by-Step Telegram Setup:
+1. **Create the Telegram Bot (The Sender):**
+   * Search for `@BotFather` in the Telegram search bar (it is the official system bot to create other bots) and press **Start**.
+   * Send the command `/newbot`.
+   * Follow the prompt to give your bot a name (e.g. `My Cloud Trader Alerts`) and a unique username ending in "bot" (e.g. `MyCloudTraderAlertBot`).
+   * `@BotFather` will reply with a long **HTTP API Token** (e.g., `123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ`). Copy this token.
+2. **Start the Bot (Crucial Anti-Spam Step):**
+   * Click on the link provided by BotFather (e.g., `t.me/MyCloudTraderAlertBot`) or search for your bot's username in Telegram.
+   * Click the **Start** button (or send a message). 
+   * > [!IMPORTANT]
+   * > If you do not click **Start**, Telegram's anti-spam security will prevent the bot from sending any messages to your account.
+3. **Get Your Chat ID (The Destination Address):**
+   * Search for `@userinfobot` in Telegram and press **Start**.
+   * The bot will instantly reply with your account's unique `Id` (a series of numbers, e.g. `987654321`). Copy this number.
+   * *(Alternative: If you want alerts sent to a Telegram Group instead of a private message, add your custom bot as a member of the group, add `@raw_data_bot` to get the group's Chat ID—which starts with a minus sign like `-100123456789`—and use that ID).*
+4. **Save in Cloud Trader Pro:**
+   * Go to the **Application Configuration** dashboard in your browser.
+   * Toggle on the **Telegram Bot Notifications** switch.
+   * Paste the **Telegram Bot Token** and **Telegram Chat ID** in the corresponding fields.
+   * Click **Save Settings**.
+
+---
+
+### 2. Discord Webhook Alerts
+
+Discord uses incoming webhooks to push rich embedded messages directly into a specific server channel.
+
+#### Step-by-Step Discord Setup:
+1. **Create an Incoming Webhook:**
+   * Open your Discord application and navigate to your server.
+   * Right-click the channel where you want trading alerts to appear and select **Edit Channel**.
+   * Go to **Integrations** -> **Webhooks** -> Click **Create Webhook** or **New Webhook**.
+   * Name the webhook (e.g., `Cloud Trader Pro Alerts`) and copy the **Webhook URL**.
+2. **Save in Cloud Trader Pro:**
+   * Open the **Application Configuration** dashboard.
+   * Toggle on the **Discord Webhook Notifications** switch.
+   * Paste the copied **Webhook URL** in the field.
+   * Click **Save Settings**.
 
 ---
 
