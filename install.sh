@@ -6,11 +6,25 @@ echo "       INSTALLING CLOUD TRADER PRO BACKEND               "
 echo "========================================================="
 echo ""
 
-# Define target installation directory
-INSTALL_DIR="/opt/cloudtraderpro"
+# Define target installation directory (Allow custom path via first argument, prompt for subfolder name under /opt/ if empty)
+DEFAULT_SUBDIR="cloudtraderpro"
+if [ -n "$1" ]; then
+    if [[ "$1" =~ ^/ ]]; then
+        INSTALL_DIR="$1"
+    else
+        INSTALL_DIR="/opt/$1"
+    fi
+else
+    read -p "Enter installation folder name under /opt/ [$DEFAULT_SUBDIR]: " custom_subdir < /dev/tty
+    SUBDIR="${custom_subdir:-$DEFAULT_SUBDIR}"
+    # Strip any leading slashes if entered by user
+    SUBDIR="${SUBDIR#/}"
+    INSTALL_DIR="/opt/$SUBDIR"
+fi
+
+echo "[*] Installing to: $INSTALL_DIR"
 GITHUB_RAW_URL="https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main"
 
-echo "[*] Creating target directory at $INSTALL_DIR..."
 sudo mkdir -p "$INSTALL_DIR/configs"
 sudo mkdir -p "$INSTALL_DIR/logs"
 sudo mkdir -p "$INSTALL_DIR/symbolmaster"
