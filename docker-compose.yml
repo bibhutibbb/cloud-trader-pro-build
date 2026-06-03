@@ -1,10 +1,10 @@
 services:
-  cloud-trader:
-    image: bibhutibbb/cloudtraderpro:latest
+  backend-api:
+    image: bibhutibbb/cloudtraderpro-backend:latest
     hostname: cloudtraderpro-server
     restart: always
-    ports:
-      - "8002:8002"
+    expose:
+      - "8002"
     volumes:
       # Persist configuration and license activations so they survive container updates
       - ./configs:/app/configs
@@ -20,3 +20,11 @@ services:
       - ./backtester/backtest_histories:/app/backtester/backtest_histories
     environment:
       - TZ=Asia/Kolkata
+
+  frontend-nginx:
+    image: bibhutibbb/cloudtraderpro-frontend:latest
+    restart: always
+    ports:
+      - "8002:80"
+    depends_on:
+      - backend-api

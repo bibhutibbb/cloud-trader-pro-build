@@ -5,5 +5,6 @@
     "jwt_secret": "long_random_string_for_web_tokens",
     "session_timeout_minutes": 1440,
     "server_port": 8002,
-    "license_key": "your_license_key"
+    "license_key": "your_license_key",
+    "serve_static_files": true
 }
