@@ -833,7 +833,8 @@ sudo nano configs/app_settings.json</code></pre>
     "jwt_secret": "long_random_string_for_web_tokens",
     "session_timeout_minutes": 1440,
     "server_port": 8002,
-    "license_key": "your_license_key"
+    "license_key": "your_license_key",
+    "serve_static_files": true
 }</code></pre>
                 </div>
 
@@ -845,7 +846,8 @@ sudo nano configs/app_settings.json</code></pre>
                     <li style="margin-bottom: 0.5rem;"><strong><code>jwt_secret</code>:</strong> A long random secret key used by the backend to sign web tokens (JSON Web Tokens) for the dashboard session. Change this to a secure random string (e.g. 32 characters) to secure your browser session tokens.</li>
                     <li style="margin-bottom: 0.5rem;"><strong><code>session_timeout_minutes</code>:</strong> The duration (in minutes) for which your login session remains active in the browser dashboard before requiring re-authentication. The default is set to <code>1440</code> minutes (exactly 24 hours / 1 day).</li>
                     <li style="margin-bottom: 0.5rem;"><strong><code>server_port</code>:</strong> The port number on which the FastAPI backend web server runs and listens for incoming requests. The default is <code>8002</code>.</li>
-                    <li style="margin-bottom: 0;"><strong><code>license_key</code>:</strong> The cryptographically signed license key generated for your account. This is required to unlock the trading engine and activate automated strategies.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong><code>license_key</code>:</strong> The cryptographically signed license key generated for your account. This is required to unlock the trading engine and activate automated strategies.</li>
+                    <li style="margin-bottom: 0;"><strong><code>serve_static_files</code>:</strong> Configures whether the FastAPI backend serves static files (<code>true</code>) or delegates this entirely to Nginx (<code>false</code>). Set this to <code>false</code> in production.</li>
                 </ul>
 
                 <div class="callout important">
@@ -857,7 +859,13 @@ sudo nano configs/app_settings.json</code></pre>
                 </div>
 
                 <h3>4. Boot and Manage the Server (Docker Hub)</h3>
-                <p>The provided <code>docker-compose.yml</code> file is preconfigured to automatically pull the official production image directly from <strong>Docker Hub</strong> (<code>bibhutibbb/cloudtraderpro:latest</code>). Simply run the command to start the containers:</p>
+                <p>The provided <code>docker-compose.yml</code> file is preconfigured to run a multi-container stack:
+                    <ul style="margin: 0.5rem 0 1rem 1.25rem; font-size: 0.95rem; color: var(--text-muted); list-style-type: disc;">
+                        <li style="margin-bottom: 0.3rem;"><strong><code>backend-api</code>:</strong> The Python FastAPI service (runs <code>bibhutibbb/cloudtraderpro-backend:latest</code>).</li>
+                        <li style="margin-bottom: 0.3rem;"><strong><code>frontend-nginx</code>:</strong> The Nginx proxy serving static UI files and forwarding dynamic endpoints (runs <code>bibhutibbb/cloudtraderpro-frontend:latest</code>).</li>
+                        <li style="margin-bottom: 0;"><strong>ARM64 Support:</strong> Both images support both standard 64-bit x86 (<code>amd64</code>) and 64-bit ARM (<code>arm64</code>) architectures.</li>
+                    </ul>
+                    Simply run the command to start the containers:</p>
                 <div class="subtabs-container">
                     <div class="subtab-headers">
                         <button class="subtab-header active" data-sub="boot-ubuntu">Ubuntu Linux</button>
@@ -918,11 +926,11 @@ docker compose up -d</code></pre>
                             <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
                             <pre><code>sudo docker compose down</code></pre>
                         </div>
-                        <p><strong>Remove containers and delete loaded image (to free up disk space):</strong></p>
+                        <p><strong>Remove containers and delete loaded images (to free up disk space):</strong></p>
                         <div class="code-container">
                             <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
                             <pre><code>sudo docker compose down
-sudo docker rmi bibhutibbb/cloudtraderpro:latest</code></pre>
+sudo docker rmi bibhutibbb/cloudtraderpro-backend:latest bibhutibbb/cloudtraderpro-frontend:latest</code></pre>
                         </div>
                     </div>
                     <div class="subtab-content" id="lifecycle-windows">
@@ -936,11 +944,11 @@ sudo docker rmi bibhutibbb/cloudtraderpro:latest</code></pre>
                             <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
                             <pre><code>docker compose down</code></pre>
                         </div>
-                        <p><strong>Remove containers and delete loaded image (to free up disk space):</strong></p>
+                        <p><strong>Remove containers and delete loaded images (to free up disk space):</strong></p>
                         <div class="code-container">
                             <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
                             <pre><code>docker compose down
-docker rmi bibhutibbb/cloudtraderpro:latest</code></pre>
+docker rmi bibhutibbb/cloudtraderpro-backend:latest bibhutibbb/cloudtraderpro-frontend:latest</code></pre>
                         </div>
                     </div>
                 </div>
@@ -1349,7 +1357,7 @@ sudo ./setup.sh</code></pre>
                             <li><strong>Subdomain:</strong> e.g., <code>trader</code></li>
                             <li><strong>Domain:</strong> Your registered domain (e.g., <code>domain.com</code>)</li>
                             <li><strong>Type:</strong> <code>HTTP</code></li>
-                            <li><strong>URL:</strong> <code>cloud-trader-pro:8002</code></li>
+                            <li><strong>URL:</strong> <code>frontend-nginx:80</code></li>
                         </ul>
                     </li>
                     <li>Save settings. Now, your server dashboard is publicly available over secure HTTPS at <code>https://trader.domain.com</code>.</li>

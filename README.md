@@ -105,7 +105,8 @@ Before running the container, configure the application settings and activate yo
     "jwt_secret": "long_random_string_for_web_tokens",
     "session_timeout_minutes": 1440,
     "server_port": 8002,
-    "license_key": "your_license_key"
+    "license_key": "your_license_key",
+    "serve_static_files": true
 }
 ```
 
@@ -117,6 +118,7 @@ Before running the container, configure the application settings and activate yo
 *   **`session_timeout_minutes`**: The duration (in minutes) for which your login session remains active in the browser dashboard before requiring re-authentication. The default is set to `1440` minutes (exactly 24 hours / 1 day).
 *   **`server_port`**: The port number on which the FastAPI backend web server runs and listens for incoming requests. The default is `8002`.
 *   **`license_key`**: The cryptographically signed license key generated for your account. This is required to unlock the trading engine and activate automated strategies.
+*   **`serve_static_files`**: Configures whether the FastAPI backend serves static files (`true`) or delegates this role entirely to an external Nginx server (`false`). In a professional production environment behind Nginx, set this to `false`.
 
 > [!IMPORTANT]
 > Change the default passwords/secrets to highly secure, random strings to prevent unauthorized access. The `license_key` is required to authenticate and unlock core trading routines.
@@ -125,7 +127,11 @@ Before running the container, configure the application settings and activate yo
 
 ### Step 4: Starting the Application (Docker Hub)
 
-By default, the provided `docker-compose.yml` file is preconfigured to automatically pull the official production image directly from **Docker Hub** (`bibhutibbb/cloudtraderpro:latest`).
+By default, the provided `docker-compose.yml` file runs a multi-container stack:
+*   **`backend-api`**: Runs the Python FastAPI application internally, using the image `bibhutibbb/cloudtraderpro-backend:latest`.
+*   **`frontend-nginx`**: Runs an Nginx web server on host port `8002` (routing requests internally to `backend-api` and serving static files), using the image `bibhutibbb/cloudtraderpro-frontend:latest`.
+
+Both images are built as **multi-architecture** images supporting both standard 64-bit x86 (`amd64`) and ARM 64-bit (`arm64`) architectures (e.g., AWS Graviton or Apple Silicon) out-of-the-box. Docker will automatically pull the correct image for your processor.
 
 Simply navigate to your deployment folder and run:
 *   **Ubuntu / Linux:**
@@ -137,7 +143,7 @@ Simply navigate to your deployment folder and run:
     docker compose up -d
     ```
 
-Docker will automatically pull the latest image layers from Docker Hub, configure the networks, and start the trading backend.
+Docker will automatically pull the latest backend and frontend image layers from Docker Hub, configure the network bridge, and start the services.
 
 ---
 
@@ -186,16 +192,16 @@ If you need to stop the server or clean up the container resources:
         ```powershell
         docker compose down
         ```
-*   **Remove the containers and delete the loaded image (to free up disk space):**
+*   **Remove the containers and delete the loaded images (to free up disk space):**
     *   **Ubuntu / Linux:**
         ```bash
         sudo docker compose down
-        sudo docker rmi bibhutibbb/cloudtraderpro:latest
+        sudo docker rmi bibhutibbb/cloudtraderpro-backend:latest bibhutibbb/cloudtraderpro-frontend:latest
         ```
     *   **Windows (PowerShell):**
         ```powershell
         docker compose down
-        docker rmi bibhutibbb/cloudtraderpro:latest
+        docker rmi bibhutibbb/cloudtraderpro-backend:latest bibhutibbb/cloudtraderpro-frontend:latest
         ```
 
 ---
@@ -461,7 +467,7 @@ The setup script will automatically extract the token, update your `.env` config
     *   **Subdomain:** `trader` (or any subdomain of your choice, e.g. `trader.yourdomain.com`).
     *   **Domain:** Select your registered domain.
     *   **Type:** `HTTP`
-    *   **URL:** `cloud-trader-pro:8002` (routing requests internally inside the Docker network).
+    *   **URL:** `frontend-nginx:80` (routing requests internally inside the Docker network to the Nginx frontend container).
 4. Save the Hostname configuration.
 
 ---
