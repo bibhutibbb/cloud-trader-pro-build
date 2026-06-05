@@ -472,6 +472,8 @@ The setup script will automatically extract the token, update your `.env` config
 
 ---
 
+---
+
 ### Step 4: Broker-Side Handshake
 1. Log into the Developer Portal for your Active Broker (**Flattrade** or **Upstox**).
 2. Select your App and locate the **Redirect URL** field.
@@ -483,7 +485,39 @@ The setup script will automatically extract the token, update your `.env` config
 
 ---
 
-### Step 5: Starting & Connecting the Local Desktop Client (Tkinter App)
+### Step 5: Multi-Subdomain API Access with Service Auth (Optional)
+If you want to protect your dashboard web portal with Cloudflare Access (forcing identity provider or email logins for browser users) while still allowing external automated trading scripts or API clients to access the backend directly, you can set up Service Token Auth.
+
+#### Option A: Two Subdomains (UI & API Isolation) — Recommended
+This is the cleanest approach. It exposes the browser UI on one subdomain and the automation API on another:
+1. **Cloudflare Tunnel Setup:** In your Cloudflare Tunnel dashboard, add two public hostnames pointing to the same local Nginx container port (e.g., `8003` on the host, which is mapped to port `80` inside the container):
+   * `ctp.shoonyatrader.in` -> `http://localhost:8003`
+   * `ctp-api.shoonyatrader.in` -> `http://localhost:8003`
+2. **Nginx Handling:** You do not need to modify Nginx configuration because Nginx is configured to listen to all incoming domains (`server_name localhost;` in `nginx.conf`) and proxy any unmatched paths to the FastAPI backend dynamically.
+3. **Cloudflare Access Policies:** Create two different Access Applications:
+   * **Dashboard App (`ctp.shoonyatrader.in`):** Set the policy action to **Allow** and assign email OTP, Google Auth, or SSO rules.
+   * **API App (`ctp-api.shoonyatrader.in`):** Set the policy action to **Service Auth** and bind it to your generated Service Token.
+4. **Usage:**
+   * **Browser Users:** Navigate to `https://ctp.shoonyatrader.in` and complete the browser-based login. Your browser session cookies (`CF_Authorization`) will automatically authorize all relative backend calls.
+   * **External Scripts:** Target your automated code (e.g., Python `requests`) at `https://ctp-api.shoonyatrader.in/api/...` and pass the `CF-Access-Client-Id` and `CF-Access-Client-Secret` headers. CORS issues are completely bypassed since external command-line clients do not enforce CORS policies.
+
+#### Option B: Single Subdomain with Path-Based Policies
+If you prefer using a single subdomain:
+1. Create one Cloudflare Access Application for `ctp.shoonyatrader.in`.
+2. Add a **Browser Allow** policy (OTP/Google) covering the entire domain.
+3. Add a **Service Auth Bypass** policy restricted to specific path rules: `api/*` and `ws/*`. Ensure your external scripts include the `CF-Access-Client-Id` and `CF-Access-Client-Secret` headers when calling those paths.
+
+---
+
+### Step 6: Port Mapping & Nginx Internal Routing Architecture
+If you change the external port mapping in your `docker-compose.yml` (for example, setting `8003:80` on the host to avoid local port allocation conflicts):
+* **No internal config changes are needed:** Port `8003` is mapped at the Docker host level. The Nginx proxy container still listens on port `80` internally, and Uvicorn still listens on `8002` inside the backend container. The hardcoded `backend-api:8002` references inside `nginx.conf` do not need to change because container communication happens entirely on the internal Docker network.
+* **No local configuration files needed:** You do not need a copy of `nginx.conf` on your AWS server host machine. It is copied inside the Docker image during the build process (`Dockerfile.nginx`) and runs entirely within the frontend container.
+* **FastAPI Optimization:** When running behind Nginx, it is highly recommended to edit `configs/app_settings.json` and set `"serve_static_files": false`. This tells the FastAPI server to stop wasting CPU cycles handling static assets, delegating static delivery entirely to Nginx.
+
+---
+
+### Step 7: Starting & Connecting the Local Desktop Client (Tkinter App)
 The Tkinter desktop application (`main.py`) is designed to run on a **local machine (Windows PC or local Linux Desktop)**. It cannot display a graphical interface if run directly on a headless Ubuntu Linux Server without a desktop environment; however, it can connect remotely to a backend hosted on an Ubuntu Server.
 
 > [!NOTE]

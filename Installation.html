@@ -1383,9 +1383,66 @@ sudo ./setup.sh</code></pre>
                         </div>
                     </li>
                 </ul>
+
+                <h3>5. Multi-Subdomain API Access with Service Auth (Optional):</h3>
+                <p>If you want to protect your dashboard web portal with Cloudflare Access (forcing identity provider or email logins for browser users) while still allowing external automated trading scripts or API clients to access the backend directly, you can set up Service Token Auth.</p>
+                
+                <div class="tabs-container">
+                    <div class="tab-headers">
+                        <button class="tab-header active" onclick="switchTab(event, 'cf-auth-multi')">Option A: Two Subdomains (Recommended)</button>
+                        <button class="tab-header" onclick="switchTab(event, 'cf-auth-single')">Option B: Single Subdomain</button>
+                    </div>
+                    <div class="tab-contents">
+                        <!-- Option A Tab -->
+                        <div class="tab-content active" id="cf-auth-multi">
+                            <h4 style="color: #ffffff; margin-bottom: 0.75rem;">Option A: Two Subdomains (UI & API Isolation)</h4>
+                            <p>This is the cleanest approach. It exposes the browser UI on one subdomain and the automation API on another:</p>
+                            <ol style="margin-left: 1.5rem; line-height: 1.8; color: var(--text-main);">
+                                <li style="margin-bottom: 0.5rem;"><strong>Cloudflare Tunnel Setup:</strong> In your Cloudflare Tunnel dashboard, add two public hostnames pointing to the same local Nginx container port (e.g., <code>8003</code> on the host, which is mapped to port <code>80</code> inside the container):
+                                    <ul>
+                                        <li><code>ctp.shoonyatrader.in</code> &rarr; <code>http://localhost:8003</code></li>
+                                        <li><code>ctp-api.shoonyatrader.in</code> &rarr; <code>http://localhost:8003</code></li>
+                                    </ul>
+                                </li>
+                                <li style="margin-bottom: 0.5rem;"><strong>Nginx Handling:</strong> You do not need to modify Nginx configuration because Nginx is configured to listen to all incoming domains (<code>server_name localhost;</code> in <code>nginx.conf</code>) and proxy any unmatched paths to the FastAPI backend dynamically.</li>
+                                <li style="margin-bottom: 0.5rem;"><strong>Cloudflare Access Policies:</strong> Create two different Access Applications:
+                                    <ul>
+                                        <li><strong>Dashboard App (<code>ctp.shoonyatrader.in</code>):</strong> Set the policy action to <strong>Allow</strong> and assign email OTP, Google Auth, or SSO rules.</li>
+                                        <li><strong>API App (<code>ctp-api.shoonyatrader.in</code>):</strong> Set the policy action to <strong>Service Auth</strong> and bind it to your generated Service Token.</li>
+                                    </ul>
+                                </li>
+                                <li style="margin-bottom: 0;"><strong>Usage:</strong>
+                                    <ul>
+                                        <li><strong>Browser Users:</strong> Navigate to <code>https://ctp.shoonyatrader.in</code> and complete the login. Your browser session cookies will automatically authorize all relative backend calls.</li>
+                                        <li><strong>External Scripts:</strong> Target your automated code (e.g., Python <code>requests</code>) at <code>https://ctp-api.shoonyatrader.in/api/...</code> and pass the <code>CF-Access-Client-Id</code> and <code>CF-Access-Client-Secret</code> headers. CORS issues are completely bypassed since external command-line clients do not enforce CORS.</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+
+                        <!-- Option B Tab -->
+                        <div class="tab-content" id="cf-auth-single">
+                            <h4 style="color: #ffffff; margin-bottom: 0.75rem;">Option B: Single Subdomain with Path-Based Policies</h4>
+                            <p>If you prefer using a single subdomain:</p>
+                            <ol style="margin-left: 1.5rem; line-height: 1.8; color: var(--text-main);">
+                                <li style="margin-bottom: 0.5rem;">Create one Cloudflare Access Application for <code>ctp.shoonyatrader.in</code>.</li>
+                                <li style="margin-bottom: 0.5rem;">Add a <strong>Browser Allow</strong> policy (OTP/Google) covering the entire domain.</li>
+                                <li style="margin-bottom: 0;">Add a <strong>Service Auth Bypass</strong> policy restricted to specific path rules: <code>api/*</code> and <code>ws/*</code>. Ensure your external scripts include the <code>CF-Access-Client-Id</code> and <code>CF-Access-Client-Secret</code> headers when calling those paths.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>6. Port Mapping & Nginx Internal Routing Architecture:</h3>
+                <p>If you change the external port mapping in your <code>docker-compose.yml</code> (for example, setting <code>8003:80</code> on the host to avoid local port allocation conflicts):</p>
+                <ul>
+                    <li style="margin-bottom: 0.5rem;"><strong>No internal config changes are needed:</strong> Port <code>8003</code> is mapped at the Docker host level. The Nginx proxy container still listens on port <code>80</code> internally, and Uvicorn still listens on <code>8002</code> inside the backend container. The hardcoded <code>backend-api:8002</code> references inside <code>nginx.conf</code> do not need to change because container communication happens entirely on the internal Docker network.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>No local configuration files needed:</strong> You do not need a copy of <code>nginx.conf</code> on your AWS server host machine. It is copied inside the Docker image during the build process (<code>Dockerfile.nginx</code>) and runs entirely within the frontend container.</li>
+                    <li style="margin-bottom: 0;"><strong>FastAPI Optimization:</strong> When running behind Nginx, it is highly recommended to edit <code>configs/app_settings.json</code> and set <code>"serve_static_files": false</code>. This tells the FastAPI server to stop serving static assets, delegating static delivery entirely to Nginx.</li>
+                </ul>
             </section>
 
-            <!-- Section 6: Tkinter Desktop Client -->
+            <!-- Section 7: Tkinter Desktop Client -->
             <section id="tkinter-client">
                 <h2>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
@@ -1436,7 +1493,7 @@ sudo ./setup.sh</code></pre>
                 </ul>
             </section>
 
-            <!-- Section 7: Alternative Access -->
+            <!-- Section 8: Alternative Access -->
             <section id="alternative-access">
                 <h2>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
