@@ -1398,10 +1398,10 @@ sudo ./setup.sh</code></pre>
                             <h4 style="color: #ffffff; margin-bottom: 0.75rem;">Option A: Two Subdomains (UI & API Isolation)</h4>
                             <p>This is the cleanest approach. It exposes the browser UI on one subdomain and the automation API on another:</p>
                             <ol style="margin-left: 1.5rem; line-height: 1.8; color: var(--text-main);">
-                                <li style="margin-bottom: 0.5rem;"><strong>Cloudflare Tunnel Setup:</strong> In your Cloudflare Tunnel dashboard, add two public hostnames pointing to the same local Nginx container port (e.g., <code>8003</code> on the host, which is mapped to port <code>80</code> inside the container):
+                                <li style="margin-bottom: 0.5rem;"><strong>Cloudflare Tunnel Setup:</strong> In your Cloudflare Tunnel dashboard, add two public hostnames pointing to the same local Nginx container port (e.g., <code>8002</code> on the host, which is mapped to port <code>80</code> inside the container):
                                     <ul>
-                                        <li><code>ctp.shoonyatrader.in</code> &rarr; <code>http://localhost:8003</code></li>
-                                        <li><code>ctp-api.shoonyatrader.in</code> &rarr; <code>http://localhost:8003</code></li>
+                                        <li><code>ctp.shoonyatrader.in</code> &rarr; <code>http://localhost:8002</code></li>
+                                        <li><code>ctp-api.shoonyatrader.in</code> &rarr; <code>http://localhost:8002</code></li>
                                     </ul>
                                 </li>
                                 <li style="margin-bottom: 0.5rem;"><strong>Nginx Handling:</strong> You do not need to modify Nginx configuration because Nginx is configured to listen to all incoming domains (<code>server_name localhost;</code> in <code>nginx.conf</code>) and proxy any unmatched paths to the FastAPI backend dynamically.</li>

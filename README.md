@@ -490,9 +490,9 @@ If you want to protect your dashboard web portal with Cloudflare Access (forcing
 
 #### Option A: Two Subdomains (UI & API Isolation) — Recommended
 This is the cleanest approach. It exposes the browser UI on one subdomain and the automation API on another:
-1. **Cloudflare Tunnel Setup:** In your Cloudflare Tunnel dashboard, add two public hostnames pointing to the same local Nginx container port (e.g., `8003` on the host, which is mapped to port `80` inside the container):
-   * `ctp.shoonyatrader.in` -> `http://localhost:8003`
-   * `ctp-api.shoonyatrader.in` -> `http://localhost:8003`
+1. **Cloudflare Tunnel Setup:** In your Cloudflare Tunnel dashboard, add two public hostnames pointing to the same local Nginx container port (e.g., `8002` on the host, which is mapped to port `80` inside the container):
+   * `ctp.shoonyatrader.in` -> `http://localhost:8002`
+   * `ctp-api.shoonyatrader.in` -> `http://localhost:8002`
 2. **Nginx Handling:** You do not need to modify Nginx configuration because Nginx is configured to listen to all incoming domains (`server_name localhost;` in `nginx.conf`) and proxy any unmatched paths to the FastAPI backend dynamically.
 3. **Cloudflare Access Policies:** Create two different Access Applications:
    * **Dashboard App (`ctp.shoonyatrader.in`):** Set the policy action to **Allow** and assign email OTP, Google Auth, or SSO rules.
