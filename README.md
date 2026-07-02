@@ -123,13 +123,18 @@ Before running the container, configure the application settings and activate yo
 > [!IMPORTANT]
 > Change the default passwords/secrets to highly secure, random strings to prevent unauthorized access. The `license_key` is required to authenticate and unlock core trading routines.
 
+#### 🔑 License Activation & UI Settings Banner:
+*   **Locked Setup Mode:** If the license key is missing, invalid, or expired on server boot, all core trading functions and API routes are locked (returning `402 Payment Required`). 
+*   **Browser Activation:** In Locked Setup Mode, opening the web dashboard in your browser shows an interactive **License Activation Page** where you can paste your license key and click **Activate** to dynamically unlock the server without a restart.
+*   **License Validity Banner:** Once activated, a persistent license validity banner will appear at the top of the **System Settings** tab displaying the active status and the dynamically fetched plan name (e.g. `"Cloud Trader Pro - Ultimate"`).
+
 ---
 
 ### Step 4: Starting the Application (Docker Hub)
 
 By default, the provided `docker-compose.yml` file runs a multi-container stack:
-*   **`backend-api`**: Runs the Python FastAPI application internally, using the image `bibhutibbb/cloudtraderpro-backend:latest`.
-*   **`frontend-nginx`**: Runs an Nginx web server on host port `8002` (routing requests internally to `backend-api` and serving static files), using the image `bibhutibbb/cloudtraderpro-frontend:latest`.
+*   **`backend-api`**: Runs the Python FastAPI application internally, using the image `ghcr.io/bibhutibbb/cloudtraderpro-backend:latest`.
+*   **`frontend-nginx`**: Runs an Nginx web server on host port `8002` (routing requests internally to `backend-api` and serving static files), using the image `ghcr.io/bibhutibbb/cloudtraderpro-frontend:latest`.
 
 Both images are built as **multi-architecture** images supporting both standard 64-bit x86 (`amd64`) and ARM 64-bit (`arm64`) architectures (e.g., AWS Graviton or Apple Silicon) out-of-the-box. Docker will automatically pull the correct image for your processor.
 
@@ -196,12 +201,12 @@ If you need to stop the server or clean up the container resources:
     *   **Ubuntu / Linux:**
         ```bash
         sudo docker compose down
-        sudo docker rmi bibhutibbb/cloudtraderpro-backend:latest bibhutibbb/cloudtraderpro-frontend:latest
+        sudo docker rmi ghcr.io/bibhutibbb/cloudtraderpro-backend:latest ghcr.io/bibhutibbb/cloudtraderpro-frontend:latest
         ```
     *   **Windows (PowerShell):**
         ```powershell
         docker compose down
-        docker rmi bibhutibbb/cloudtraderpro-backend:latest bibhutibbb/cloudtraderpro-frontend:latest
+        docker rmi ghcr.io/bibhutibbb/cloudtraderpro-backend:latest ghcr.io/bibhutibbb/cloudtraderpro-frontend:latest
         ```
 
 ---
@@ -298,6 +303,13 @@ If you have purchased or generated historical backtesting data (saved as `.parqu
 ### **Where to Place the Files:**
 *   **Ubuntu Linux (Docker Server):** `/opt/cloudtraderpro/datafetcher/historicaldatas/`
 *   **Windows PC (Local Setup):** `C:\CloudTraderPro\datafetcher\historicaldatas\`
+
+### **☁️ Cloud Synchronization from R2 (Sync Dashboard)**
+If your subscription package includes Cloud R2 data access, you do not need to manually upload parquet files using SFTP/SCP. Instead, you can sync them directly inside the web dashboard:
+1. Open the **Historical Data Viewer** page in your browser.
+2. Click the **Sync Data** button in the control bar to open the **Cloud Data Synchronizer** modal.
+3. Select the target **Year**, choose a specific **Symbol** (or select `[ALL SYMBOLS]` to download everything), select the **Data Types** (`Spot`, `Futures`, `Options`), and click **Start Synchronization**.
+4. The system will query the Cloudflare R2 worker, calculate the diff, skip files that are already locally cached, and download the rest in optimized background batches with a live progress bar.
 
 ---
 

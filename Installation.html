@@ -858,11 +858,19 @@ sudo nano configs/app_settings.json</code></pre>
                     <p>Always customize the default dashboard password, local api key, and jwt secret. The <code>license_key</code> field is required to cryptographically validate your software license upon server startup.</p>
                 </div>
 
+                <h3>🔑 License Activation & UI Settings Banner</h3>
+                <p>Cloud Trader Pro features an integrated offline/online licensing manager:</p>
+                <ul style="margin: 0.5rem 0 1.5rem 1.25rem; font-size: 0.95rem; color: var(--text-muted); list-style-type: disc;">
+                    <li style="margin-bottom: 0.5rem;"><strong>Locked Setup Mode:</strong> If the license key is missing, invalid, or expired on server boot, all core trading functions and API routes are locked (returning <code>402 Payment Required</code>).</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Browser Activation:</strong> In Locked Setup Mode, opening the web dashboard in your browser shows an interactive <strong>License Activation Page</strong> where you can paste your license key and click <strong>Activate</strong> to dynamically unlock the server without a restart.</li>
+                    <li style="margin-bottom: 0;"><strong>License Validity Banner:</strong> Once activated, a persistent license validity banner will appear at the top of the <strong>System Settings</strong> tab displaying the active status and the dynamically fetched plan name (e.g. <code>"Cloud Trader Pro - Ultimate"</code>).</li>
+                </ul>
+
                 <h3>4. Boot and Manage the Server (Docker Hub)</h3>
                 <p>The provided <code>docker-compose.yml</code> file is preconfigured to run a multi-container stack:
                     <ul style="margin: 0.5rem 0 1rem 1.25rem; font-size: 0.95rem; color: var(--text-muted); list-style-type: disc;">
-                        <li style="margin-bottom: 0.3rem;"><strong><code>backend-api</code>:</strong> The Python FastAPI service (runs <code>bibhutibbb/cloudtraderpro-backend:latest</code>).</li>
-                        <li style="margin-bottom: 0.3rem;"><strong><code>frontend-nginx</code>:</strong> The Nginx proxy serving static UI files and forwarding dynamic endpoints (runs <code>bibhutibbb/cloudtraderpro-frontend:latest</code>).</li>
+                        <li style="margin-bottom: 0.3rem;"><strong><code>backend-api</code>:</strong> The Python FastAPI service (runs <code>ghcr.io/bibhutibbb/cloudtraderpro-backend:latest</code>).</li>
+                        <li style="margin-bottom: 0.3rem;"><strong><code>frontend-nginx</code>:</strong> The Nginx proxy serving static UI files and forwarding dynamic endpoints (runs <code>ghcr.io/bibhutibbb/cloudtraderpro-frontend:latest</code>).</li>
                         <li style="margin-bottom: 0;"><strong>ARM64 Support:</strong> Both images support both standard 64-bit x86 (<code>amd64</code>) and 64-bit ARM (<code>arm64</code>) architectures.</li>
                     </ul>
                     Simply run the command to start the containers:</p>
@@ -930,7 +938,7 @@ docker compose up -d</code></pre>
                         <div class="code-container">
                             <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
                             <pre><code>sudo docker compose down
-sudo docker rmi bibhutibbb/cloudtraderpro-backend:latest bibhutibbb/cloudtraderpro-frontend:latest</code></pre>
+sudo docker rmi ghcr.io/bibhutibbb/cloudtraderpro-backend:latest ghcr.io/bibhutibbb/cloudtraderpro-frontend:latest</code></pre>
                         </div>
                     </div>
                     <div class="subtab-content" id="lifecycle-windows">
@@ -948,7 +956,7 @@ sudo docker rmi bibhutibbb/cloudtraderpro-backend:latest bibhutibbb/cloudtraderp
                         <div class="code-container">
                             <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
                             <pre><code>docker compose down
-docker rmi bibhutibbb/cloudtraderpro-backend:latest bibhutibbb/cloudtraderpro-frontend:latest</code></pre>
+docker rmi ghcr.io/bibhutibbb/cloudtraderpro-backend:latest ghcr.io/bibhutibbb/cloudtraderpro-frontend:latest</code></pre>
                         </div>
                     </div>
                 </div>
@@ -1113,6 +1121,15 @@ uv run python run_server.py</code></pre>
                         </div>
                     </div>
                 </div>
+
+                <h3>☁️ Cloud Synchronization from R2 (Sync Dashboard)</h3>
+                <p>If your subscription package includes Cloud R2 data access, you do not need to manually upload parquet files using SFTP/SCP. Instead, you can sync them directly inside the web dashboard:</p>
+                <ol style="margin-bottom: 1.5rem; padding-left: 1.75rem;">
+                    <li>Open the <strong>Historical Data Viewer</strong> page in your browser.</li>
+                    <li>Click the <strong>Sync Data</strong> button in the control bar to open the <strong>Cloud Data Synchronizer</strong> modal.</li>
+                    <li>Select the target <strong>Year</strong>, choose a specific <strong>Symbol</strong> (or select <code>[ALL SYMBOLS]</code> to download everything), select the <strong>Data Types</strong> (<code>Spot</code>, <code>Futures</code>, <code>Options</code>), and click <strong>Start Synchronization</strong>.</li>
+                    <li>The system will query the Cloudflare R2 worker, calculate the diff, skip files that are already locally cached, and download the rest in optimized background batches with a live progress bar.</li>
+                </ol>
 
                 <h3>How to Upload Files to a Linux VPS:</h3>
                 <p>Choose one of the following methods to transfer the files from your local computer to your remote server:</p>

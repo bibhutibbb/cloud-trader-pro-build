@@ -1,6 +1,6 @@
 services:
   backend-api:
-    image: bibhutibbb/cloudtraderpro-backend:latest
+    image: ghcr.io/bibhutibbb/cloudtraderpro-backend:latest
     hostname: cloudtraderpro-server
     restart: always
     expose:
@@ -20,11 +20,21 @@ services:
       - ./backtester/backtest_histories:/app/backtester/backtest_histories
     environment:
       - TZ=Asia/Kolkata
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   frontend-nginx:
-    image: bibhutibbb/cloudtraderpro-frontend:latest
+    image: ghcr.io/bibhutibbb/cloudtraderpro-frontend:latest
     restart: always
     ports:
       - "8002:80"
     depends_on:
       - backend-api
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

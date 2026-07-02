@@ -6,5 +6,6 @@
     "session_timeout_minutes": 1440,
     "server_port": 8002,
     "license_key": "your_license_key",
+    "data_gatekeeper_url": "https://ctp-hist-data.shoonyatrader.in",
     "serve_static_files": true
 }
