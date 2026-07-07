@@ -52,3 +52,4 @@ services:
       - WATCHTOWER_HTTP_API_UPDATE=true
       - WATCHTOWER_HTTP_API_TOKEN=super-secret-watchtower-token
       - WATCHTOWER_CLEANUP=true
+      - DOCKER_API_VERSION=${DOCKER_API_VERSION:-1.44}
