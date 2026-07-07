@@ -42,6 +42,7 @@ Download-File "Installation.html" "Installation.html"
 # Download image assets
 Download-File "img/shoonya_scalper.ico" "img/shoonya_scalper.ico"
 Download-File "img/shoonya_scalper.png" "img/shoonya_scalper.png"
+Download-File "img/cloud_trader_pro_logo.png" "img/cloud_trader_pro_logo.png"
 
 # Download config template samples
 Download-File "configs/app_settings.json.sample" "configs/app_settings.json.sample"
@@ -82,7 +83,10 @@ if ($response -match "^[Yy]$") {
     Write-Host "      Paste your Docker run command into cloudflare_tunnel_command.txt" -ForegroundColor Green
     Write-Host "      Then run: cd $INSTALL_DIR; .\setup.ps1" -ForegroundColor Green
     Write-Host "" -ForegroundColor Green
-    Write-Host "   4. Detailed manual and walkthroughs:" -ForegroundColor Green
+    Write-Host "   4. Detailed Installation & Setup Guide:" -ForegroundColor Green
     Write-Host "      Open $INSTALL_DIR\Installation.html in your browser." -ForegroundColor Green
+    Write-Host "" -ForegroundColor Green
+    Write-Host "   5. Platform User Manual & Workflows:" -ForegroundColor Green
+    Write-Host "      Access via your web browser: http://localhost:8002/manual.html" -ForegroundColor Green
     Write-Host "=========================================================" -ForegroundColor Green
 }

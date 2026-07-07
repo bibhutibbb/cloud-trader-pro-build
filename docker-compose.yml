@@ -18,8 +18,11 @@ services:
       - ./datafetcher/historicaldatas:/app/datafetcher/historicaldatas
       # Persist Backtesting folder location
       - ./backtester/backtest_histories:/app/backtester/backtest_histories
+      # Mount docker socket to allow the backend to read its own container image digest
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - TZ=Asia/Kolkata
+      - WATCHTOWER_TOKEN=super-secret-watchtower-token
     logging:
       driver: "json-file"
       options:
@@ -38,3 +41,14 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+  watchtower:
+    image: containrrr/watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - TZ=Asia/Kolkata
+      - WATCHTOWER_HTTP_API_UPDATE=true
+      - WATCHTOWER_HTTP_API_TOKEN=super-secret-watchtower-token
+      - WATCHTOWER_CLEANUP=true

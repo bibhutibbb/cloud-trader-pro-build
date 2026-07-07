@@ -53,6 +53,7 @@ download_file "Installation.html" "Installation.html"
 # Download image assets
 download_file "img/shoonya_scalper.ico" "img/shoonya_scalper.ico"
 download_file "img/shoonya_scalper.png" "img/shoonya_scalper.png"
+download_file "img/cloud_trader_pro_logo.png" "img/cloud_trader_pro_logo.png"
 
 # Download config template samples
 download_file "configs/app_settings.json.sample" "configs/app_settings.json.sample"
@@ -98,7 +99,10 @@ else
     echo "   3. Start the Server:"
     echo "      Run: cd $INSTALL_DIR && sudo docker compose up -d"
     echo ""
-    echo "   4. Detailed manual and walkthroughs:"
+    echo "   4. Detailed Installation & Setup Guide:"
     echo "      Open $INSTALL_DIR/Installation.html in your browser."
+    echo ""
+    echo "   5. Platform User Manual & Workflows:"
+    echo "      Access via your web browser: http://localhost:8002/manual.html"
     echo "========================================================="
 fi
