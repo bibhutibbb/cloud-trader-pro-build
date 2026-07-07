@@ -50,10 +50,8 @@ download_file "cloudflare_tunnel_command.txt" "cloudflare_tunnel_command.txt"
 download_file "setup.sh" "setup.sh"
 download_file "Installation.html" "Installation.html"
 
-# Download image assets
+# Download image assets (only favicon is needed for Installation.html)
 download_file "img/shoonya_scalper.ico" "img/shoonya_scalper.ico"
-download_file "img/shoonya_scalper.png" "img/shoonya_scalper.png"
-download_file "img/cloud_trader_pro_logo.png" "img/cloud_trader_pro_logo.png"
 
 # Download config template samples
 download_file "configs/app_settings.json.sample" "configs/app_settings.json.sample"

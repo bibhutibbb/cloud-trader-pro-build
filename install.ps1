@@ -39,10 +39,8 @@ Download-File "setup.ps1" "setup.ps1"
 Download-File "setup.bat" "setup.bat"
 Download-File "Installation.html" "Installation.html"
 
-# Download image assets
+# Download image assets (only favicon is needed for Installation.html)
 Download-File "img/shoonya_scalper.ico" "img/shoonya_scalper.ico"
-Download-File "img/shoonya_scalper.png" "img/shoonya_scalper.png"
-Download-File "img/cloud_trader_pro_logo.png" "img/cloud_trader_pro_logo.png"
 
 # Download config template samples
 Download-File "configs/app_settings.json.sample" "configs/app_settings.json.sample"
