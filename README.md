@@ -597,6 +597,7 @@ If you do not own a custom domain name, you can contact the system administrator
 For setup assistance, questions, or requesting a custom subdomain, contact:
 *   **Official Website:** [cloudtraderpro.in](https://cloudtraderpro.in)
 *   **WhatsApp Support:** [Chat on WhatsApp (+91 7001041694)](https://wa.me/917001041694)
+*   **WhatsApp Channel:** [Join our WhatsApp Channel](https://whatsapp.com/channel/0029Vb8LdceHFxP1LQf0530s)
 
 ---
 
