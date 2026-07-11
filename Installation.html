@@ -801,7 +801,8 @@ sudo systemctl enable --now docker</code></pre>
                 <h3>2. Download Deployment Files from GitHub</h3>
                 <p>Instead of manually copying orchestration assets, you can download all necessary files (like
                     <code>docker-compose.yml</code>, configuration templates, and setup helper scripts) directly from
-                    our public GitHub build repository. Select your preferred method below:</p>
+                    our public GitHub build repository. Select your preferred method below:
+                </p>
 
                 <div class="subtabs-container">
                     <div class="subtab-headers">
@@ -884,7 +885,8 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trade
                 <h3>3. Configure App Settings</h3>
                 <p>Go to the <code>configs/</code> folder, rename <code>app_settings.json.sample</code> to
                     <code>app_settings.json</code>, and configure your parameters. On Ubuntu/Linux, you can copy the
-                    sample settings and edit it directly using <code>nano</code>:</p>
+                    sample settings and edit it directly using <code>nano</code>:
+                </p>
                 <div class="code-container">
                     <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn"
                             onclick="copyCode(this)">Copy</button></div>
@@ -917,10 +919,12 @@ sudo nano configs/app_settings.json</code></pre>
                     <li style="margin-bottom: 0.5rem;"><strong><code>local_api_key</code>:</strong> A shared secret key
                         used to authenticate and connect the local Tkinter desktop application securely with the remote
                         server. Both the server's <code>app_settings.json</code> and the client's
-                        <code>cf_secrets.json</code> must share this exact key.</li>
+                        <code>cf_secrets.json</code> must share this exact key.
+                    </li>
                     <li style="margin-bottom: 0.5rem;"><strong><code>active_broker</code>:</strong> Specifies the broker
                         to be used by the trading system. Supported values are <code>"flattrade"</code> or
-                        <code>"upstox"</code>.</li>
+                        <code>"upstox"</code>.
+                    </li>
                     <li style="margin-bottom: 0.5rem;"><strong><code>jwt_secret</code>:</strong> A long random secret
                         key used by the backend to sign web tokens (JSON Web Tokens) for the dashboard session. Change
                         this to a secure random string (e.g. 32 characters) to secure your browser session tokens.</li>
@@ -930,7 +934,8 @@ sudo nano configs/app_settings.json</code></pre>
                         hours / 1 day).</li>
                     <li style="margin-bottom: 0.5rem;"><strong><code>server_port</code>:</strong> The port number on
                         which the FastAPI backend web server runs and listens for incoming requests. The default is
-                        <code>8002</code>.</li>
+                        <code>8002</code>.
+                    </li>
                     <li style="margin-bottom: 0.5rem;"><strong><code>license_key</code>:</strong> The cryptographically
                         signed license key generated for your account. This is required to unlock the trading engine and
                         activate automated strategies.</li>
@@ -953,7 +958,8 @@ sudo nano configs/app_settings.json</code></pre>
                     </span>
                     <p>Always customize the default dashboard password, local api key, and jwt secret. The
                         <code>license_key</code> field is required to cryptographically validate your software license
-                        upon server startup.</p>
+                        upon server startup.
+                    </p>
                 </div>
 
                 <h3>🔑 License Activation & UI Settings Banner</h3>
@@ -970,7 +976,8 @@ sudo nano configs/app_settings.json</code></pre>
                     <li style="margin-bottom: 0;"><strong>License Validity Banner:</strong> Once activated, a persistent
                         license validity banner will appear at the top of the <strong>System Settings</strong> tab
                         displaying the active status and the dynamically fetched plan name (e.g.
-                        <code>"Cloud Trader Pro - Ultimate"</code>).</li>
+                        <code>"Cloud Trader Pro - Ultimate"</code>).
+                    </li>
                 </ul>
 
                 <h3>4. Boot and Manage the Server (Docker Hub)</h3>
@@ -981,7 +988,8 @@ sudo nano configs/app_settings.json</code></pre>
                         service (runs <code>ghcr.io/bibhutibbb/cloudtraderpro-backend:latest</code>).</li>
                     <li style="margin-bottom: 0.3rem;"><strong><code>frontend-nginx</code>:</strong> The Nginx proxy
                         serving static UI files and forwarding dynamic endpoints (runs
-                        <code>ghcr.io/bibhutibbb/cloudtraderpro-frontend:latest</code>).</li>
+                        <code>ghcr.io/bibhutibbb/cloudtraderpro-frontend:latest</code>).
+                    </li>
                     <li style="margin-bottom: 0;"><strong>ARM64 Support:</strong> Both images support both standard
                         64-bit x86 (<code>amd64</code>) and 64-bit ARM (<code>arm64</code>) architectures.</li>
                 </ul>
@@ -1163,7 +1171,8 @@ docker compose up -d</code></pre>
                         <li style="margin-bottom: 0.4rem;"><strong>Port Settings Remain Intact:</strong> If you mapped a
                             custom host port (e.g. <code>8003:8002</code>) in your local
                             <code>docker-compose.yml</code>, that file will not be changed. Your custom port mapping
-                            will continue to function on the new container version.</li>
+                            will continue to function on the new container version.
+                        </li>
                         <li style="margin-bottom: 0;"><strong>Caution with Installer Script:</strong> If you update by
                             re-running the full installer script (<code>install.sh</code>/<code>install.ps1</code>), it
                             will download a fresh copy of <code>docker-compose.yml</code> from GitHub, which will
@@ -1206,7 +1215,8 @@ docker compose up -d</code></pre>
                 <ul>
                     <li>Contact the developer to request the official Cloud Trader Pro distribution ZIP file.</li>
                     <li>Extract the received ZIP archive into a dedicated directory of your choice (e.g.
-                        <code>C:\CloudTraderPro</code> or <code>/opt/cloudtraderpro</code>).</li>
+                        <code>C:\CloudTraderPro</code> or <code>/opt/cloudtraderpro</code>).
+                    </li>
                     <li>Open your terminal or PowerShell inside the extracted directory to run the following setup
                         commands.</li>
                 </ul>
@@ -1308,7 +1318,8 @@ uv run python run_server.py</code></pre>
                     <li>Select the target <strong>Year</strong>, choose a specific <strong>Symbol</strong> (or select
                         <code>[ALL SYMBOLS]</code> to download everything), select the <strong>Data Types</strong>
                         (<code>Spot</code>, <code>Futures</code>, <code>Options</code>), and click <strong>Start
-                            Synchronization</strong>.</li>
+                            Synchronization</strong>.
+                    </li>
                     <li>The system will query the Cloudflare R2 worker, calculate the diff, skip files that are already
                         locally cached, and download the rest in optimized background batches with a live progress bar.
                     </li>
@@ -1333,7 +1344,8 @@ uv run python run_server.py</code></pre>
                             </h4>
                             <ol style="margin-left: 1.25rem; color: var(--text-main);">
                                 <li style="margin-bottom: 0.5rem;">Download and install a free SFTP client such as
-                                    <strong>FileZilla</strong> or <strong>WinSCP</strong>.</li>
+                                    <strong>FileZilla</strong> or <strong>WinSCP</strong>.
+                                </li>
                                 <li style="margin-bottom: 0.5rem;">Connect to your VPS using your SSH credentials (IP
                                     Address, username <code>ubuntu</code>, and your private key file).</li>
                                 <li style="margin-bottom: 0.5rem;">On the remote server side, navigate to the target
@@ -1373,7 +1385,8 @@ uv run python run_server.py</code></pre>
                         <li style="margin-bottom: 0.5rem;"><strong>Do Not Rename Files:</strong> The backtest engine
                             expects files to be named exactly according to their symbol/token names (e.g.,
                             <code>NSE_26000.parquet</code>). Changing the names will make them invisible to the backtest
-                            parser.</li>
+                            parser.
+                        </li>
                         <li style="margin-bottom: 0;"><strong>No Server Restart Required:</strong> Because the
                             directories are volume-bound in Docker, files are detected instantly by the backtester as
                             soon as they are placed in the folder.</li>
@@ -1408,7 +1421,8 @@ uv run python run_server.py</code></pre>
                             <h3 style="color: #ffffff; margin-bottom: 0.75rem;">Step-by-Step Telegram Setup</h3>
                             <p style="margin-bottom: 1rem;">Telegram routes messages securely using your unique
                                 <strong>Chat ID</strong> and a <strong>Bot Token</strong>. Setting it up takes less than
-                                2 minutes and is completely private (no phone numbers are shared with the API).</p>
+                                2 minutes and is completely private (no phone numbers are shared with the API).
+                            </p>
 
                             <ol style="margin-left: 1.5rem; line-height: 1.8; color: var(--text-main);">
                                 <li style="margin-bottom: 0.75rem;">
@@ -1419,9 +1433,11 @@ uv run python run_server.py</code></pre>
                                         <li>Send the command <code>/newbot</code>.</li>
                                         <li>Follow the prompts to specify a display name (e.g.,
                                             <code>My Alerts Bot</code>) and a unique username ending in "bot" (e.g.,
-                                            <code>MyCloudTraderAlertBot</code>).</li>
+                                            <code>MyCloudTraderAlertBot</code>).
+                                        </li>
                                         <li>Copy the **HTTP API Token** returned by BotFather (e.g.,
-                                            <code>738194:ABCde...</code>).</li>
+                                            <code>738194:ABCde...</code>).
+                                        </li>
                                     </ul>
                                 </li>
                                 <li style="margin-bottom: 0.75rem;">
@@ -1438,16 +1454,19 @@ uv run python run_server.py</code></pre>
                                     <strong>Retrieve your personal Chat ID (The Destination):</strong>
                                     <ul>
                                         <li>Search for <code>@userinfobot</code> in Telegram and press
-                                            <strong>Start</strong>.</li>
+                                            <strong>Start</strong>.
+                                        </li>
                                         <li>Copy the numeric <strong>Id</strong> returned in the chat response (e.g.,
-                                            <code>987654321</code>).</li>
+                                            <code>987654321</code>).
+                                        </li>
                                     </ul>
                                 </li>
                                 <li style="margin-bottom: 0;">
                                     <strong>Link & Save Settings:</strong>
                                     <ul>
                                         <li>Open your Cloud Trader Pro Web Dashboard and navigate to the
-                                            <strong>Application Configuration</strong> page.</li>
+                                            <strong>Application Configuration</strong> page.
+                                        </li>
                                         <li>Toggle on <strong>Telegram Bot Notifications</strong>.</li>
                                         <li>Paste your <strong>Telegram Bot Token</strong> and <strong>Telegram Chat
                                                 ID</strong> in the input fields.</li>
@@ -1472,11 +1491,13 @@ uv run python run_server.py</code></pre>
                                         <li>Right-click the channel where you want notifications and select <strong>Edit
                                                 Channel</strong>.</li>
                                         <li>Go to the <strong>Integrations</strong> tab on the left and select
-                                            <strong>Webhooks</strong>.</li>
+                                            <strong>Webhooks</strong>.
+                                        </li>
                                         <li>Click <strong>Create Webhook</strong> (or <strong>New Webhook</strong>).
                                         </li>
                                         <li>Give the webhook a name (e.g., <code>Trader Alerts</code>) and click
-                                            <strong>Copy Webhook URL</strong>.</li>
+                                            <strong>Copy Webhook URL</strong>.
+                                        </li>
                                     </ul>
                                 </li>
                                 <li style="margin-bottom: 0;">
@@ -1627,7 +1648,8 @@ sudo ./setup.sh</code></pre>
                 </div>
                 <p>The helper automatically updates the <code>.env</code> file, establishes a
                     <code>docker-compose.override.yml</code> containing the Cloudflare Tunnel container sidecar, and
-                    initiates the service stack.</p>
+                    initiates the service stack.
+                </p>
 
                 <h3>3. Configure Route Hostname:</h3>
                 <ul>
@@ -1642,18 +1664,21 @@ sudo ./setup.sh</code></pre>
                         </ul>
                     </li>
                     <li>Save settings. Now, your server dashboard is publicly available over secure HTTPS at
-                        <code>https://trader.domain.com</code>.</li>
+                        <code>https://trader.domain.com</code>.
+                    </li>
                 </ul>
 
                 <h3>4. Broker-Side Handshake:</h3>
                 <ul>
                     <li>Log into the Developer Portal for your Active Broker (<strong>Flattrade</strong> or
-                        <strong>Upstox</strong>).</li>
+                        <strong>Upstox</strong>).
+                    </li>
                     <li>Select your App and locate the <strong>Redirect URL</strong> field.</li>
                     <li>Update the redirect URL according to your setup:
                         <ul>
                             <li style="margin-top: 0.25rem;"><strong>For Remote Server / Cloudflare Tunnel:</strong>
-                                <code>https://trader.yourdomain.com/api/auth/callback</code></li>
+                                <code>https://trader.yourdomain.com/api/auth/callback</code>
+                            </li>
                             <li style="margin-top: 0.25rem; margin-bottom: 0.5rem;"><strong>For Local Windows PC Setup
                                     (No Domain):</strong> <code>http://localhost:8002/api/auth/callback</code> <span
                                     style="color: var(--text-muted); font-size: 0.9rem;">(Note: If you customized your
@@ -1707,7 +1732,8 @@ sudo ./setup.sh</code></pre>
                                         <li><code>ctp.cloudtraderpro.in</code> &rarr; <code>http://localhost:8002</code>
                                         </li>
                                         <li><code>ctp-api.cloudtraderpro.in</code> &rarr;
-                                            <code>http://localhost:8002</code></li>
+                                            <code>http://localhost:8002</code>
+                                        </li>
                                     </ul>
                                 </li>
                                 <li style="margin-bottom: 0.5rem;"><strong>Nginx Handling:</strong> You do not need to
@@ -1730,13 +1756,15 @@ sudo ./setup.sh</code></pre>
                                         <li><strong>Browser Users:</strong> Navigate to
                                             <code>https://ctp.cloudtraderpro.in</code> and complete the login. Your
                                             browser session cookies will automatically authorize all relative backend
-                                            calls.</li>
+                                            calls.
+                                        </li>
                                         <li><strong>External Scripts:</strong> Target your automated code (e.g., Python
                                             <code>requests</code>) at
                                             <code>https://ctp-api.cloudtraderpro.in/api/...</code> and pass the
                                             <code>CF-Access-Client-Id</code> and <code>CF-Access-Client-Secret</code>
                                             headers. CORS issues are completely bypassed since external command-line
-                                            clients do not enforce CORS.</li>
+                                            clients do not enforce CORS.
+                                        </li>
                                     </ul>
                                 </li>
                             </ol>
@@ -1749,13 +1777,15 @@ sudo ./setup.sh</code></pre>
                             <p>If you prefer using a single subdomain:</p>
                             <ol style="margin-left: 1.5rem; line-height: 1.8; color: var(--text-main);">
                                 <li style="margin-bottom: 0.5rem;">Create one Cloudflare Access Application for
-                                    <code>ctp.cloudtraderpro.in</code>.</li>
+                                    <code>ctp.cloudtraderpro.in</code>.
+                                </li>
                                 <li style="margin-bottom: 0.5rem;">Add a <strong>Browser Allow</strong> policy
                                     (OTP/Google) covering the entire domain.</li>
                                 <li style="margin-bottom: 0;">Add a <strong>Service Auth Bypass</strong> policy
                                     restricted to specific path rules: <code>api/*</code> and <code>ws/*</code>. Ensure
                                     your external scripts include the <code>CF-Access-Client-Id</code> and
-                                    <code>CF-Access-Client-Secret</code> headers when calling those paths.</li>
+                                    <code>CF-Access-Client-Secret</code> headers when calling those paths.
+                                </li>
                             </ol>
                         </div>
                     </div>
@@ -1763,14 +1793,16 @@ sudo ./setup.sh</code></pre>
 
                 <h3>6. Port Mapping & Nginx Internal Routing Architecture:</h3>
                 <p>If you change the external port mapping in your <code>docker-compose.yml</code> (for example, setting
-                    <code>8003:80</code> on the host to avoid local port allocation conflicts):</p>
+                    <code>8003:80</code> on the host to avoid local port allocation conflicts):
+                </p>
                 <ul>
                     <li style="margin-bottom: 0.5rem;"><strong>No internal config changes are needed:</strong> Port
                         <code>8003</code> is mapped at the Docker host level. The Nginx proxy container still listens on
                         port <code>80</code> internally, and Uvicorn still listens on <code>8002</code> inside the
                         backend container. The hardcoded <code>backend-api:8002</code> references inside
                         <code>nginx.conf</code> do not need to change because container communication happens entirely
-                        on the internal Docker network.</li>
+                        on the internal Docker network.
+                    </li>
                     <li style="margin-bottom: 0.5rem;"><strong>No local configuration files needed:</strong> You do not
                         need a copy of <code>nginx.conf</code> on your AWS server host machine. It is copied inside the
                         Docker image during the build process (<code>Dockerfile.nginx</code>) and runs entirely within
@@ -1778,7 +1810,8 @@ sudo ./setup.sh</code></pre>
                     <li style="margin-bottom: 0;"><strong>FastAPI Optimization:</strong> When running behind Nginx, it
                         is highly recommended to edit <code>configs/app_settings.json</code> and set
                         <code>"serve_static_files": false</code>. This tells the FastAPI server to stop serving static
-                        assets, delegating static delivery entirely to Nginx.</li>
+                        assets, delegating static delivery entirely to Nginx.
+                    </li>
                 </ul>
             </section>
 
@@ -1845,11 +1878,13 @@ sudo ./setup.sh</code></pre>
                             <li><strong>Local Python setup / SSH Port Forwarding:</strong> Use
                                 <code>"base_url": "http://localhost:8002"</code> and
                                 <code>"ws_url": "ws://localhost:8002/ws"</code> (with
-                                <code>"use_cloudflare": false</code>).</li>
+                                <code>"use_cloudflare": false</code>).
+                            </li>
                             <li><strong>Cloudflare Tunnel Remote setup:</strong> Use
                                 <code>"base_url": "https://trader.yourdomain.com"</code> and
                                 <code>"ws_url": "wss://trader.yourdomain.com/ws"</code> (with
-                                <code>"use_cloudflare": true</code>).</li>
+                                <code>"use_cloudflare": true</code>).
+                            </li>
                         </ul>
                     </li>
                     <li><strong><code>local_api_key</code>:</strong> Must match the <code>local_api_key</code> value in
@@ -1878,7 +1913,8 @@ sudo ./setup.sh</code></pre>
 
                 <h3>Option A: Cloudflare Quick Tunnels (Random Temporary Domain)</h3>
                 <p>Run a temporary public tunnel without creating an account. Add this service block to your
-                    <code>docker-compose.yml</code> file:</p>
+                    <code>docker-compose.yml</code> file:
+                </p>
                 <div class="code-container">
                     <div class="code-header"><span class="code-lang">yaml</span><button class="copy-btn"
                             onclick="copyCode(this)">Copy</button></div>
@@ -1907,7 +1943,8 @@ sudo ./setup.sh</code></pre>
                 <h3>Option C: Request a Subdomain from the Developer/Admin (Easiest)</h3>
                 <p>If you do not own a domain, you can request the developer/admin to provision a custom subdomain (e.g.
                     <code>yourname.cloudtraderpro.in</code>) on their own network infrastructure. They can link this
-                    subdomain directly to your Cloudflare Tunnel connector.</p>
+                    subdomain directly to your Cloudflare Tunnel connector.
+                </p>
             </section>
 
             <!-- Section 8: Support & Contact -->
@@ -1930,7 +1967,7 @@ sudo ./setup.sh</code></pre>
                         </svg>
                         WhatsApp Support
                     </a>
-                    <a href="https://www.cloudtraderpro.in" target="_blank" class="badge-link badge-web">
+                    <a href="https://cloudtraderpro.in" target="_blank" class="badge-link badge-web">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
                             <circle cx="12" cy="12" r="10"></circle>

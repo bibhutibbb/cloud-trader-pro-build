@@ -595,13 +595,13 @@ If you do not own a custom domain name, you can contact the system administrator
 
 ## 📞 Support & Contact
 For setup assistance, questions, or requesting a custom subdomain, contact:
-*   **Official Website:** [cloudtraderpro.in](https://www.cloudtraderpro.in)
+*   **Official Website:** [cloudtraderpro.in](https://cloudtraderpro.in)
 *   **WhatsApp Support:** [Chat on WhatsApp (+91 7001041694)](https://wa.me/917001041694)
 
 ---
 
 ## ⚖️ License & Disclaimer
-**PROPRIETARY & CONFIDENTIAL:** This software is not open-source. Unauthorized distribution, copying, decompilation, or modification is strictly prohibited. Official Portal: [cloudtraderpro.in](https://www.cloudtraderpro.in)
+**PROPRIETARY & CONFIDENTIAL:** This software is not open-source. Unauthorized distribution, copying, decompilation, or modification is strictly prohibited. Official Portal: [cloudtraderpro.in](https://cloudtraderpro.in)
 
 **TRADING DISCLOSURE:** Algorithmic trading involves substantial risk of loss. The author and developers assume no liability for financial outcomes. Always trade responsibly.
 
