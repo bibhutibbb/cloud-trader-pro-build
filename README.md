@@ -503,19 +503,19 @@ If you want to protect your dashboard web portal with Cloudflare Access (forcing
 #### Option A: Two Subdomains (UI & API Isolation) — Recommended
 This is the cleanest approach. It exposes the browser UI on one subdomain and the automation API on another:
 1. **Cloudflare Tunnel Setup:** In your Cloudflare Tunnel dashboard, add two public hostnames pointing to the same local Nginx container port (e.g., `8002` on the host, which is mapped to port `80` inside the container):
-   * `ctp.shoonyatrader.in` -> `http://localhost:8002`
-   * `ctp-api.shoonyatrader.in` -> `http://localhost:8002`
+   * `ctp.cloudtraderpro.in` -> `http://localhost:8002`
+   * `ctp-api.cloudtraderpro.in` -> `http://localhost:8002`
 2. **Nginx Handling:** You do not need to modify Nginx configuration because Nginx is configured to listen to all incoming domains (`server_name localhost;` in `nginx.conf`) and proxy any unmatched paths to the FastAPI backend dynamically.
 3. **Cloudflare Access Policies:** Create two different Access Applications:
-   * **Dashboard App (`ctp.shoonyatrader.in`):** Set the policy action to **Allow** and assign email OTP, Google Auth, or SSO rules.
-   * **API App (`ctp-api.shoonyatrader.in`):** Set the policy action to **Service Auth** and bind it to your generated Service Token.
+   * **Dashboard App (`ctp.cloudtraderpro.in`):** Set the policy action to **Allow** and assign email OTP, Google Auth, or SSO rules.
+   * **API App (`ctp-api.cloudtraderpro.in`):** Set the policy action to **Service Auth** and bind it to your generated Service Token.
 4. **Usage:**
-   * **Browser Users:** Navigate to `https://ctp.shoonyatrader.in` and complete the browser-based login. Your browser session cookies (`CF_Authorization`) will automatically authorize all relative backend calls.
-   * **External Scripts:** Target your automated code (e.g., Python `requests`) at `https://ctp-api.shoonyatrader.in/api/...` and pass the `CF-Access-Client-Id` and `CF-Access-Client-Secret` headers. CORS issues are completely bypassed since external command-line clients do not enforce CORS policies.
+   * **Browser Users:** Navigate to `https://ctp.cloudtraderpro.in` and complete the browser-based login. Your browser session cookies (`CF_Authorization`) will automatically authorize all relative backend calls.
+   * **External Scripts:** Target your automated code (e.g., Python `requests`) at `https://ctp-api.cloudtraderpro.in/api/...` and pass the `CF-Access-Client-Id` and `CF-Access-Client-Secret` headers. CORS issues are completely bypassed since external command-line clients do not enforce CORS policies.
 
 #### Option B: Single Subdomain with Path-Based Policies
 If you prefer using a single subdomain:
-1. Create one Cloudflare Access Application for `ctp.shoonyatrader.in`.
+1. Create one Cloudflare Access Application for `ctp.cloudtraderpro.in`.
 2. Add a **Browser Allow** policy (OTP/Google) covering the entire domain.
 3. Add a **Service Auth Bypass** policy restricted to specific path rules: `api/*` and `ws/*`. Ensure your external scripts include the `CF-Access-Client-Id` and `CF-Access-Client-Secret` headers when calling those paths.
 
@@ -589,19 +589,19 @@ ssh -N -L 8002:localhost:8002 user@YOUR_SERVER_IP
 Now, simply open **`http://localhost:8002`** on your local machine's web browser.
 
 ### Option C: Request a Subdomain from the Developer/Admin (Easiest)
-If you do not own a custom domain name, you can contact the system administrator or developer to request a subdomain allocation (e.g., `yourname.shoonyatrader.in`). The developer can configure this subdomain to point securely to your Cloudflare Tunnel container.
+If you do not own a custom domain name, you can contact the system administrator or developer to request a subdomain allocation (e.g., `yourname.cloudtraderpro.in`). The developer can configure this subdomain to point securely to your Cloudflare Tunnel container.
 
 ---
 
 ## 📞 Support & Contact
 For setup assistance, questions, or requesting a custom subdomain, contact:
-*   **Official Website:** [Shoonyatrader.in](https://www.shoonyatrader.in)
+*   **Official Website:** [cloudtraderpro.in](https://www.cloudtraderpro.in)
 *   **WhatsApp Support:** [Chat on WhatsApp (+91 7001041694)](https://wa.me/917001041694)
 
 ---
 
 ## ⚖️ License & Disclaimer
-**PROPRIETARY & CONFIDENTIAL:** This software is not open-source. Unauthorized distribution, copying, decompilation, or modification is strictly prohibited. Official Portal: [Shoonyatrader.in](https://www.shoonyatrader.in)
+**PROPRIETARY & CONFIDENTIAL:** This software is not open-source. Unauthorized distribution, copying, decompilation, or modification is strictly prohibited. Official Portal: [cloudtraderpro.in](https://www.cloudtraderpro.in)
 
 **TRADING DISCLOSURE:** Algorithmic trading involves substantial risk of loss. The author and developers assume no liability for financial outcomes. Always trade responsibly.
 
