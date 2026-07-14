@@ -5,7 +5,9 @@ Write-Host "=========================================================" -Foregrou
 Write-Host ""
 
 $cmd = ""
-$commandFile = "cloudflare_tunnel_command.txt"
+$ScriptDir = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocation.MyCommand.Path }
+if (-not $ScriptDir) { $ScriptDir = "." }
+$commandFile = Join-Path $ScriptDir "cloudflare_tunnel_command.txt"
 
 if (Test-Path $commandFile) {
     # Read the whole file content
@@ -51,7 +53,8 @@ if ([string]::IsNullOrEmpty($token)) {
 }
 
 # Write token to the .env file in ASCII encoding to prevent formatting issues
-"TUNNEL_TOKEN=$token" | Out-File -FilePath .env -Encoding ascii
+$envFile = Join-Path $ScriptDir ".env"
+"TUNNEL_TOKEN=$token" | Out-File -FilePath $envFile -Encoding ascii
 Write-Host "[OK] Token successfully saved to .env file." -ForegroundColor Cyan
 
 # Create docker-compose.override.yml dynamically to add the cloudflare tunnel sidecar service
@@ -64,12 +67,14 @@ services:
     command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
 '@
 
-$overrideContent | Out-File -FilePath docker-compose.override.yml -Encoding ascii
+$overrideFile = Join-Path $ScriptDir "docker-compose.override.yml"
+$overrideContent | Out-File -FilePath $overrideFile -Encoding ascii
 Write-Host "[OK] Created docker-compose.override.yml with Cloudflare Tunnel sidecar." -ForegroundColor Cyan
 
 Write-Host "[*] Starting containers via Docker Compose..." -ForegroundColor Yellow
 Write-Host ""
 
+Set-Location $ScriptDir
 docker compose up -d
 
 Write-Host ""

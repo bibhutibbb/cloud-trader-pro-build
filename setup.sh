@@ -6,6 +6,10 @@ echo "        CLOUD TRADER PRO - DOCKER SETUP HELPER           "
 echo "========================================================="
 echo ""
 
+# Get script folder and change context to script directory
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd "$SCRIPT_DIR" || exit 1
+
 cmd=""
 command_file="cloudflare_tunnel_command.txt"
 
