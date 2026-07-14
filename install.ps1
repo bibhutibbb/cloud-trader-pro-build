@@ -44,7 +44,6 @@ Download-File "img/shoonya_scalper.ico" "img/shoonya_scalper.ico"
 
 # Download config template samples
 Download-File "configs/app_settings.json.sample" "configs/app_settings.json.sample"
-Download-File "configs/cf_secrets.json.sample" "configs/cf_secrets.json.sample"
 Download-File "configs/credentials.json.sample" "configs/credentials.json.sample"
 Download-File "configs/upstox_credentials.json.sample" "configs/upstox_credentials.json.sample"
 
