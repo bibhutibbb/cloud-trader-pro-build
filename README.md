@@ -8,7 +8,6 @@ Welcome to the **Cloud Trader Pro** installation guide. This document provides s
 Cloud Trader Pro is built on a **Headless Decoupled Architecture**:
 *   **Headless Backend (Server):** Runs 24/7 autonomously on a server or local PC, processing live market ticks and executing algorithms.
 *   **Web Dashboard:** Accessible via browser for remote monitoring.
-*   **Tkinter Desktop UI:** Runs locally on your PC for professional scalping and deep configuration.
 
 ---
 
@@ -100,7 +99,6 @@ Before running the container, configure the application settings and activate yo
 ```json
 {
     "dashboard_password": "your_secure_web_password",
-    "local_api_key": "shared_secret_for_tkinter_app",
     "active_broker": "flattrade", 
     "jwt_secret": "long_random_string_for_web_tokens",
     "session_timeout_minutes": 1440,
@@ -112,7 +110,6 @@ Before running the container, configure the application settings and activate yo
 
 #### ⚙️ Configuration Parameters Explained:
 *   **`dashboard_password`**: The password used to log in to the web browser dashboard interface. Choose a strong, unique password.
-*   **`local_api_key`**: A shared secret key used to authenticate and connect the local Tkinter desktop application securely with the remote server. Both the server's `app_settings.json` and the client's `cf_secrets.json` must share this exact key.
 *   **`active_broker`**: Specifies the broker to be used by the trading system. Supported values are `"flattrade"` or `"upstox"`.
 *   **`jwt_secret`**: A long random secret key used by the backend to sign web tokens (JSON Web Tokens) for the dashboard session. Change this to a secure random string (e.g. 32 characters) to secure your browser session tokens.
 *   **`session_timeout_minutes`**: The duration (in minutes) for which your login session remains active in the browser dashboard before requiring re-authentication. The default is set to `1440` minutes (exactly 24 hours / 1 day).
@@ -278,14 +275,7 @@ If you prefer running Cloud Trader Pro directly in Python without Docker, follow
     powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
     ```
 
-### Step 4: Install Tkinter & System Packages
-*   **Ubuntu Linux:**
-    ```bash
-    sudo apt update
-    sudo apt install -y python3-tk
-    ```
-
-### Step 5: Synchronize Dependencies & Run
+### Step 4: Synchronize Dependencies & Run
 Navigate to the root project directory and run:
 ```bash
 # Sync virtual environment automatically using uv (skipping development tools)
@@ -527,42 +517,7 @@ If you change the external port mapping in your `docker-compose.yml` (for exampl
 * **No local configuration files needed:** You do not need a copy of `nginx.conf` on your AWS server host machine. It is copied inside the Docker image during the build process (`Dockerfile.nginx`) and runs entirely within the frontend container.
 * **FastAPI Optimization:** When running behind Nginx, it is highly recommended to edit `configs/app_settings.json` and set `"serve_static_files": false`. This tells the FastAPI server to stop wasting CPU cycles handling static assets, delegating static delivery entirely to Nginx.
 
----
 
-### Step 7: Starting & Connecting the Local Desktop Client (Tkinter App)
-The Tkinter desktop application (`main.py`) is designed to run on a **local machine (Windows PC or local Linux Desktop)**. It cannot display a graphical interface if run directly on a headless Ubuntu Linux Server without a desktop environment; however, it can connect remotely to a backend hosted on an Ubuntu Server.
-
-> [!NOTE]
-> A standalone `.exe` package for Windows is planned for a future release. Currently, the Tkinter app is run using Python. To connect the desktop client remotely (either via Python or the future `.exe` package), you must configure connection secrets.
-
-#### **Starting the Tkinter App:**
-Navigate to the project root directory on your local machine and run:
-```bash
-uv run python main.py
-```
-
-#### **Configuring Connection Secrets (`configs/cf_secrets.json`):**
-Create or edit `configs/cf_secrets.json` in your local installation's `configs` folder to set the backend URL and Cloudflare Access tokens:
-
-```json
-{
-    "base_url": "https://trader.yourdomain.com",
-    "ws_url": "wss://trader.yourdomain.com/ws",
-    "use_cloudflare": true,
-    "local_api_key": "must_match_app_settings_on_server",
-    "CF-Access-Client-Id": "your-cloudflare-client-id.access",
-    "CF-Access-Client-Secret": "your-cloudflare-client-secret-hex-string"
-}
-```
-
-*   **`base_url` / `ws_url`**: Point these to your server URL:
-    *   **Local Python setup / SSH Port Forwarding:** Use `"base_url": "http://localhost:8002"` and `"ws_url": "ws://localhost:8002/ws"` (with `"use_cloudflare": false`).
-    *   **Cloudflare Tunnel Remote setup:** Use `"base_url": "https://trader.yourdomain.com"` and `"ws_url": "wss://trader.yourdomain.com/ws"` (with `"use_cloudflare": true`).
-*   **`local_api_key`**: This **must** match the `local_api_key` configured in the server's `app_settings.json`.
-*   **`CF-Access-Client-Id` & `CF-Access-Client-Secret`**: If your remote server is behind a Cloudflare Tunnel with active Zero Trust Access Policies, you must generate a **Service Token** in your Cloudflare dashboard and paste the Client ID and Client Secret here. This allows the Tkinter client to bypass the browser-based login gate and connect securely.
-*   **`use_cloudflare`**: Set to `true` if accessing via Cloudflare Tunnel, or `false` if connecting via `localhost` (e.g., using SSH port forwarding).
-
----
 
 ## 🔒 Alternative Access Methods (Without a Domain)
 If you do not own a custom domain, you can access the server using these alternative strategies:
