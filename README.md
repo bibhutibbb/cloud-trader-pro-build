@@ -11,7 +11,7 @@ Cloud Trader Pro is built on a **Headless Decoupled Architecture**:
 
 ---
 
-## ⚡ Option 1: Docker Deployment (Recommended)
+## ⚡ Docker Deployment (Recommended)
 Docker is the easiest and most secure way to run the Cloud Trader Pro backend. It packages the application, dependencies, and runtime together so you do not need to install Python or manage packages manually.
 
 ### Step 1: Install Docker
@@ -149,30 +149,6 @@ Docker will automatically pull the latest backend and frontend image layers from
 
 ---
 
-### Alternative: Offline Deployment (From Distributed `.tar` File)
-If your developer provided you with a packaged offline container image file (e.g. `cloudtraderpro_v1.tar`):
-
-1. **Load the image file into Docker:**
-   *   **Ubuntu / Linux:**
-       ```bash
-       sudo docker load -i cloudtraderpro_v1.tar
-       ```
-   *   **Windows (PowerShell):**
-       ```powershell
-       docker load -i cloudtraderpro_v1.tar
-       ```
-2. **Start the server:**
-   *   **Ubuntu / Linux:**
-       ```bash
-       sudo docker compose up -d
-       ```
-   *   **Windows (PowerShell):**
-       ```powershell
-       docker compose up -d
-       ```
-
----
-
 ### Step 5: Stopping & Removing Containers
 If you need to stop the server or clean up the container resources:
 
@@ -206,20 +182,22 @@ If you need to stop the server or clean up the container resources:
         docker rmi ghcr.io/bibhutibbb/cloudtraderpro-backend:latest ghcr.io/bibhutibbb/cloudtraderpro-frontend:latest
         ```
 
----
-
 ### Step 5: Updating the Docker Container (When a New Version is Released)
 
-When a new version of the Cloud Trader Pro image is uploaded to Docker Hub, you can update your setup easily without losing your configurations, databases, or logs (since they are stored outside the container in your host directories).
+When a new version of the Cloud Trader Pro image is released, you can update your setup easily. Since your configurations and database logs are stored outside the container on your host, you will never lose your data.
 
-#### **The Correct Update Command Sequence:**
-Navigate to your deployment directory (e.g., `/opt/cloudtraderpro` on Linux or `C:\CloudTraderPro` on Windows) and run:
+You can update using either the **Automated (Watchtower)** method or the **Manual** method:
+
+#### **Method A: Automated Updates (Watchtower)**
+The default `docker-compose.yml` configuration runs a sidecar container called **Watchtower**. Watchtower automatically polls the registry in the background, checks for updates, pulls the latest image layers, and restarts the containers seamlessly with zero manual intervention.
+
+#### **Method B: Manual Update**
+If you prefer to trigger updates manually, navigate to your deployment directory (e.g., `/opt/cloudtraderpro` on Linux or `C:\CloudTraderPro` on Windows) and run:
 
 *   **Linux / Ubuntu:**
     ```bash
     cd /opt/cloudtraderpro
-    sudo docker compose pull
-    sudo docker compose up -d
+    sudo docker compose pull && sudo docker compose up -d
     ```
 *   **Windows (PowerShell):**
     ```powershell
@@ -228,62 +206,16 @@ Navigate to your deployment directory (e.g., `/opt/cloudtraderpro` on Linux or `
     docker compose up -d
     ```
 
-> [!TIP]
-> **Chaining commands on Linux:** If you wish to chain the down and up commands in a single line on Linux, remember that the `sudo` privilege does not carry over across the `&&` operator automatically. You must prepend `sudo` to **both** commands:
-> ```bash
-> sudo docker compose down && sudo docker compose up -d
-> ```
-> Omitting `sudo` on the second command will result in a `Permission Denied` socket error.
-
-
 #### **How it works:**
-*   `docker compose pull` downloads the latest image layers from Docker Hub in the background while the application is still running.
-*   `docker compose up -d` checks the changes, stops the container, recreates it using the new image, and starts it up—all in less than 2 seconds. You do **not** need to manually run `docker compose stop` or `docker compose down` before pulling.
+*   `docker compose pull` downloads the latest image layers from the registry in the background while the application is still running.
+*   `docker compose up -d` stops the old container, recreates it using the new image, and starts it up—all in less than 2 seconds.
 
 #### **Will Custom Settings (like Custom Ports or API Keys) Be Overwritten?**
-*   **Your API Keys and Credentials:** Completely safe. Your local `configs/app_settings.json` is never modified or overwritten by image updates.
-*   **Custom Host Ports (e.g., `8003:8002` in `docker-compose.yml`):** Completely safe *as long as you update using the command sequence above*. Because the image update only downloads the container's interior, your local `docker-compose.yml` file is not replaced.
-*   **Caution:** If you update by downloading and re-running the full installer script (`install.sh` / `install.ps1`), it will fetch a clean `docker-compose.yml` from GitHub and overwrite your local file, resetting your mapped host ports back to the default `8002`. If you do this, you will need to re-apply your port edits (e.g. `8003:8002`) inside the `docker-compose.yml` file.
+*   **Your API Keys and Credentials:** Completely safe. Your local `configs/app_settings.json` is never overwritten by image updates.
+*   **Custom Host Ports (e.g. `8500:80`):** Completely safe *as long as you update using the command sequence above*. Since the image update only pulls the container's interior, your local `docker-compose.yml` file is not replaced.
+*   **Caution:** If you run the full installer script (`install.sh` / `install.ps1`) again, it will download a clean `docker-compose.yml` from GitHub and overwrite your local modifications. If you do this, you will need to re-apply your custom port configurations inside the `docker-compose.yml` file.
 
 ---
-
-## 🐍 Option 2: Local Python Development Deployment (Alternative)
-
-If you prefer running Cloud Trader Pro directly in Python without Docker, follow these instructions.
-
-> [!IMPORTANT]
-> **Source Code Distribution Notice:** 
-> The core source code files are proprietary and are not hosted on the public GitHub build repository. To deploy locally, you must first obtain the official application distribution package (ZIP file) by contacting the developer directly.
-
-### Step 1: Obtain & Extract the Application Package
-1. Contact the developer to request the official Cloud Trader Pro distribution ZIP file.
-2. Once received, extract the ZIP archive into your desired deployment folder (e.g. `C:\CloudTraderPro` or `/opt/cloudtraderpro`).
-3. Open your terminal or PowerShell inside the extracted directory to run the following setup commands.
-
-### Step 2: Install Prerequisites
-*   Python 3.12 installed on your system.
-*   The **`uv`** package manager (highly recommended for faster dependency resolution).
-
-### Step 3: Install `uv` Package Manager
-*   **Linux / macOS:**
-    ```bash
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-    source $HOME/.local/bin/env
-    ```
-*   **Windows (PowerShell):**
-    ```powershell
-    powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-    ```
-
-### Step 4: Synchronize Dependencies & Run
-Navigate to the root project directory and run:
-```bash
-# Sync virtual environment automatically using uv (skipping development tools)
-uv sync --no-dev
-
-# Run the backend server
-uv run python run_server.py
-```
 
 ---
 
@@ -294,14 +226,7 @@ If you have purchased or generated historical backtesting data (saved as `.parqu
 *   **Ubuntu Linux (Docker Server):** `/opt/cloudtraderpro/datafetcher/historicaldatas/`
 *   **Windows PC (Local Setup):** `C:\CloudTraderPro\datafetcher\historicaldatas\`
 
-### **☁️ Cloud Synchronization from R2 (Sync Dashboard)**
-If your subscription package includes Cloud R2 data access, you do not need to manually upload parquet files using SFTP/SCP. Instead, you can sync them directly inside the web dashboard:
-1. Open the **Historical Data Viewer** page in your browser.
-2. Click the **Sync Data** button in the control bar to open the **Cloud Data Synchronizer** modal.
-3. Select the target **Year**, choose a specific **Symbol** (or select `[ALL SYMBOLS]` to download everything), select the **Data Types** (`Spot`, `Futures`, `Options`), and click **Start Synchronization**.
-4. The system will query the Cloudflare R2 worker, calculate the diff, skip files that are already locally cached, and download the rest in optimized background batches with a live progress bar.
 
----
 
 ### **How to Upload the Files to a Linux VPS:**
 
@@ -394,7 +319,7 @@ uv add "numpy<2.0" "pandas<2.3"
 ```
 
 **Solution for Docker Setup:**
-End users cannot rebuild the Docker image themselves. If you run the Docker setup on an older CPU and encounter this compatibility crash, you must switch to the **Local Python Development Deployment (Option 2)** instead and run the downgrade command (`uv add "numpy<2.0" "pandas<2.3"`) in that environment.
+End users cannot rebuild the Docker image themselves. If you run the Docker setup on an older CPU and encounter this compatibility crash, please contact the developer to request a compatibility container image compiled for older CPU architectures.
 
 ---
 
@@ -431,6 +356,9 @@ Use these common commands to inspect and manage your running services:
 
 ## 🌐 Networking & Cloudflare Tunnel Configuration
 The application requires a secure HTTPS connection for both UI access and Broker Authentication callbacks. A **Cloudflare Tunnel** is the safest way to expose the application to the internet without opening firewall ports.
+
+> [!NOTE]
+> **Direct VPS Installation Option:** If you prefer not to run the Tunnel sidecar container inside Docker, you can install the `cloudflared` client directly on your host VPS operating system and configure it to route HTTPS traffic directly to the local host port `8002` (where the new Vue frontend is served).
 
 ### Step 1: Create a Tunnel in Cloudflare Zero Trust
 1. Log into your [Cloudflare Zero Trust Dashboard](https://one.dash.cloudflare.com/).
@@ -469,7 +397,9 @@ The setup script will automatically extract the token, update your `.env` config
     *   **Subdomain:** `trader` (or any subdomain of your choice, e.g. `trader.yourdomain.com`).
     *   **Domain:** Select your registered domain.
     *   **Type:** `HTTP`
-    *   **URL:** `frontend-nginx:80` (routing requests internally inside the Docker network to the Nginx frontend container).
+    *   **URL:** Configure the target URL destination:
+        *   **If using Docker Tunnel Sidecar:** Set **URL** to `frontend-nginx:80` (routing requests internally inside the private Docker network to Nginx).
+        *   **If running `cloudflared` directly on your host VPS:** Set **URL** to `localhost:8002` (routing requests directly to Nginx mapped on your host).
 4. Save the Hostname configuration.
 
 ---
@@ -487,35 +417,13 @@ The setup script will automatically extract the token, update your `.env` config
 
 ---
 
-### Step 5: Multi-Subdomain API Access with Service Auth (Optional)
-If you want to protect your dashboard web portal with Cloudflare Access (forcing identity provider or email logins for browser users) while still allowing external automated trading scripts or API clients to access the backend directly, you can set up Service Token Auth.
 
-#### Option A: Two Subdomains (UI & API Isolation) — Recommended
-This is the cleanest approach. It exposes the browser UI on one subdomain and the automation API on another:
-1. **Cloudflare Tunnel Setup:** In your Cloudflare Tunnel dashboard, add two public hostnames pointing to the same local Nginx container port (e.g., `8002` on the host, which is mapped to port `80` inside the container):
-   * `ctp.cloudtraderpro.in` -> `http://localhost:8002`
-   * `ctp-api.cloudtraderpro.in` -> `http://localhost:8002`
-2. **Nginx Handling:** You do not need to modify Nginx configuration because Nginx is configured to listen to all incoming domains (`server_name localhost;` in `nginx.conf`) and proxy any unmatched paths to the FastAPI backend dynamically.
-3. **Cloudflare Access Policies:** Create two different Access Applications:
-   * **Dashboard App (`ctp.cloudtraderpro.in`):** Set the policy action to **Allow** and assign email OTP, Google Auth, or SSO rules.
-   * **API App (`ctp-api.cloudtraderpro.in`):** Set the policy action to **Service Auth** and bind it to your generated Service Token.
-4. **Usage:**
-   * **Browser Users:** Navigate to `https://ctp.cloudtraderpro.in` and complete the browser-based login. Your browser session cookies (`CF_Authorization`) will automatically authorize all relative backend calls.
-   * **External Scripts:** Target your automated code (e.g., Python `requests`) at `https://ctp-api.cloudtraderpro.in/api/...` and pass the `CF-Access-Client-Id` and `CF-Access-Client-Secret` headers. CORS issues are completely bypassed since external command-line clients do not enforce CORS policies.
 
-#### Option B: Single Subdomain with Path-Based Policies
-If you prefer using a single subdomain:
-1. Create one Cloudflare Access Application for `ctp.cloudtraderpro.in`.
-2. Add a **Browser Allow** policy (OTP/Google) covering the entire domain.
-3. Add a **Service Auth Bypass** policy restricted to specific path rules: `api/*` and `ws/*`. Ensure your external scripts include the `CF-Access-Client-Id` and `CF-Access-Client-Secret` headers when calling those paths.
-
----
-
-### Step 6: Port Mapping & Nginx Internal Routing Architecture
-If you change the external port mapping in your `docker-compose.yml` (for example, setting `8003:80` on the host to avoid local port allocation conflicts):
-* **No internal config changes are needed:** Port `8003` is mapped at the Docker host level. The Nginx proxy container still listens on port `80` internally, and Uvicorn still listens on `8002` inside the backend container. The hardcoded `backend-api:8002` references inside `nginx.conf` do not need to change because container communication happens entirely on the internal Docker network.
-* **No local configuration files needed:** You do not need a copy of `nginx.conf` on your AWS server host machine. It is copied inside the Docker image during the build process (`Dockerfile.nginx`) and runs entirely within the frontend container.
-* **FastAPI Optimization:** When running behind Nginx, it is highly recommended to edit `configs/app_settings.json` and set `"serve_static_files": false`. This tells the FastAPI server to stop wasting CPU cycles handling static assets, delegating static delivery entirely to Nginx.
+### Step 5: Port Mapping & Nginx Internal Routing Architecture
+If you change the external port mapping in your `docker-compose.yml` (for example, mapping port `8500:80` on the host instead of `8002:80` due to a port conflict):
+* **No internal configurations need to change:** The Nginx container still listens on port `80` internally and proxies to `backend-api` on port `8002` inside the private Docker network. Changing the host-side port mapping does not affect Nginx or FastAPI internal logic.
+* **No local Nginx config file is needed:** You do not need to maintain a local copy of `nginx.conf` on your host server. The configuration is already packaged inside the pre-built Nginx container image.
+* **FastAPI Optimization:** When running behind Nginx, set `"serve_static_files": false` in `configs/app_settings.json`. This tells the backend to stop serving static files, freeing up CPU cycles since Nginx handles all static assets directly.
 
 
 
