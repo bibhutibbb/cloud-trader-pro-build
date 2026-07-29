@@ -40,7 +40,7 @@ Download-File "setup.bat" "setup.bat"
 Download-File "Installation.html" "Installation.html"
 
 # Download image assets (only favicon is needed for Installation.html)
-Download-File "img/shoonya_scalper.ico" "img/shoonya_scalper.ico"
+Download-File "img/cloud-trader-pro.ico" "img/cloud-trader-pro.ico"
 
 # Download config template samples
 Download-File "configs/app_settings.json.sample" "configs/app_settings.json.sample"
