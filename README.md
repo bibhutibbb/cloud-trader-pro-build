@@ -114,16 +114,11 @@ Before running the container, configure the application settings and activate yo
 *   **`jwt_secret`**: A long random secret key used by the backend to sign web tokens (JSON Web Tokens) for the dashboard session. Change this to a secure random string (e.g. 32 characters) to secure your browser session tokens.
 *   **`session_timeout_minutes`**: The duration (in minutes) for which your login session remains active in the browser dashboard before requiring re-authentication. The default is set to `1440` minutes (exactly 24 hours / 1 day).
 *   **`server_port`**: The port number on which the FastAPI backend web server runs and listens for incoming requests. The default is `8002`.
-*   **`license_key`**: The cryptographically signed license key generated for your account. This is required to unlock the trading engine and activate automated strategies.
+*   **`license_key`**: The cryptographically signed license key generated for your account (obtainable from [cloudtraderpro.in](https://cloudtraderpro.in)). This is required to unlock the trading engine and activate automated strategies. If not set in `app_settings.json` beforehand, the user will be prompted to enter the license key in the web dashboard on the first startup of the application.
 *   **`serve_static_files`**: Configures whether the FastAPI backend serves static files (`true`) or delegates this role entirely to an external Nginx server (`false`). In a professional production environment behind Nginx, set this to `false`.
 
 > [!IMPORTANT]
 > Change the default passwords/secrets to highly secure, random strings to prevent unauthorized access. The `license_key` is required to authenticate and unlock core trading routines.
-
-#### 🔑 License Activation & UI Settings Banner:
-*   **Locked Setup Mode:** If the license key is missing, invalid, or expired on server boot, all core trading functions and API routes are locked (returning `402 Payment Required`). 
-*   **Browser Activation:** In Locked Setup Mode, opening the web dashboard in your browser shows an interactive **License Activation Page** where you can paste your license key and click **Activate** to dynamically unlock the server without a restart.
-*   **License Validity Banner:** Once activated, a persistent license validity banner will appear at the top of the **System Settings** tab displaying the active status and the dynamically fetched plan name (e.g. `"Cloud Trader Pro - Ultimate"`).
 
 ---
 
@@ -186,10 +181,13 @@ If you need to stop the server or clean up the container resources:
 
 When a new version of the Cloud Trader Pro image is released, you can update your setup easily. Since your configurations and database logs are stored outside the container on your host, you will never lose your data.
 
-You can update using either the **Automated (Watchtower)** method or the **Manual** method:
+You can update using either the **Automatic Dashboard** method or the **Manual CLI** method:
 
-#### **Method A: Automated Updates (Watchtower)**
-The default `docker-compose.yml` configuration runs a sidecar container called **Watchtower**. Watchtower automatically polls the registry in the background, checks for updates, pulls the latest image layers, and restarts the containers seamlessly with zero manual intervention.
+#### **Method A: Automatic Updates (Dashboard)**
+Cloud Trader Pro is designed to automatically update itself in the background when a new version is released:
+*   **Update Banners**: When a new update starts installing, a status notification banner will appear at the top of your web dashboard showing the update progress.
+*   **Manual Dashboard Trigger**: You can check for updates manually or trigger them instantly by navigating to the **Account Settings** tab in your web dashboard and clicking **Check for Updates**.
+*   **No Data Loss**: Your settings, configurations, and logs remain completely intact as they are stored on the host machine.
 
 #### **Method B: Manual Update**
 If you prefer to trigger updates manually, navigate to your deployment directory (e.g., `/opt/cloudtraderpro` on Linux or `C:\CloudTraderPro` on Windows) and run:
@@ -214,39 +212,6 @@ If you prefer to trigger updates manually, navigate to your deployment directory
 *   **Your API Keys and Credentials:** Completely safe. Your local `configs/app_settings.json` is never overwritten by image updates.
 *   **Custom Host Ports (e.g. `8500:80`):** Completely safe *as long as you update using the command sequence above*. Since the image update only pulls the container's interior, your local `docker-compose.yml` file is not replaced.
 *   **Caution:** If you run the full installer script (`install.sh` / `install.ps1`) again, it will download a clean `docker-compose.yml` from GitHub and overwrite your local modifications. If you do this, you will need to re-apply your custom port configurations inside the `docker-compose.yml` file.
-
----
-
----
-
-## 📊 Pre-loading Historical Backtesting Data (Parquet Files)
-If you have purchased or generated historical backtesting data (saved as `.parquet` files), you can easily pre-load them into the system. This allows immediate backtesting without having to fetch the files over the live broker API.
-
-### **Where to Place the Files:**
-*   **Ubuntu Linux (Docker Server):** `/opt/cloudtraderpro/datafetcher/historicaldatas/`
-*   **Windows PC (Local Setup):** `C:\CloudTraderPro\datafetcher\historicaldatas\`
-
-
-
-### **How to Upload the Files to a Linux VPS:**
-
-#### **Method A: SFTP (FileZilla / WinSCP) — Recommended (Graphical)**
-1.  Download and install a free SFTP client (like **FileZilla** or **WinSCP**).
-2.  Connect to your server using your SSH credentials (IP, username `ubuntu`, and private key file).
-3.  On the remote server, navigate to: `/opt/cloudtraderpro/datafetcher/historicaldatas/`.
-4.  Drag and drop your Parquet files from your local computer into that folder.
-
-#### **Method B: Command Line (SCP)**
-From your local machine's terminal, copy the files directly using:
-```bash
-scp -i /path/to/key.pem -r /local/path/to/data/*.parquet ubuntu@YOUR_VPS_IP:/opt/cloudtraderpro/datafetcher/historicaldatas/
-```
-
----
-
-### **⚠️ Critical Guidelines:**
-1.  **Do Not Rename Files:** The backtest engine expects files to be named exactly according to their symbol/token names (e.g. `NSE_26000.parquet`). Changing the names will make them invisible to the backtester.
-2.  **No Server Restart Required:** Because directories are volume-bound, files are detected instantly the moment they are placed in the folder.
 
 ---
 
@@ -309,21 +274,7 @@ Discord uses incoming webhooks to push rich embedded messages directly into a sp
 
 ## 🔧 Troubleshooting & Special Configurations
 
-### ⚠️ Issue 1: "Illegal Instruction" or NumPy/Pandas crashes on older CPUs
-If your server or local PC runs on an older CPU model (which lacks newer AVX/AVX2 instruction sets), the latest versions of NumPy and Pandas may fail and throw errors. 
-
-**Solution for Local Python Setup:**
-Downgrade NumPy and Pandas to compatible versions by running:
-```bash
-uv add "numpy<2.0" "pandas<2.3"
-```
-
-**Solution for Docker Setup:**
-End users cannot rebuild the Docker image themselves. If you run the Docker setup on an older CPU and encounter this compatibility crash, please contact the developer to request a compatibility container image compiled for older CPU architectures.
-
----
-
-### ⚠️ Issue 2: SSL Validation / Connection Errors on Windows
+### ⚠️ Issue 1: SSL Validation / Connection Errors on Windows
 If Windows fails to connect or throws SSL verification errors during broker handshake calls:
 
 **Solution:**
@@ -336,7 +287,7 @@ del roots.sst
 
 ---
 
-### ⚠️ Issue 3: Accessing Container Logs & Managing the Service
+### ⚠️ Issue 2: Accessing Container Logs & Managing the Service
 Use these common commands to inspect and manage your running services:
 
 *   **View Live Logs:**
@@ -399,7 +350,7 @@ The setup script will automatically extract the token, update your `.env` config
     *   **Type:** `HTTP`
     *   **URL:** Configure the target URL destination:
         *   **If using Docker Tunnel Sidecar:** Set **URL** to `frontend-nginx:80` (routing requests internally inside the private Docker network to Nginx).
-        *   **If running `cloudflared` directly on your host VPS:** Set **URL** to `localhost:8002` (routing requests directly to Nginx mapped on your host).
+        *   **If running `cloudflared` directly on your host VPS:** Set **URL** to `localhost:8002` (routing requests directly to Nginx mapped on your host). (Note: If you already have `cloudflared` installed on your server, you can just point the tunnel to `localhost:8002` directly).
 4. Save the Hostname configuration.
 
 ---

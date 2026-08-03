@@ -685,10 +685,6 @@
                             class="nav-text">Architecture Overview</span></a></li>
                 <li class="nav-item" data-target="docker-deploy"><a href="#docker-deploy"><span class="nav-text">Docker
                             Deployment</span></a></li>
-                <li class="nav-item" data-target="python-deploy"><a href="#python-deploy"><span class="nav-text">Local
-                            Python setup</span></a></li>
-                <li class="nav-item" data-target="historical-data"><a href="#historical-data"><span
-                            class="nav-text">Importing Data</span></a></li>
                 <li class="nav-item" data-target="notifications"><a href="#notifications"><span
                             class="nav-text">Notification Webhooks</span></a></li>
                 <li class="nav-item" data-target="troubleshooting"><a href="#troubleshooting"><span
@@ -742,7 +738,7 @@
                         <line x1="6" y1="6" x2="6.01" y2="6"></line>
                         <line x1="6" y1="18" x2="6.01" y2="18"></line>
                     </svg>
-                    Option 1: Docker Deployment (Recommended)
+                    Docker Deployment (Recommended)
                 </h2>
                 <p>Using Docker encapsulates the application, libraries, and runtime environment. It eliminates the need
                     to manually install Python or configure dependencies on the host system.</p>
@@ -927,8 +923,8 @@ sudo nano configs/app_settings.json</code></pre>
                         <code>8002</code>.
                     </li>
                     <li style="margin-bottom: 0.5rem;"><strong><code>license_key</code>:</strong> The cryptographically
-                        signed license key generated for your account. This is required to unlock the trading engine and
-                        activate automated strategies.</li>
+                        signed license key generated for your account (obtainable from <a href="https://cloudtraderpro.in" target="_blank">cloudtraderpro.in</a>). This is required to unlock the trading engine and
+                        activate automated strategies. If not set in <code>app_settings.json</code> beforehand, the user will be prompted to enter the license key in the web dashboard on the first startup of the application.</li>
                     <li style="margin-bottom: 0;"><strong><code>serve_static_files</code>:</strong> Configures whether
                         the FastAPI backend serves static files (<code>true</code>) or delegates this entirely to Nginx
                         (<code>false</code>). Set this to <code>false</code> in production.</li>
@@ -952,23 +948,6 @@ sudo nano configs/app_settings.json</code></pre>
                     </p>
                 </div>
 
-                <h3>🔑 License Activation & UI Settings Banner</h3>
-                <p>Cloud Trader Pro features an integrated offline/online licensing manager:</p>
-                <ul
-                    style="margin: 0.5rem 0 1.5rem 1.25rem; font-size: 0.95rem; color: var(--text-muted); list-style-type: disc;">
-                    <li style="margin-bottom: 0.5rem;"><strong>Locked Setup Mode:</strong> If the license key is
-                        missing, invalid, or expired on server boot, all core trading functions and API routes are
-                        locked (returning <code>402 Payment Required</code>).</li>
-                    <li style="margin-bottom: 0.5rem;"><strong>Browser Activation:</strong> In Locked Setup Mode,
-                        opening the web dashboard in your browser shows an interactive <strong>License Activation
-                            Page</strong> where you can paste your license key and click <strong>Activate</strong> to
-                        dynamically unlock the server without a restart.</li>
-                    <li style="margin-bottom: 0;"><strong>License Validity Banner:</strong> Once activated, a persistent
-                        license validity banner will appear at the top of the <strong>System Settings</strong> tab
-                        displaying the active status and the dynamically fetched plan name (e.g.
-                        <code>"Cloud Trader Pro - Ultimate"</code>).
-                    </li>
-                </ul>
 
                 <h3>4. Boot and Manage the Server (Docker Hub)</h3>
                 <p>The provided <code>docker-compose.yml</code> file is preconfigured to run a multi-container stack:
@@ -1005,33 +984,7 @@ sudo nano configs/app_settings.json</code></pre>
                     </div>
                 </div>
 
-                <h3>5. Alternative: Loading via Distributed .tar File (Offline Setup)</h3>
-                <p>If you received an offline container package (e.g., <code>cloudtraderpro_v1.tar</code>) instead of
-                    pulling from Docker Hub, load it into Docker first before starting:</p>
-                <div class="subtabs-container">
-                    <div class="subtab-headers">
-                        <button class="subtab-header active" data-sub="load-ubuntu">Ubuntu Linux</button>
-                        <button class="subtab-header" data-sub="load-windows">Windows (PowerShell)</button>
-                    </div>
-                    <div class="subtab-content active" id="load-ubuntu">
-                        <div class="code-container">
-                            <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn"
-                                    onclick="copyCode(this)">Copy</button></div>
-                            <pre><code>sudo docker load -i cloudtraderpro_v1.tar
-sudo docker compose up -d</code></pre>
-                        </div>
-                    </div>
-                    <div class="subtab-content" id="load-windows">
-                        <div class="code-container">
-                            <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn"
-                                    onclick="copyCode(this)">Copy</button></div>
-                            <pre><code>docker load -i cloudtraderpro_v1.tar
-docker compose up -d</code></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <h3>6. Stopping & Removing Containers</h3>
+                <h3>5. Stopping & Removing Containers</h3>
                 <p>If you need to stop the server or clean up container resources, select your OS for the appropriate
                     commands:</p>
                 <div class="subtabs-container">
@@ -1085,40 +1038,66 @@ docker rmi ghcr.io/bibhutibbb/cloudtraderpro-backend:latest ghcr.io/bibhutibbb/c
 
                 <hr style="margin: 2.5rem 0; border: 0; border-top: 1px solid var(--panel-border);" />
 
-                <h3>Step 5: Updating the Docker Container (When a New Version is Released)</h3>
-                <p>When a new version of the Cloud Trader Pro image is uploaded to Docker Hub, you can update your setup
-                    easily without losing your configurations, databases, or logs (since they are stored outside the
-                    container in your host directories).</p>
+                <h3>6. Updating the Docker Container (When a New Version is Released)</h3>
+                <p>When a new version of the Cloud Trader Pro image is uploaded to GitHub Container Registry, you can update your setup easily. Since configuration files, databases, and logs are stored on the host, you will never lose your data.</p>
 
-                <div class="subtabs-container" style="margin-top: 1.5rem;">
-                    <div class="subtab-headers">
-                        <button class="subtab-header active" data-sub="update-ubuntu">Ubuntu Linux Server</button>
-                        <button class="subtab-header" data-sub="update-windows">Windows PC</button>
+                <p>You can choose between automated or manual updates:</p>
+
+                <div class="tabs-container" style="margin-top: 1.5rem;">
+                    <div class="tab-headers">
+                        <button class="tab-header active" onclick="switchTab(event, 'update-auto')">Automatic Updates (Dashboard)</button>
+                        <button class="tab-header" onclick="switchTab(event, 'update-manual')">Manual Updates (CLI)</button>
                     </div>
 
-                    <div class="subtab-content active" id="update-ubuntu">
-                        <p>Navigate to your deployment directory and run the standard update sequence:</p>
-                        <div class="code-container">
-                            <div class="code-header">
-                                <span class="code-lang">bash</span>
-                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                            </div>
-                            <pre><code>cd /opt/cloudtraderpro
+                    <div class="tab-contents">
+                        <!-- Automated Updates Tab -->
+                        <div class="tab-content active" id="update-auto">
+                            <h4 style="color: #ffffff; margin-bottom: 0.75rem;">Automatic Background Updates (Recommended)</h4>
+                            <p>Cloud Trader Pro is designed to update itself automatically in the background when a new version is released:</p>
+                            <ul style="margin: 0.5rem 0 1rem 1.25rem; font-size: 0.95rem; color: var(--text-muted); list-style-type: disc;">
+                                <li style="margin-bottom: 0.4rem;"><strong>Update Banners:</strong> When a new update is being downloaded and installed, a notification banner will appear at the top of your web dashboard to keep you updated on the progress.</li>
+                                <li style="margin-bottom: 0.4rem;"><strong>Manual Dashboard Checks:</strong> You can manually check for new updates or force-install them immediately by navigating to the <strong>Account Settings</strong> tab in your web dashboard and clicking **Check for Updates**.</li>
+                                <li style="margin-bottom: 0;"><strong>Safe and Secure:</strong> Your configuration files, active keys, and logs are kept completely untouched during updates since they are stored directly on the host machine.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Manual Updates Tab -->
+                        <div class="tab-content" id="update-manual">
+                            <h4 style="color: #ffffff; margin-bottom: 0.75rem;">Manual Updates</h4>
+                            <p>To manually trigger an update, select your operating system and execute the pull and recreate sequence:</p>
+                            
+                            <div class="subtabs-container" style="margin-top: 1rem;">
+                                <div class="subtab-headers">
+                                    <button class="subtab-header active" data-sub="update-ubuntu">Ubuntu Linux Server</button>
+                                    <button class="subtab-header" data-sub="update-windows">Windows PC</button>
+                                </div>
+
+                                <div class="subtab-content active" id="update-ubuntu">
+                                    <p>Navigate to your deployment directory and run:</p>
+                                    <div class="code-container">
+                                        <div class="code-header">
+                                            <span class="code-lang">bash</span>
+                                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                                        </div>
+                                        <pre><code>cd /opt/cloudtraderpro
 sudo docker compose pull
 sudo docker compose up -d</code></pre>
-                        </div>
-                    </div>
+                                    </div>
+                                </div>
 
-                    <div class="subtab-content" id="update-windows">
-                        <p>Open PowerShell, navigate to your deployment directory, and pull/start the new container:</p>
-                        <div class="code-container">
-                            <div class="code-header">
-                                <span class="code-lang">powershell</span>
-                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-                            </div>
-                            <pre><code>cd C:\CloudTraderPro
+                                <div class="subtab-content" id="update-windows">
+                                    <p>Open PowerShell and run:</p>
+                                    <div class="code-container">
+                                        <div class="code-header">
+                                            <span class="code-lang">powershell</span>
+                                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                                        </div>
+                                        <pre><code>cd C:\CloudTraderPro
 docker compose pull
 docker compose up -d</code></pre>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1172,208 +1151,6 @@ docker compose up -d</code></pre>
                 </div>
             </section>
 
-            <!-- Section 3: Local Python Setup -->
-            <section id="python-deploy">
-                <h2>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                        <line x1="12" y1="11" x2="12" y2="17"></line>
-                        <line x1="9" y1="14" x2="15" y2="14"></line>
-                    </svg>
-                    Option 2: Local Python setup
-                </h2>
-                <p>If you wish to bypass Docker containerization and run Python directly, follow these steps.</p>
-
-                <div class="callout important" style="margin-top: 1.5rem;">
-                    <span class="callout-title">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path
-                                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
-                            </path>
-                            <line x1="12" y1="9" x2="12" y2="13"></line>
-                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                        </svg>
-                        Source Code Distribution Notice
-                    </span>
-                    <p>The core application source code is proprietary and is not hosted on the public GitHub build
-                        repository. To deploy locally, you must first obtain the official application distribution
-                        package (ZIP file) by contacting the developer directly.</p>
-                </div>
-
-                <h3>1. Obtain & Extract the Application Package:</h3>
-                <ul>
-                    <li>Contact the developer to request the official Cloud Trader Pro distribution ZIP file.</li>
-                    <li>Extract the received ZIP archive into a dedicated directory of your choice (e.g.
-                        <code>C:\CloudTraderPro</code> or <code>/opt/cloudtraderpro</code>).
-                    </li>
-                    <li>Open your terminal or PowerShell inside the extracted directory to run the following setup
-                        commands.</li>
-                </ul>
-
-                <h3>Prerequisites:</h3>
-                <ul>
-                    <li>Install <strong>Python 3.12+</strong></li>
-                    <li>Install the <strong><code>uv</code></strong> package manager (recommended for fast dependencies
-                        synchronization).</li>
-                </ul>
-
-                <h3>2. Install `uv` Package Manager:</h3>
-                <div class="subtabs-container">
-                    <div class="subtab-headers">
-                        <button class="subtab-header active" data-sub="uv-linux">Linux / macOS</button>
-                        <button class="subtab-header" data-sub="uv-windows">Windows (PowerShell)</button>
-                    </div>
-                    <div class="subtab-content active" id="uv-linux">
-                        <div class="code-container">
-                            <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn"
-                                    onclick="copyCode(this)">Copy</button></div>
-                            <pre><code>curl -LsSf https://astral.sh/uv/install.sh | sh
-source $HOME/.local/bin/env</code></pre>
-                        </div>
-                    </div>
-                    <div class="subtab-content" id="uv-windows">
-                        <div class="code-container">
-                            <div class="code-header"><span class="code-lang">powershell</span><button class="copy-btn"
-                                    onclick="copyCode(this)">Copy</button></div>
-                            <pre><code>powershell -c "irm https://astral.sh/uv/install.ps1 | iex"</code></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <h3>3. Sync Packages & Boot Server:</h3>
-                <p>Navigate to the project root and run:</p>
-                <div class="code-container">
-                    <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn"
-                            onclick="copyCode(this)">Copy</button></div>
-                    <pre><code># Synchronize environment excluding development utilities
-uv sync --no-dev
-
-# Run backend server
-uv run python run_server.py</code></pre>
-                </div>
-            </section>
-
-            <!-- Section 3b: Importing Historical Data -->
-            <section id="historical-data">
-                <h2>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
-                        <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
-                    </svg>
-                    Pre-loading Historical Backtesting Data
-                </h2>
-                <p>If you have purchased or generated historical backtesting data (saved as <code>.parquet</code>
-                    files), you can easily pre-load them into the system. This allows immediate backtesting without
-                    having to fetch the files over the live broker API.</p>
-
-                <h3>Target Directories:</h3>
-                <p>The files must be placed in specific directories depending on your installation type:</p>
-
-                <div class="subtabs-container">
-                    <div class="subtab-headers">
-                        <button class="subtab-header active" data-sub="dir-ubuntu">Ubuntu Linux (Docker Server)</button>
-                        <button class="subtab-header" data-sub="dir-windows">Windows PC (Local Setup)</button>
-                    </div>
-                    <div class="subtab-content active" id="dir-ubuntu">
-                        <div class="code-container">
-                            <div class="code-header"><span class="code-lang">Directory Path</span></div>
-                            <pre><code>/opt/cloudtraderpro/datafetcher/historicaldatas/</code></pre>
-                        </div>
-                    </div>
-                    <div class="subtab-content" id="dir-windows">
-                        <div class="code-container">
-                            <div class="code-header"><span class="code-lang">Directory Path</span></div>
-                            <pre><code>C:\CloudTraderPro\datafetcher\historicaldatas\</code></pre>
-                        </div>
-                    </div>
-                </div>
-
-                <h3>☁️ Cloud Synchronization from R2 (Sync Dashboard)</h3>
-                <p>If your subscription package includes Cloud R2 data access, you do not need to manually upload
-                    parquet files using SFTP/SCP. Instead, you can sync them directly inside the web dashboard:</p>
-                <ol style="margin-bottom: 1.5rem; padding-left: 1.75rem;">
-                    <li>Open the <strong>Historical Data Viewer</strong> page in your browser.</li>
-                    <li>Click the <strong>Sync Data</strong> button in the control bar to open the <strong>Cloud Data
-                            Synchronizer</strong> modal.</li>
-                    <li>Select the target <strong>Year</strong>, choose a specific <strong>Symbol</strong> (or select
-                        <code>[ALL SYMBOLS]</code> to download everything), select the <strong>Data Types</strong>
-                        (<code>Spot</code>, <code>Futures</code>, <code>Options</code>), and click <strong>Start
-                            Synchronization</strong>.
-                    </li>
-                    <li>The system will query the Cloudflare R2 worker, calculate the diff, skip files that are already
-                        locally cached, and download the rest in optimized background batches with a live progress bar.
-                    </li>
-                </ol>
-
-                <h3>How to Upload Files to a Linux VPS:</h3>
-                <p>Choose one of the following methods to transfer the files from your local computer to your remote
-                    server:</p>
-
-                <div class="tabs-container">
-                    <div class="tab-headers">
-                        <button class="tab-header active" onclick="switchTab(event, 'sftp-method')">Method A: SFTP
-                            (FileZilla / WinSCP)</button>
-                        <button class="tab-header" onclick="switchTab(event, 'scp-method')">Method B: Command Line
-                            (SCP)</button>
-                    </div>
-
-                    <div class="tab-contents">
-                        <!-- SFTP Tab -->
-                        <div class="tab-content active" id="sftp-method">
-                            <h4 style="color: #ffffff; margin-bottom: 0.75rem;">SFTP Transfer (Recommended - Graphical)
-                            </h4>
-                            <ol style="margin-left: 1.25rem; color: var(--text-main);">
-                                <li style="margin-bottom: 0.5rem;">Download and install a free SFTP client such as
-                                    <strong>FileZilla</strong> or <strong>WinSCP</strong>.
-                                </li>
-                                <li style="margin-bottom: 0.5rem;">Connect to your VPS using your SSH credentials (IP
-                                    Address, username <code>ubuntu</code>, and your private key file).</li>
-                                <li style="margin-bottom: 0.5rem;">On the remote server side, navigate to the target
-                                    directory: <code>/opt/cloudtraderpro/datafetcher/historicaldatas/</code>.</li>
-                                <li style="margin-bottom: 0;">Drag and drop your <code>.parquet</code> files from your
-                                    local file explorer into the remote directory.</li>
-                            </ol>
-                        </div>
-
-                        <!-- SCP Tab -->
-                        <div class="tab-content" id="scp-method">
-                            <h4 style="color: #ffffff; margin-bottom: 0.75rem;">SCP Command Line Transfer</h4>
-                            <p>From your local machine's terminal or PowerShell, run the following command to copy the
-                                files directly:</p>
-                            <div class="code-container">
-                                <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn"
-                                        onclick="copyCode(this)">Copy</button></div>
-                                <pre><code>scp -i /path/to/key.pem -r /local/path/to/data/*.parquet ubuntu@YOUR_VPS_IP:/opt/cloudtraderpro/datafetcher/historicaldatas/</code></pre>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="callout warning">
-                    <span class="callout-title">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path
-                                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
-                            </path>
-                            <line x1="12" y1="9" x2="12" y2="13"></line>
-                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                        </svg>
-                        Critical Guidelines
-                    </span>
-                    <ul style="margin: 0.5rem 0 0 1.25rem; font-size: 0.95rem; color: #fef3c7; list-style-type: disc;">
-                        <li style="margin-bottom: 0.5rem;"><strong>Do Not Rename Files:</strong> The backtest engine
-                            expects files to be named exactly according to their symbol/token names (e.g.,
-                            <code>NSE_26000.parquet</code>). Changing the names will make them invisible to the backtest
-                            parser.
-                        </li>
-                        <li style="margin-bottom: 0;"><strong>No Server Restart Required:</strong> Because the
-                            directories are volume-bound in Docker, files are detected instantly by the backtester as
-                            soon as they are placed in the folder.</li>
-                    </ul>
-                </div>
-            </section>
 
             <!-- Section 3c: Notification Webhooks -->
             <section id="notifications">
@@ -1511,31 +1288,13 @@ uv run python run_server.py</code></pre>
 
                 <div class="tabs-container">
                     <div class="tab-headers">
-                        <button class="tab-header active" onclick="switchTab(event, 'cpu-error')">Older CPU
-                            Crash</button>
-                        <button class="tab-header" onclick="switchTab(event, 'ssl-error')">Windows SSL Issues</button>
+                        <button class="tab-header active" onclick="switchTab(event, 'ssl-error')">Windows SSL Issues</button>
                         <button class="tab-header" onclick="switchTab(event, 'logs-debug')">Logs & Management</button>
                     </div>
 
                     <div class="tab-contents">
-                        <!-- Older CPU Crash Tab -->
-                        <div class="tab-content active" id="cpu-error">
-                            <h3>"Illegal Instruction" / NumPy Compatibility Crash</h3>
-                            <p>Recent compiled packages for NumPy and Pandas require advanced CPU capabilities (like AVX
-                                instruction sets). On older CPUs, this triggers compatibility crashes.</p>
-
-                            <p><strong>Solution:</strong> Since end-users cannot rebuild the prepackaged Docker image
-                                themselves, you must run the server using <strong>Local Python Deployment (Option
-                                    2)</strong>, and force older, compatible package versions using:</p>
-                            <div class="code-container">
-                                <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn"
-                                        onclick="copyCode(this)">Copy</button></div>
-                                <pre><code>uv add "numpy&lt;2.0" "pandas&lt;2.3"</code></pre>
-                            </div>
-                        </div>
-
                         <!-- Windows SSL Issues Tab -->
-                        <div class="tab-content" id="ssl-error">
+                        <div class="tab-content active" id="ssl-error">
                             <h3>SSL Certificate Validation Errors (Windows)</h3>
                             <p>If the Windows host machine fails to fetch symbols or connect to broker APIs due to
                                 SSL/TLS handshake exceptions, the local Certificate Authority store may be outdated.</p>
@@ -1641,7 +1400,7 @@ sudo ./setup.sh</code></pre>
                             <li><strong>Subdomain:</strong> e.g., <code>trader</code></li>
                             <li><strong>Domain:</strong> Your registered domain (e.g., <code>domain.com</code>)</li>
                             <li><strong>Type:</strong> <code>HTTP</code></li>
-                            <li><strong>URL:</strong> <code>frontend-nginx:80</code></li>
+                            <li><strong>URL:</strong> <code>frontend-nginx:80</code> (if using the Docker Tunnel sidecar). Alternatively, if you already have <code>cloudflared</code> installed on your server, you can point the tunnel to <code>localhost:8002</code> directly.</li>
                         </ul>
                     </li>
                     <li>Save settings. Now, your server dashboard is publicly available over secure HTTPS at
@@ -1685,94 +1444,7 @@ sudo ./setup.sh</code></pre>
                     </li>
                 </ul>
 
-                <h3>5. Multi-Subdomain API Access with Service Auth (Optional):</h3>
-                <p>If you want to protect your dashboard web portal with Cloudflare Access (forcing identity provider or
-                    email logins for browser users) while still allowing external automated trading scripts or API
-                    clients to access the backend directly, you can set up Service Token Auth.</p>
-
-                <div class="tabs-container">
-                    <div class="tab-headers">
-                        <button class="tab-header active" onclick="switchTab(event, 'cf-auth-multi')">Option A: Two
-                            Subdomains (Recommended)</button>
-                        <button class="tab-header" onclick="switchTab(event, 'cf-auth-single')">Option B: Single
-                            Subdomain</button>
-                    </div>
-                    <div class="tab-contents">
-                        <!-- Option A Tab -->
-                        <div class="tab-content active" id="cf-auth-multi">
-                            <h4 style="color: #ffffff; margin-bottom: 0.75rem;">Option A: Two Subdomains (UI & API
-                                Isolation)</h4>
-                            <p>This is the cleanest approach. It exposes the browser UI on one subdomain and the
-                                automation API on another:</p>
-                            <ol style="margin-left: 1.5rem; line-height: 1.8; color: var(--text-main);">
-                                <li style="margin-bottom: 0.5rem;"><strong>Cloudflare Tunnel Setup:</strong> In your
-                                    Cloudflare Tunnel dashboard, add two public hostnames pointing to the same local
-                                    Nginx container port (e.g., <code>8002</code> on the host, which is mapped to port
-                                    <code>80</code> inside the container):
-                                    <ul>
-                                        <li><code>ctp.cloudtraderpro.in</code> &rarr; <code>http://localhost:8002</code>
-                                        </li>
-                                        <li><code>ctp-api.cloudtraderpro.in</code> &rarr;
-                                            <code>http://localhost:8002</code>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li style="margin-bottom: 0.5rem;"><strong>Nginx Handling:</strong> You do not need to
-                                    modify Nginx configuration because Nginx is configured to listen to all incoming
-                                    domains (<code>server_name localhost;</code> in <code>nginx.conf</code>) and proxy
-                                    any unmatched paths to the FastAPI backend dynamically.</li>
-                                <li style="margin-bottom: 0.5rem;"><strong>Cloudflare Access Policies:</strong> Create
-                                    two different Access Applications:
-                                    <ul>
-                                        <li><strong>Dashboard App (<code>ctp.cloudtraderpro.in</code>):</strong> Set the
-                                            policy action to <strong>Allow</strong> and assign email OTP, Google Auth,
-                                            or SSO rules.</li>
-                                        <li><strong>API App (<code>ctp-api.cloudtraderpro.in</code>):</strong> Set the
-                                            policy action to <strong>Service Auth</strong> and bind it to your generated
-                                            Service Token.</li>
-                                    </ul>
-                                </li>
-                                <li style="margin-bottom: 0;"><strong>Usage:</strong>
-                                    <ul>
-                                        <li><strong>Browser Users:</strong> Navigate to
-                                            <code>https://ctp.cloudtraderpro.in</code> and complete the login. Your
-                                            browser session cookies will automatically authorize all relative backend
-                                            calls.
-                                        </li>
-                                        <li><strong>External Scripts:</strong> Target your automated code (e.g., Python
-                                            <code>requests</code>) at
-                                            <code>https://ctp-api.cloudtraderpro.in/api/...</code> and pass the
-                                            <code>CF-Access-Client-Id</code> and <code>CF-Access-Client-Secret</code>
-                                            headers. CORS issues are completely bypassed since external command-line
-                                            clients do not enforce CORS.
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ol>
-                        </div>
-
-                        <!-- Option B Tab -->
-                        <div class="tab-content" id="cf-auth-single">
-                            <h4 style="color: #ffffff; margin-bottom: 0.75rem;">Option B: Single Subdomain with
-                                Path-Based Policies</h4>
-                            <p>If you prefer using a single subdomain:</p>
-                            <ol style="margin-left: 1.5rem; line-height: 1.8; color: var(--text-main);">
-                                <li style="margin-bottom: 0.5rem;">Create one Cloudflare Access Application for
-                                    <code>ctp.cloudtraderpro.in</code>.
-                                </li>
-                                <li style="margin-bottom: 0.5rem;">Add a <strong>Browser Allow</strong> policy
-                                    (OTP/Google) covering the entire domain.</li>
-                                <li style="margin-bottom: 0;">Add a <strong>Service Auth Bypass</strong> policy
-                                    restricted to specific path rules: <code>api/*</code> and <code>ws/*</code>. Ensure
-                                    your external scripts include the <code>CF-Access-Client-Id</code> and
-                                    <code>CF-Access-Client-Secret</code> headers when calling those paths.
-                                </li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-
-                <h3>6. Port Mapping & Nginx Internal Routing Architecture:</h3>
+                <h3>5. Port Mapping & Nginx Internal Routing Architecture:</h3>
                 <p>If you change the external port mapping in your <code>docker-compose.yml</code> (for example, setting
                     <code>8003:80</code> on the host to avoid local port allocation conflicts):
                 </p>
