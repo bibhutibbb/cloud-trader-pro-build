@@ -950,16 +950,12 @@ sudo nano configs/app_settings.json</code></pre>
 
 
                 <h3>4. Boot and Manage the Server (Docker Hub)</h3>
-                <p>The provided <code>docker-compose.yml</code> file is preconfigured to run a multi-container stack:
+                <p>The provided <code>docker-compose.yml</code> file is preconfigured to run the backend service:
                 <ul
                     style="margin: 0.5rem 0 1rem 1.25rem; font-size: 0.95rem; color: var(--text-muted); list-style-type: disc;">
                     <li style="margin-bottom: 0.3rem;"><strong><code>backend-api</code>:</strong> The Python FastAPI
-                        service (runs <code>ghcr.io/bibhutibbb/cloudtraderpro-backend:latest</code>).</li>
-                    <li style="margin-bottom: 0.3rem;"><strong><code>frontend-nginx</code>:</strong> The Nginx proxy
-                        serving static UI files and forwarding dynamic endpoints (runs
-                        <code>ghcr.io/bibhutibbb/cloudtraderpro-frontend:latest</code>).
-                    </li>
-                    <li style="margin-bottom: 0;"><strong>ARM64 Support:</strong> Both images support both standard
+                        service (runs <code>ghcr.io/bibhutibbb/cloudtraderpro-backend:latest</code>) exposed on port <code>8002</code>.</li>
+                    <li style="margin-bottom: 0;"><strong>ARM64 Support:</strong> Supports both standard
                         64-bit x86 (<code>amd64</code>) and 64-bit ARM (<code>arm64</code>) architectures.</li>
                 </ul>
                 Simply run the command to start the containers:</p>
@@ -1400,7 +1396,7 @@ sudo ./setup.sh</code></pre>
                             <li><strong>Subdomain:</strong> e.g., <code>trader</code></li>
                             <li><strong>Domain:</strong> Your registered domain (e.g., <code>domain.com</code>)</li>
                             <li><strong>Type:</strong> <code>HTTP</code></li>
-                            <li><strong>URL:</strong> <code>frontend-nginx:80</code> (if using the Docker Tunnel sidecar). Alternatively, if you already have <code>cloudflared</code> installed on your server, you can point the tunnel to <code>localhost:8002</code> directly.</li>
+                            <li><strong>URL:</strong> <code>backend-api:8002</code> (if using the Docker Tunnel sidecar). Alternatively, if you already have <code>cloudflared</code> installed on your server, you can point the tunnel to <code>localhost:8002</code> directly.</li>
                         </ul>
                     </li>
                     <li>Save settings. Now, your server dashboard is publicly available over secure HTTPS at
@@ -1444,26 +1440,18 @@ sudo ./setup.sh</code></pre>
                     </li>
                 </ul>
 
-                <h3>5. Port Mapping & Nginx Internal Routing Architecture:</h3>
+                <h3>5. Port Mapping & Routing Architecture:</h3>
                 <p>If you change the external port mapping in your <code>docker-compose.yml</code> (for example, setting
-                    <code>8003:80</code> on the host to avoid local port allocation conflicts):
+                    <code>8003:8002</code> on the host to avoid local port allocation conflicts):
                 </p>
                 <ul>
                     <li style="margin-bottom: 0.5rem;"><strong>No internal config changes are needed:</strong> Port
-                        <code>8003</code> is mapped at the Docker host level. The Nginx proxy container still listens on
-                        port <code>80</code> internally, and Uvicorn still listens on <code>8002</code> inside the
-                        backend container. The hardcoded <code>backend-api:8002</code> references inside
-                        <code>nginx.conf</code> do not need to change because container communication happens entirely
-                        on the internal Docker network.
+                        <code>8003</code> is mapped at the Docker host level. Uvicorn still listens on <code>8002</code> inside the
+                        backend container.
                     </li>
-                    <li style="margin-bottom: 0.5rem;"><strong>No local configuration files needed:</strong> You do not
-                        need a copy of <code>nginx.conf</code> on your AWS server host machine. It is copied inside the
-                        Docker image during the build process (<code>Dockerfile.nginx</code>) and runs entirely within
-                        the frontend container.</li>
-                    <li style="margin-bottom: 0;"><strong>FastAPI Optimization:</strong> When running behind Nginx, it
-                        is highly recommended to edit <code>configs/app_settings.json</code> and set
-                        <code>"serve_static_files": false</code>. This tells the FastAPI server to stop serving static
-                        assets, delegating static delivery entirely to Nginx.
+                    <li style="margin-bottom: 0;"><strong>FastAPI Optimization:</strong> Since the frontend UI assets are served from remote hosting (e.g., Cloudflare Pages), Uvicorn is optimized with
+                        <code>"serve_static_files": false</code> inside <code>configs/app_settings.json</code>. This tells the FastAPI server to stop serving static
+                        assets, reserving all CPU and memory resources exclusively for options execution.
                     </li>
                 </ul>
             </section>

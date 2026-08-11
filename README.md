@@ -124,9 +124,8 @@ Before running the container, configure the application settings and activate yo
 
 ### Step 4: Starting the Application (Docker Hub)
 
-By default, the provided `docker-compose.yml` file runs a multi-container stack:
-*   **`backend-api`**: Runs the Python FastAPI application internally, using the image `ghcr.io/bibhutibbb/cloudtraderpro-backend:latest`.
-*   **`frontend-nginx`**: Runs an Nginx web server on host port `8002` (routing requests internally to `backend-api` and serving static files), using the image `ghcr.io/bibhutibbb/cloudtraderpro-frontend:latest`.
+By default, the provided `docker-compose.yml` file runs the backend container:
+*   **`backend-api`**: Runs the Python FastAPI application, exposed on host port `8002` using the image `ghcr.io/bibhutibbb/cloudtraderpro-backend:latest`.
 
 Both images are built as **multi-architecture** images supporting both standard 64-bit x86 (`amd64`) and ARM 64-bit (`arm64`) architectures (e.g., AWS Graviton or Apple Silicon) out-of-the-box. Docker will automatically pull the correct image for your processor.
 
@@ -349,8 +348,8 @@ The setup script will automatically extract the token, update your `.env` config
     *   **Domain:** Select your registered domain.
     *   **Type:** `HTTP`
     *   **URL:** Configure the target URL destination:
-        *   **If using Docker Tunnel Sidecar:** Set **URL** to `frontend-nginx:80` (routing requests internally inside the private Docker network to Nginx).
-        *   **If running `cloudflared` directly on your host VPS:** Set **URL** to `localhost:8002` (routing requests directly to Nginx mapped on your host). (Note: If you already have `cloudflared` installed on your server, you can just point the tunnel to `localhost:8002` directly).
+        *   **If using Docker Tunnel Sidecar:** Set **URL** to `backend-api:8002` (routing requests internally inside the private Docker network directly to the backend).
+        *   **If running `cloudflared` directly on your host VPS:** Set **URL** to `localhost:8002` (routing requests directly to the backend mapped on your host).
 4. Save the Hostname configuration.
 
 ---
@@ -370,11 +369,10 @@ The setup script will automatically extract the token, update your `.env` config
 
 
 
-### Step 5: Port Mapping & Nginx Internal Routing Architecture
-If you change the external port mapping in your `docker-compose.yml` (for example, mapping port `8500:80` on the host instead of `8002:80` due to a port conflict):
-* **No internal configurations need to change:** The Nginx container still listens on port `80` internally and proxies to `backend-api` on port `8002` inside the private Docker network. Changing the host-side port mapping does not affect Nginx or FastAPI internal logic.
-* **No local Nginx config file is needed:** You do not need to maintain a local copy of `nginx.conf` on your host server. The configuration is already packaged inside the pre-built Nginx container image.
-* **FastAPI Optimization:** When running behind Nginx, set `"serve_static_files": false` in `configs/app_settings.json`. This tells the backend to stop serving static files, freeing up CPU cycles since Nginx handles all static assets directly.
+### Step 5: Port Mapping & Routing Architecture
+If you change the external port mapping in your `docker-compose.yml` (for example, mapping port `8500:8002` on the host instead of `8002:8002` due to a port conflict):
+* **No internal configurations need to change:** Uvicorn still listens on port `8002` internally. Changing the host-side port mapping does not affect internal container logic.
+* **CORS Allowed Origins**: Make sure to set `"serve_static_files": false` and configure `"allowed_origins": "https://terminal.cloudtraderpro.in"` in `configs/app_settings.json` so that the remote frontend can connect to your backend server port.
 
 
 
@@ -385,9 +383,9 @@ If you do not own a custom domain, you can access the server using these alterna
 Expose the server temporarily over secure HTTPS without a Cloudflare account:
 1. Append the following service to your `docker-compose.yml`:
    ```yaml
-   quick-tunnel:
-     image: cloudflare/cloudflared:latest
-     command: tunnel --url http://cloud-trader-pro:8002
+    quick-tunnel:
+      image: cloudflare/cloudflared:latest
+      command: tunnel --url http://backend-api:8002
    ```
 2. Run `docker compose up -d` and inspect the logs:
    ```bash

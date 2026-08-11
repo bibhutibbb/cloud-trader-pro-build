@@ -3,8 +3,8 @@ services:
     image: ghcr.io/bibhutibbb/cloudtraderpro-backend:latest
     hostname: cloudtraderpro-server
     restart: always
-    expose:
-      - "8002"
+    ports:
+      - "8002:8002"
     volumes:
       # Persist configuration and license activations so they survive container updates
       - ./configs:/app/configs
@@ -28,20 +28,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-
-  frontend-nginx:
-    image: ghcr.io/bibhutibbb/cloudtraderpro-frontend:latest
-    restart: always
-    ports:
-      - "8002:80"
-    depends_on:
-      - backend-api
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-
   watchtower:
     image: containrrr/watchtower
     restart: always

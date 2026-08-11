@@ -6,5 +6,6 @@
     "server_port": 8002,
     "license_key": "your_license_key",
     "data_gatekeeper_url": "https://ctp-hist-data.cloudtraderpro.in",
-    "serve_static_files": false
+    "serve_static_files": false,
+    "allowed_origins": "https://terminal.cloudtraderpro.in"
 }
