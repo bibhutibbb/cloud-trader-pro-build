@@ -886,8 +886,19 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trade
                 </div>
 
 
-                <h3>3. Configure App Settings</h3>
-                <p>Go to the <code>configs/</code> folder, rename <code>app_settings.json.sample</code> to
+                 <h3>3. Configure App Settings (Optional / Automated)</h3>
+                <div class="callout note" style="margin-top: 1rem; margin-bottom: 1.5rem;">
+                    <span class="callout-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        Installer Script Note
+                    </span>
+                    <p>If you ran the single-line installer script, a secure random <code>dashboard_password</code> and <code>jwt_secret</code> were automatically generated and pre-configured inside <code>configs/app_settings.json</code> for you! You can skip this step, start the server, and log in to the web console at <a href="https://terminal.cloudtraderpro.in" target="_blank" style="color: var(--accent-color); font-weight: bold; text-decoration: underline;">terminal.cloudtraderpro.in</a> to configure your license and credentials directly in the Web UI.</p>
+                </div>
+                <p>If you are setting up manually, go to the <code>configs/</code> folder, rename <code>app_settings.json.sample</code> to
                     <code>app_settings.json</code>, and configure your parameters. On Ubuntu/Linux, you can copy the
                     sample settings and edit it directly using <code>nano</code>:
                 </p>
@@ -905,12 +916,14 @@ sudo nano configs/app_settings.json</code></pre>
                     </div>
                     <pre><code>{
     "dashboard_password": "your_secure_web_password",
-    "active_broker": "flattrade", 
+    "active_broker": "flattrade",
     "jwt_secret": "long_random_string_for_web_tokens",
     "session_timeout_minutes": 1440,
     "server_port": 8002,
     "license_key": "your_license_key",
-    "serve_static_files": true
+    "data_gatekeeper_url": "https://ctp-hist-data.cloudtraderpro.in",
+    "serve_static_files": false,
+    "allowed_origins": "https://terminal.cloudtraderpro.in"
 }</code></pre>
                 </div>
 
@@ -957,8 +970,9 @@ sudo nano configs/app_settings.json</code></pre>
                     <li style="margin-bottom: 0.5rem;"><strong><code>license_key</code>:</strong> The cryptographically
                         signed license key generated for your account (obtainable from <a href="https://cloudtraderpro.in" target="_blank">cloudtraderpro.in</a>). This is required to unlock the trading engine and
                         activate automated strategies. If not set in <code>app_settings.json</code> beforehand, the user will be prompted to enter the license key in the web dashboard on the first startup of the application.</li>
-                    <li style="margin-bottom: 0;"><strong><code>serve_static_files</code>:</strong> Configures whether
-                        the FastAPI backend serves static files (<code>true</code>) or stops serving them when using external frontend hosting (<code>false</code>). Set this to <code>false</code> when using terminal.cloudtraderpro.in.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong><code>data_gatekeeper_url</code>:</strong> The URL used to fetch historical candle data for indicators and backtesting (defaults to <code>"https://ctp-hist-data.cloudtraderpro.in"</code>).</li>
+                    <li style="margin-bottom: 0.5rem;"><strong><code>serve_static_files</code>:</strong> Configures whether the FastAPI backend serves static files (<code>true</code>) or delegates this role entirely to an external web server/hosting (<code>false</code>). In a professional production environment or when hosted on <code>terminal.cloudtraderpro.in</code>, set this to <code>false</code>.</li>
+                    <li style="margin-bottom: 0;"><strong><code>allowed_origins</code>:</strong> Authorizes origin headers (CORS) from the frontend domain (defaults to <code>"https://terminal.cloudtraderpro.in"</code>).</li>
                 </ul>
 
                 <div class="callout important">
@@ -1528,12 +1542,33 @@ sudo ./setup.sh</code></pre>
                     <pre><code>ssh -N -L 8002:localhost:8002 user@YOUR_SERVER_IP</code></pre>
                 </div>
                 <p>Now, open <code>http://localhost:8002</code> in your local browser to access the server safely.</p>
-
+                
                 <h3>Option C: Request a Subdomain from the Developer/Admin (Easiest)</h3>
-                <p>If you do not own a domain, you can request the developer/admin to provision a custom subdomain (e.g.
-                    <code>yourname.cloudtraderpro.in</code>) on their own network infrastructure. They can link this
-                    subdomain directly to your Cloudflare Tunnel connector.
-                </p>
+                <p>If you do not own a custom domain name, you can contact the system administrator or developer to request a subdomain allocation (e.g., <code>yourname.cloudtraderpro.in</code>).</p>
+                <div style="margin: 1rem 0; padding: 1rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; font-size: 0.9em; line-height: 1.6; color: var(--text-muted);">
+                    <strong style="color: #fff; display: block; margin-bottom: 0.5rem;">How it works (Admin & User Setup):</strong>
+                    <ol style="margin: 0; padding-left: 1.2rem;">
+                        <li style="margin-bottom: 0.5rem;"><strong>Admin/Developer Setup:</strong>
+                            <ul style="margin: 4px 0 0 0; padding-left: 1rem; list-style-type: disc;">
+                                <li>Admin creates a new tunnel on their Cloudflare account for your VPS.</li>
+                                <li>Admin maps the subdomain (e.g., <code>yourname.cloudtraderpro.in</code>) in Cloudflare to route to target HTTP URL <code>backend-api:8002</code>.</li>
+                                <li>Admin sends you the unique <strong>Tunnel Token</strong> generated by Cloudflare.</li>
+                            </ul>
+                        </li>
+                        <li><strong>User Setup:</strong>
+                            <ul style="margin: 4px 0 0 0; padding-left: 1rem; list-style-type: disc;">
+                                <li>Save the token inside the file <code>cloudflare_tunnel_command.txt</code> in your deployment directory.</li>
+                                <li>Run the setup helper script:
+                                    <ul style="margin: 2px 0 0 0; padding-left: 1rem; list-style-type: circle;">
+                                        <li>Linux / VPS: <code>sudo ./setup.sh</code></li>
+                                        <li>Windows: Double-click <code>setup.bat</code> (or execute <code>.\setup.ps1</code>)</li>
+                                    </ul>
+                                </li>
+                                <li>The script will automatically save the token to your <code>.env</code> file, generate <code>docker-compose.override.yml</code>, and launch both the trader backend and the Cloudflare tunnel sidecar client (<code>docker compose up -d</code>).</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
             </section>
 
             <!-- Section 8: Support & Contact -->

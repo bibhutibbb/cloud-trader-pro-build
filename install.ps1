@@ -88,24 +88,22 @@ if ($response -match "^[Yy]$") {
     Write-Host "=========================================================" -ForegroundColor Green
     Write-Host "       CLOUD TRADER PRO BACKEND - SETUP CHECKLIST        " -ForegroundColor Green
     Write-Host "=========================================================" -ForegroundColor Green
-    Write-Host "   1. Configure settings:" -ForegroundColor Green
-    Write-Host "      Open and edit: $INSTALL_DIR\configs\app_settings.json" -ForegroundColor Green
-    Write-Host "      Add your license key." -ForegroundColor Green
+    Write-Host "   1. Start the Server:" -ForegroundColor Green
+    Write-Host "      Run: cd $INSTALL_DIR; docker compose up -d" -ForegroundColor Green
     Write-Host "" -ForegroundColor Green
     Write-Host "   2. Optional - Setup Remote Access (Cloudflare Tunnel):" -ForegroundColor Green
     Write-Host "      Paste your Docker run command into cloudflare_tunnel_command.txt" -ForegroundColor Green
     Write-Host "      Then run: cd $INSTALL_DIR; .\setup.ps1" -ForegroundColor Green
     Write-Host "" -ForegroundColor Green
-    Write-Host "   3. Start the Server:" -ForegroundColor Green
-    Write-Host "      Run: cd $INSTALL_DIR; docker compose up -d" -ForegroundColor Green
-    Write-Host "" -ForegroundColor Green
-    Write-Host "   4. Connect to Frontend Dashboard:" -ForegroundColor Green
+    Write-Host "   3. Connect to Frontend Dashboard & Configure:" -ForegroundColor Green
     Write-Host "      - Open your browser and go to: https://terminal.cloudtraderpro.in" -ForegroundColor Green
     Write-Host "      - Select Server Type (Localhost or Cloud Server)." -ForegroundColor Green
-    Write-Host "      - Enter your Backend URL (http://localhost:8002 or your Cloudflare Tunnel HTTPS URL)." -ForegroundColor Green
-    Write-Host "      - Enter your Dashboard Password and log in." -ForegroundColor Green
+    Write-Host "      - Enter your Backend URL (http://localhost:8002 or Cloudflare URL)." -ForegroundColor Green
+    Write-Host "      - Enter your auto-generated Dashboard Password and log in." -ForegroundColor Green
+    Write-Host "      - Once logged in, enter your License Key and Broker API credentials" -ForegroundColor Green
+    Write-Host "        directly inside the Settings page." -ForegroundColor Green
     Write-Host "" -ForegroundColor Green
-    Write-Host "   5. Detailed Installation & Setup Guide:" -ForegroundColor Green
-    Write-Host "      Open $INSTALL_DIR\Installation.html in your browser." -ForegroundColor Green
+    Write-Host "   4. Detailed Installation & Setup Guide:" -ForegroundColor Green
+    Write-Host "      Read: $INSTALL_DIR\README.md (or open Installation.html in your browser)" -ForegroundColor Green
     Write-Host "=========================================================" -ForegroundColor Green
 }
