@@ -1,23 +1,18 @@
-# Cloud Trader Pro - Installation & Deployment Guide
+# Cloud Trader Pro - Terminal Installation Guide
 
-Welcome to the **Cloud Trader Pro** installation guide. This document provides step-by-step instructions to set up, configure, and run the backend server on a **Windows PC** or an **Ubuntu Linux Server**. 
+![Version](https://img.shields.io/badge/version-3.3.4-blue)
+![License](https://img.shields.io/badge/license-proprietary-red)
+![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows-brightgreen)
 
----
-
-## 🏗️ System Architecture Overview
-Cloud Trader Pro is built on a **Headless Decoupled Architecture**:
-*   **Headless Backend (Server):** Runs 24/7 autonomously on a server or local PC, processing live market ticks and executing algorithms.
-*   **Web Dashboard:** Accessible via browser for remote monitoring.
+Deploy Cloud Trader Pro securely on your local PC or private cloud VPS. Docker handles all dependencies automatically.
 
 ---
 
-## ⚡ Docker Deployment (Recommended)
-Docker is the easiest and most secure way to run the Cloud Trader Pro backend. It packages the application, dependencies, and runtime together so you do not need to install Python or manage packages manually.
+## 🐧 Linux VPS (Recommended)
 
 ### Step 1: Install Docker
+Run these commands on your Linux Terminal to install and setup Docker & Compose:
 
-#### **For Ubuntu Linux Server:**
-Run the following commands in your terminal to install Docker and Docker Compose:
 ```bash
 # Update and install prerequisite tools
 sudo apt update && sudo apt upgrade -y
@@ -42,76 +37,38 @@ sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin d
 sudo systemctl enable --now docker
 ```
 
-#### **For Windows PC:**
+### Step 2: Run the Script Installer
+Download deployment templates, Docker Compose files, and scripts automatically:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/install.sh | sudo bash
+```
+
+---
+
+## 🪟 Windows PC
+
+### Step 1: Install Docker Desktop
+Docker handles execution encapsulation. It isolates credentials locally for complete system security.
 1. Download and install [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/).
-2. During the installation process, ensure the **WSL 2 backend** option is checked (enabled by default).
+2. Ensure the **WSL 2 backend** component is checked during installation setup.
 3. Restart your computer when prompted.
 
----
+### Step 2: Run PowerShell Installer
+Launch PowerShell as **Administrator** and paste the following setup script:
 
-### Step 2: Download Deployment Files from GitHub
-
-Instead of manually copying orchestration assets, you can download all required files (such as `docker-compose.yml`, configuration templates, and setup helper scripts) directly from our public GitHub build repository.
-
-Choose **Method A (Automated)** or **Method B (Manual)**:
-
-#### **Method A: Automated One-Line Installer (Recommended)**
-Run this command in your terminal to automatically create folders, download files, and configure permissions:
-*   **Ubuntu / Linux:**
-    ```bash
-    curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/install.sh | sudo bash
-    ```
-*   **Windows (PowerShell run as Administrator):**
-    ```powershell
-    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/install.ps1'))
-    ```
+```powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/install.ps1'))
+```
 
 ---
 
-#### **Method B: Manual Download**
-If you prefer to download files manually, run these commands to set up the directories and download individual files:
-*   **Ubuntu / Linux:**
-    ```bash
-    sudo mkdir -p /opt/cloudtraderpro/configs
-    cd /opt/cloudtraderpro
+## ⚙️ Step 3: Configure App Settings (Optional / Automated)
 
-    sudo curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/docker-compose.yml -o docker-compose.yml
-    sudo curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/setup.sh -o setup.sh && sudo chmod +x setup.sh
-    sudo curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/cloudflare_tunnel_command.txt -o cloudflare_tunnel_command.txt
-    sudo curl -sSL https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/configs/app_settings.json.sample -o configs/app_settings.json.sample
-    ```
-*   **Windows (PowerShell):**
-    ```powershell
-    New-Item -ItemType Directory -Force -Path "C:\CloudTraderPro\configs"
-    Set-Location "C:\CloudTraderPro"
+> **Installer Script Note:**
+> If you ran the single-line installer script, a secure random `dashboard_password` and `jwt_secret` were automatically generated and pre-configured inside `configs/app_settings.json` for you! You can skip this step, start the server, and log in to the web console at [terminal.cloudtraderpro.in](https://terminal.cloudtraderpro.in) to configure your license and credentials directly in the Web UI.
 
-    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/docker-compose.yml" -OutFile "docker-compose.yml"
-    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/setup.ps1" -OutFile "setup.ps1"
-    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/setup.bat" -OutFile "setup.bat"
-    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/cloudflare_tunnel_command.txt" -OutFile "cloudflare_tunnel_command.txt"
-    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bibhutibbb/cloud-trader-pro-build/main/configs/app_settings.json.sample" -OutFile "configs\app_settings.json.sample"
-    ```
-
----
-
-
-### Step 3: Settings & License Configuration (Optional / Automated)
-
-> [!NOTE]
-> **Installer Script Note**
-> If you ran the single-line installer script, a secure random `dashboard_password` and `jwt_secret` were automatically generated and pre-configured inside `configs/app_settings.json` for you! You can skip this step entirely, start the server, and log in to the web console at [terminal.cloudtraderpro.in](https://terminal.cloudtraderpro.in) to configure your License Key and Broker Credentials directly in the Web UI.
-
-If you are performing a manual installation instead, follow these steps to configure your settings:
-
-1. Navigate to the `configs/` folder.
-2. Rename `app_settings.json.sample` to `app_settings.json` (or edit the existing one).
-   *   **Ubuntu / Linux:**
-       ```bash
-       cd /opt/cloudtraderpro
-       sudo cp configs/app_settings.json.sample configs/app_settings.json
-       sudo nano configs/app_settings.json
-       ```
-3. Open `app_settings.json` in a text editor and fill in your details:
+If you are setting up manually: Navigate to your installation folder (default is `/opt/cloudtraderpro` on Linux, or `C:\CloudTraderPro` on Windows), open the `configs/` subfolder, duplicate/rename the file `app_settings.json.sample` to `app_settings.json`, and update your settings:
 
 ```json
 {
@@ -120,121 +77,131 @@ If you are performing a manual installation instead, follow these steps to confi
     "jwt_secret": "long_random_string_for_web_tokens",
     "session_timeout_minutes": 1440,
     "server_port": 8002,
-    "license_key": "your_license_key",
+    "license_key": "your_license_key_here",
     "data_gatekeeper_url": "https://ctp-hist-data.cloudtraderpro.in",
     "serve_static_files": false,
     "allowed_origins": "https://terminal.cloudtraderpro.in"
 }
 ```
 
-#### ⚙️ Configuration Parameters Explained:
-*   **`dashboard_password`**: The password used to log in to the web browser dashboard interface. Choose a strong, unique password.
-*   **`active_broker`**: Specifies the broker to be used by the trading system. Supported values are `"flattrade"` or `"upstox"`.
-*   **`jwt_secret`**: A long random secret key used by the backend to sign web tokens (JSON Web Tokens) for the dashboard session. Change this to a secure random string (e.g. 32 characters) to secure your browser session tokens.
-    *   *How to generate a secure random key:*
-        *   **Linux / macOS / Git Bash:** `openssl rand -hex 32`
-        *   **Windows (PowerShell / CMD):** `python -c "import secrets; print(secrets.token_hex(32))"`
-*   **`session_timeout_minutes`**: The duration (in minutes) for which your login session remains active in the browser dashboard before requiring re-authentication. The default is set to `1440` minutes (exactly 24 hours / 1 day).
-*   **`server_port`**: The port number on which the FastAPI backend web server runs and listens for incoming requests. The default is `8002`.
-*   **`license_key`**: The cryptographically signed license key generated for your account (obtainable from [cloudtraderpro.in](https://cloudtraderpro.in)). This is required to unlock the trading engine and activate automated strategies. If not set in `app_settings.json` beforehand, the user will be prompted to enter the license key in the web dashboard on the first startup of the application.
-*   **`data_gatekeeper_url`**: The URL used to fetch historical candle data for indicators and backtesting (defaults to `https://ctp-hist-data.cloudtraderpro.in`).
-*   **`serve_static_files`**: Configures whether the FastAPI backend serves static files (`true`) or delegates this role entirely to an external web server/hosting (`false`). In a professional production environment or when hosted on `terminal.cloudtraderpro.in`, set this to `false`.
-*   **`allowed_origins`**: Authorizes origin headers (CORS) from the frontend domain (defaults to `https://terminal.cloudtraderpro.in`).
+> **Security Advice:** Avoid leaving default password settings. Your trading console handles automated trades—make sure your passwords and secrets are unique.
 
-> [!IMPORTANT]
-> Change the default passwords/secrets to highly secure, random strings to prevent unauthorized access. The `license_key` is required to authenticate and unlock core trading routines.
+#### 💡 How to generate a secure JWT Secret:
+To generate a cryptographically secure 32-byte hex key, run one of the following commands in your terminal and paste the generated string into the `jwt_secret` field:
+
+* **Linux / macOS / Git Bash:**
+  ```bash
+  openssl rand -hex 32
+  ```
+
+* **Windows (PowerShell / CMD):**
+  ```cmd
+  python -c "import secrets; print(secrets.token_hex(32))"
+  ```
 
 ---
 
-### Step 4: Starting the Application (Docker Hub)
+## 🚀 Step 4: Launch Docker Container
 
-By default, the provided `docker-compose.yml` file runs the backend container:
-*   **`backend-api`**: Runs the Python FastAPI application, exposed on host port `8002` using the image `ghcr.io/bibhutibbb/cloudtraderpro-backend:latest`.
+Open your terminal or command prompt, change directory to your installation folder, and spin up the services:
 
-Both images are built as **multi-architecture** images supporting both standard 64-bit x86 (`amd64`) and ARM 64-bit (`arm64`) architectures (e.g., AWS Graviton or Apple Silicon) out-of-the-box. Docker will automatically pull the correct image for your processor.
+### Linux VPS:
+```bash
+cd /opt/cloudtraderpro
+sudo docker compose up -d
+```
 
-Simply navigate to your deployment folder and run:
-*   **Ubuntu / Linux:**
-    ```bash
-    sudo docker compose up -d
-    ```
-*   **Windows (PowerShell):**
-    ```powershell
-    docker compose up -d
-    ```
-
-Docker will automatically pull the latest backend and frontend image layers from Docker Hub, configure the network bridge, and start the services.
+### Windows PC:
+```cmd
+cd C:\CloudTraderPro
+docker compose up -d
+```
 
 ---
 
-### Step 5: Stopping & Removing Containers
-If you need to stop the server or clean up the container resources:
+## 🖥️ Step 5: Launch Web Terminal
 
-*   **Stop the running containers (keeping configuration and database data intact):**
-    *   **Ubuntu / Linux:**
-        ```bash
-        sudo docker compose stop
-        ```
-    *   **Windows (PowerShell):**
-        ```powershell
-        docker compose stop
-        ```
-*   **Stop and completely remove the containers (freeing up ports/resources):**
-    *   **Ubuntu / Linux:**
-        ```bash
-        sudo docker compose down
-        ```
-    *   **Windows (PowerShell):**
-        ```powershell
-        docker compose down
-        ```
-*   **Remove the containers and delete the loaded images (to free up disk space):**
-    *   **Ubuntu / Linux:**
-        ```bash
-        sudo docker compose down
-        sudo docker rmi ghcr.io/bibhutibbb/cloudtraderpro-backend:latest ghcr.io/bibhutibbb/cloudtraderpro-frontend:latest
-        ```
-    *   **Windows (PowerShell):**
-        ```powershell
-        docker compose down
-        docker rmi ghcr.io/bibhutibbb/cloudtraderpro-backend:latest ghcr.io/bibhutibbb/cloudtraderpro-frontend:latest
-        ```
+The Cloud Trader Pro terminal interface is hosted centrally. You do not host the frontend dashboard files locally or on your own VPS. Access your trading dashboard exclusively at:
 
-### Step 5: Updating the Docker Container (When a New Version is Released)
+👉 **[terminal.cloudtraderpro.in](https://terminal.cloudtraderpro.in)**
 
-When a new version of the Cloud Trader Pro image is released, you can update your setup easily. Since your configurations and database logs are stored outside the container on your host, you will never lose your data.
+### To connect to your private backend:
+1. Open the central terminal link above.
+2. On the login page, enter your local or remote **API Server URL**:
+   - For local computer setups: `http://localhost:8002`
+   - For VPS setups: your configured secure tunnel domain (e.g., `https://trader.yourdomain.com`)
+   - 💡 *Don't own a custom domain? You can contact support to request a free subdomain (e.g., `user1.cloudtraderpro.in`) mapped to your tunnel.*
+3. Provide the `dashboard_password` you configured in `app_settings.json`.
+4. If this is your first startup, paste your activation license key inside the console settings to unlock the trading engine.
 
-You can update using either the **Automatic Dashboard** method or the **Manual CLI** method:
+---
 
-#### **Method A: Automatic Updates (Dashboard)**
-Cloud Trader Pro is designed to automatically update itself in the background when a new version is released:
-*   **Update Banners**: When a new update starts installing, a status notification banner will appear at the top of your web dashboard showing the update progress.
-*   **Manual Dashboard Trigger**: You can check for updates manually or trigger them instantly by navigating to the **Account Settings** tab in your web dashboard and clicking **Check for Updates**.
-*   **No Data Loss**: Your settings, configurations, and logs remain completely intact as they are stored on the host machine.
+## 🌐 Step 6: Networking & Cloudflare Tunnel Configuration
 
-#### **Method B: Manual Update**
-If you prefer to trigger updates manually, navigate to your deployment directory (e.g., `/opt/cloudtraderpro` on Linux or `C:\CloudTraderPro` on Windows) and run:
+The application requires a secure HTTPS connection for both UI access and Broker Authentication callbacks. A Cloudflare Tunnel is the safest way to expose the application to the internet without opening firewall ports.
 
-*   **Linux / Ubuntu:**
-    ```bash
-    cd /opt/cloudtraderpro
-    sudo docker compose pull && sudo docker compose up -d
-    ```
-*   **Windows (PowerShell):**
-    ```powershell
-    cd C:\CloudTraderPro
-    docker compose pull
-    docker compose up -d
-    ```
+### Step 1: Create a Tunnel in Cloudflare Zero Trust
+1. Log into your [Cloudflare Zero Trust Dashboard](https://dash.cloudflare.com/).
+2. Navigate to **Access → Tunnels** → Click **Create a Tunnel**.
+3. Select **Cloudflare** as your connector type, name the tunnel, and save it.
+4. Under "Install and run a connector", choose **Docker** and copy the command provided (or copy just the raw `--token` value).
 
-#### **How it works:**
-*   `docker compose pull` downloads the latest image layers from the registry in the background while the application is still running.
-*   `docker compose up -d` stops the old container, recreates it using the new image, and starts it up—all in less than 2 seconds.
+### Step 2: Configure the Tunnel Sidecar (Automatic Setup)
+To configure the tunnel companion container automatically:
+1. Open `cloudflare_tunnel_command.txt` in a text editor. On Ubuntu Linux, you can open and edit it using **nano**:
+   ```bash
+   cd /opt/cloudtraderpro
+   sudo nano cloudflare_tunnel_command.txt
+   ```
+2. Paste the entire `docker run` command copied from Cloudflare (or paste the raw token string).
+3. Run the automated script:
+   - **Ubuntu / Linux:**
+     ```bash
+     chmod +x setup.sh
+     sudo ./setup.sh
+     ```
+   - **Windows (PowerShell):**
+     ```cmd
+     setup.bat
+     ```
 
-#### **Will Custom Settings (like Custom Ports or API Keys) Be Overwritten?**
-*   **Your API Keys and Credentials:** Completely safe. Your local `configs/app_settings.json` is never overwritten by image updates.
-*   **Custom Host Ports (e.g. `8500:80`):** Completely safe *as long as you update using the command sequence above*. Since the image update only pulls the container's interior, your local `docker-compose.yml` file is not replaced.
-*   **Caution:** If you run the full installer script (`install.sh` / `install.ps1`) again, it will download a clean `docker-compose.yml` from GitHub and overwrite your local modifications. If you do this, you will need to re-apply your custom port configurations inside the `docker-compose.yml` file.
+The setup script will automatically extract the token, update your `.env` configuration, create a `docker-compose.override.yml` sidecar container, and boot up both the trader backend and the tunnel!
+
+### Step 3: Route Your Domain
+In the Cloudflare Tunnel dashboard, go to the **Public Hostname** tab, click **Add a public hostname**, and configure the fields:
+- **Subdomain:** `trader` (or any subdomain of your choice, e.g. `trader.yourdomain.com`).
+- **Domain:** Select your registered domain.
+- **Type:** `HTTP`
+- **URL:** `backend-api:8002` (routing requests internally inside the Docker network to the backend API container).
+  - 💡 *Running `cloudflared` directly on your host system? Set the URL to `localhost:8002` instead.*
+
+### Step 4: Broker-Side Handshake
+Log into the Developer Portal for your Active Broker (Flattrade, Upstox, or Shoonya), select your App, locate the Redirect URL field, and configure the redirect endpoint:
+
+```
+https://terminal.cloudtraderpro.in/api/auth/callback
+```
+
+Since the web terminal frontend is centrally hosted, this callback URL is universal and works for all setups (both local computer and remote cloud VPS). The broker will securely redirect back to the terminal, which then forwards the authentication token directly to your private API server.
+
+> **⚠️ Critical:** Ensure there are no trailing slashes, spaces, or query parameters. The URL must match the broker's registration field exactly.
+
+---
+
+### Request a Subdomain from the Developer/Admin (Easiest)
+If you do not own a custom domain name, you can contact the system administrator or developer to request a subdomain allocation (e.g., `yourname.cloudtraderpro.in`).
+
+#### 1. Admin/Developer Setup:
+- Admin creates a new tunnel on their Cloudflare account for your VPS.
+- Admin maps the subdomain (e.g., `yourname.cloudtraderpro.in`) in Cloudflare to route to target HTTP URL `backend-api:8002`.
+- Admin sends you the unique **Tunnel Token** generated by Cloudflare.
+
+#### 2. User Setup:
+- Save the token inside the file `cloudflare_tunnel_command.txt` in your deployment directory.
+- Run the setup helper script:
+  - Linux / VPS: `sudo ./setup.sh`
+  - Windows: Double-click `setup.bat` (or run `.\setup.ps1`)
+- The script will automatically save the token to your `.env` file, generate `docker-compose.override.yml`, and launch both the trader backend and the Cloudflare tunnel sidecar client.
 
 ---
 
@@ -295,149 +262,12 @@ Discord uses incoming webhooks to push rich embedded messages directly into a sp
 
 ---
 
-## 🔧 Troubleshooting & Special Configurations
+## 🛠️ Need Remote Setup Support?
 
-### ⚠️ Issue 1: SSL Validation / Connection Errors on Windows
-If Windows fails to connect or throws SSL verification errors during broker handshake calls:
+If you run into issues configuring your VPS, static IP, or docker engine, our engineers can assist you directly using secure screen sharing.
 
-**Solution:**
-Open PowerShell with **Administrative Privileges** and execute the following commands to update the root certificates store:
-```powershell
-certutil -generateSSTFromWU roots.sst
-certutil -addstore -f root roots.sst
-del roots.sst
-```
-
----
-
-### ⚠️ Issue 2: Accessing Container Logs & Managing the Service
-Use these common commands to inspect and manage your running services:
-
-*   **View Live Logs:**
-    ```bash
-    docker compose logs -f
-    ```
-*   **Stop the Server:**
-    ```bash
-    docker compose down
-    ```
-*   **Enter the Container CLI (Inspection):**
-    ```bash
-    docker exec -it cloud-trader-pro bash
-    ```
-
----
-
-## 🌐 Networking & Cloudflare Tunnel Configuration
-The application requires a secure HTTPS connection for both UI access and Broker Authentication callbacks. A **Cloudflare Tunnel** is the safest way to expose the application to the internet without opening firewall ports.
-
-> [!NOTE]
-> **Direct VPS Installation Option:** If you prefer not to run the Tunnel sidecar container inside Docker, you can install the `cloudflared` client directly on your host VPS operating system and configure it to route HTTPS traffic directly to the local host port `8002` (where the new Vue frontend is served).
-
-### Step 1: Create a Tunnel in Cloudflare Zero Trust
-1. Log into your [Cloudflare Zero Trust Dashboard](https://one.dash.cloudflare.com/).
-2. Navigate to **Access** -> **Tunnels** -> Click **Create a Tunnel**.
-3. Select **Cloudflare** as your connector type, name the tunnel, and save it.
-4. Under "Install and run a connector", choose **Docker** and copy the command provided (or copy just the raw `--token` value).
-
----
-
-### Step 2: Configure the Tunnel Sidecar (Automatic Setup)
-To configure the tunnel companion container automatically:
-
-1. Open `cloudflare_tunnel_command.txt` in a text editor. On Ubuntu Linux, you can open and edit it using `nano`:
-   ```bash
-   cd /opt/cloudtraderpro
-   sudo nano cloudflare_tunnel_command.txt
-   ```
-2. Paste the **entire** `docker run` command copied from Cloudflare (or paste the raw token string).
-3. Run the automated script:
-    *   **Ubuntu / Linux:**
-        ```bash
-        chmod +x setup.sh
-        sudo ./setup.sh
-        ```
-    *   **Windows (PowerShell):**
-        Double-click `setup.bat` (or execute `.\setup.ps1` in an elevated shell).
-
-The setup script will automatically extract the token, update your `.env` configuration, create a `docker-compose.override.yml` sidecar container, and boot up both the trader backend and the tunnel!
-
----
-
-### Step 3: Route Your Domain
-1. In the Cloudflare Tunnel dashboard, go to the **Public Hostname** tab.
-2. Click **Add a public hostname**.
-3. Configure the fields:
-    *   **Subdomain:** `trader` (or any subdomain of your choice, e.g. `trader.yourdomain.com`).
-    *   **Domain:** Select your registered domain.
-    *   **Type:** `HTTP`
-    *   **URL:** Configure the target URL destination:
-        *   **If using Docker Tunnel Sidecar:** Set **URL** to `backend-api:8002` (routing requests internally inside the private Docker network directly to the backend).
-        *   **If running `cloudflared` directly on your host VPS:** Set **URL** to `localhost:8002` (routing requests directly to the backend mapped on your host).
-4. Save the Hostname configuration.
-
----
-
----
-
-### Step 4: Broker-Side Handshake
-1. Log into the Developer Portal for your Active Broker (**Flattrade** or **Upstox**).
-2. Select your App and locate the **Redirect URL** field.
-3. Update the redirect URL according to your setup:
-   * **For Remote Server / Cloudflare Tunnel:** `https://trader.yourdomain.com/api/auth/callback`
-   * **For Local Windows PC Setup (No Domain):** `http://localhost:8002/api/auth/callback` *(Note: If you changed the default server port, replace `8002` with your custom port).*
-4. > [!IMPORTANT]
-   > **Critical:** Ensure there are no trailing slashes or spaces. The URL must match the broker registration exactly.
-
----
-
-
-
-### Step 5: Port Mapping & Routing Architecture
-If you change the external port mapping in your `docker-compose.yml` (for example, mapping port `8500:8002` on the host instead of `8002:8002` due to a port conflict):
-* **No internal configurations need to change:** Uvicorn still listens on port `8002` internally. Changing the host-side port mapping does not affect internal container logic.
-* **CORS Allowed Origins**: Make sure to set `"serve_static_files": false` and configure `"allowed_origins": "https://terminal.cloudtraderpro.in"` in `configs/app_settings.json` so that the remote frontend can connect to your backend server port.
-
-
-
-## 🔒 Alternative Access Methods (Without a Domain)
-If you do not own a custom domain, you can access the server using these alternative strategies:
-
-### Option A: Cloudflare Quick Tunnels (Random Temporary Domain)
-Expose the server temporarily over secure HTTPS without a Cloudflare account:
-1. Append the following service to your `docker-compose.yml`:
-   ```yaml
-    quick-tunnel:
-      image: cloudflare/cloudflared:latest
-      command: tunnel --url http://backend-api:8002
-   ```
-2. Run `docker compose up -d` and inspect the logs:
-   ```bash
-   docker compose logs quick-tunnel
-   ```
-3. Locate the generated link (e.g. `https://some-random-words.trycloudflare.com`) to access your app.
-
-### Option B: Secure SSH Port Forwarding (Recommended for Private Access)
-Keep the server ports completely closed to the internet and tunnel the port over SSH:
-```bash
-ssh -N -L 8002:localhost:8002 user@YOUR_SERVER_IP
-```
-Now, simply open **`http://localhost:8002`** on your local machine's web browser.
-
-### Option C: Request a Subdomain from the Developer/Admin (Easiest)
-If you do not own a custom domain name, you can contact the system administrator or developer to request a subdomain allocation (e.g., `yourname.cloudtraderpro.in`).
-
-**How it works (Admin & User Setup):**
-1. **Admin/Developer Setup:**
-   * Admin creates a new tunnel on their Cloudflare account for your VPS.
-   * Admin maps the subdomain (e.g., `yourname.cloudtraderpro.in`) in Cloudflare to route to target HTTP URL `backend-api:8002`.
-   * Admin sends you the unique **Tunnel Token** generated by Cloudflare.
-2. **User Setup:**
-   * Save the token inside the file `cloudflare_tunnel_command.txt` in your deployment directory.
-   * Run the setup helper script:
-     * **Linux / VPS:** `sudo ./setup.sh`
-     * **Windows:** Double-click `setup.bat` (or execute `.\setup.ps1`)
-   * The script will automatically save the token to your `.env` file, generate `docker-compose.override.yml`, and launch both the trader backend and the Cloudflare tunnel sidecar client (`docker compose up -d`).
+- 🖥️ [Download RustDesk (Windows)](https://github.com/rustdesk/rustdesk/releases/download/1.4.9/rustdesk-1.4.9-x86_64.exe)
+- 💬 [Message Support WhatsApp](https://wa.me/917001041694)
 
 ---
 
