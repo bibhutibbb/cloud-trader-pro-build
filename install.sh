@@ -30,7 +30,6 @@ sudo mkdir -p "$INSTALL_DIR/logs"
 sudo mkdir -p "$INSTALL_DIR/symbolmaster"
 sudo mkdir -p "$INSTALL_DIR/datafetcher/historicaldatas"
 sudo mkdir -p "$INSTALL_DIR/backtester/backtest_histories"
-sudo mkdir -p "$INSTALL_DIR/img"
 
 # Function to download files safely
 download_file() {
@@ -48,10 +47,6 @@ download_file() {
 download_file "docker-compose.yml" "docker-compose.yml"
 download_file "cloudflare_tunnel_command.txt" "cloudflare_tunnel_command.txt"
 download_file "setup.sh" "setup.sh"
-download_file "Installation.html" "Installation.html"
-
-# Download image assets (only favicon is needed for Installation.html)
-download_file "img/cloud-trader-pro.ico" "img/cloud-trader-pro.ico"
 
 # Download config template samples
 download_file "configs/app_settings.json.sample" "configs/app_settings.json.sample"
@@ -108,7 +103,16 @@ else
     echo "      $INSTALL_DIR/cloudflare_tunnel_command.txt"
     echo "      Then run: cd $INSTALL_DIR && sudo ./setup.sh"
     echo ""
-    echo "   3. Connect to Frontend Dashboard & Configure:"
+    echo "   3. Route Your Domain (Cloudflare Tunnel):"
+    echo "      In the Cloudflare Tunnel dashboard, go to the Public Hostname tab,"
+    echo "      click Add a public hostname, and configure the fields:"
+    echo "      - Subdomain: trader (or any subdomain of your choice, e.g. trader.yourdomain.com)."
+    echo "      - Domain: Select your registered domain."
+    echo "      - Type: HTTP"
+    echo "      - URL: backend-api:8002 (routing requests internally inside the Docker network to the backend API container)."
+    echo "      💡 Running cloudflared directly on your host system? Set the URL to localhost:8002 instead."
+    echo ""
+    echo "   4. Connect to Frontend Dashboard & Configure:"
     echo "      - Open your browser and go to: https://terminal.cloudtraderpro.in"
     echo "      - Select Server Type (Localhost or Cloud Server)."
     echo "      - Enter your Backend URL (http://localhost:8002 or your Cloudflare URL)."
@@ -116,7 +120,7 @@ else
     echo "      - Once logged in, enter your License Key and Broker API credentials"
     echo "        directly inside the Settings page."
     echo ""
-    echo "   4. Detailed Installation & Setup Guide:"
+    echo "   5. Detailed Installation & Setup Guide:"
     echo "      Read: $INSTALL_DIR/README.md"
     echo "========================================================="
 fi

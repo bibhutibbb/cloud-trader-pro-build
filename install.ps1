@@ -13,7 +13,6 @@ New-Item -ItemType Directory -Force -Path "$INSTALL_DIR\logs" | Out-Null
 New-Item -ItemType Directory -Force -Path "$INSTALL_DIR\symbolmaster" | Out-Null
 New-Item -ItemType Directory -Force -Path "$INSTALL_DIR\datafetcher\historicaldatas" | Out-Null
 New-Item -ItemType Directory -Force -Path "$INSTALL_DIR\backtester\backtest_histories" | Out-Null
-New-Item -ItemType Directory -Force -Path "$INSTALL_DIR\img" | Out-Null
 
 function Download-File {
     param (
@@ -37,10 +36,6 @@ Download-File "docker-compose.yml" "docker-compose.yml"
 Download-File "cloudflare_tunnel_command.txt" "cloudflare_tunnel_command.txt"
 Download-File "setup.ps1" "setup.ps1"
 Download-File "setup.bat" "setup.bat"
-Download-File "Installation.html" "Installation.html"
-
-# Download image assets (only favicon is needed for Installation.html)
-Download-File "img/cloud-trader-pro.ico" "img/cloud-trader-pro.ico"
 
 # Download config template samples
 Download-File "configs/app_settings.json.sample" "configs/app_settings.json.sample"
@@ -95,7 +90,16 @@ if ($response -match "^[Yy]$") {
     Write-Host "      Paste your Docker run command into cloudflare_tunnel_command.txt" -ForegroundColor Green
     Write-Host "      Then run: cd $INSTALL_DIR; .\setup.ps1" -ForegroundColor Green
     Write-Host "" -ForegroundColor Green
-    Write-Host "   3. Connect to Frontend Dashboard & Configure:" -ForegroundColor Green
+    Write-Host "   3. Route Your Domain (Cloudflare Tunnel):" -ForegroundColor Green
+    Write-Host "      In the Cloudflare Tunnel dashboard, go to the Public Hostname tab," -ForegroundColor Green
+    Write-Host "      click Add a public hostname, and configure the fields:" -ForegroundColor Green
+    Write-Host "      - Subdomain: trader (or any subdomain of your choice, e.g. trader.yourdomain.com)." -ForegroundColor Green
+    Write-Host "      - Domain: Select your registered domain." -ForegroundColor Green
+    Write-Host "      - Type: HTTP" -ForegroundColor Green
+    Write-Host "      - URL: backend-api:8002 (routing requests internally inside the Docker network to the backend API container)." -ForegroundColor Green
+    Write-Host "      💡 Running cloudflared directly on your host system? Set the URL to localhost:8002 instead." -ForegroundColor Yellow
+    Write-Host "" -ForegroundColor Green
+    Write-Host "   4. Connect to Frontend Dashboard & Configure:" -ForegroundColor Green
     Write-Host "      - Open your browser and go to: https://terminal.cloudtraderpro.in" -ForegroundColor Green
     Write-Host "      - Select Server Type (Localhost or Cloud Server)." -ForegroundColor Green
     Write-Host "      - Enter your Backend URL (http://localhost:8002 or Cloudflare URL)." -ForegroundColor Green
@@ -103,7 +107,7 @@ if ($response -match "^[Yy]$") {
     Write-Host "      - Once logged in, enter your License Key and Broker API credentials" -ForegroundColor Green
     Write-Host "        directly inside the Settings page." -ForegroundColor Green
     Write-Host "" -ForegroundColor Green
-    Write-Host "   4. Detailed Installation & Setup Guide:" -ForegroundColor Green
-    Write-Host "      Read: $INSTALL_DIR\README.md (or open Installation.html in your browser)" -ForegroundColor Green
+    Write-Host "   5. Detailed Installation & Setup Guide:" -ForegroundColor Green
+    Write-Host "      Read: $INSTALL_DIR\README.md" -ForegroundColor Green
     Write-Host "=========================================================" -ForegroundColor Green
 }
