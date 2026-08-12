@@ -19,14 +19,26 @@ Docker is the easiest and most secure way to run the Cloud Trader Pro backend. I
 #### **For Ubuntu Linux Server:**
 Run the following commands in your terminal to install Docker and Docker Compose:
 ```bash
-# Update package database and upgrade existing software
+# Update and install prerequisite tools
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y curl bzip2 tar git
+sudo apt install -y ca-certificates curl bzip2 tar git
 
-# Install Docker Engine and Compose plugin
-sudo apt install -y docker.io docker-compose-v2
+# Add Docker's official GPG key
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-# Start and enable Docker service on boot
+# Add Docker's official APT repository
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$UBUNTU_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Install official Docker Engine and Compose plugin
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# Enable and start Docker
 sudo systemctl enable --now docker
 ```
 
@@ -112,6 +124,9 @@ Before running the container, configure the application settings and activate yo
 *   **`dashboard_password`**: The password used to log in to the web browser dashboard interface. Choose a strong, unique password.
 *   **`active_broker`**: Specifies the broker to be used by the trading system. Supported values are `"flattrade"` or `"upstox"`.
 *   **`jwt_secret`**: A long random secret key used by the backend to sign web tokens (JSON Web Tokens) for the dashboard session. Change this to a secure random string (e.g. 32 characters) to secure your browser session tokens.
+    *   *How to generate a secure random key:*
+        *   **Linux / macOS / Git Bash:** `openssl rand -hex 32`
+        *   **Windows (PowerShell / CMD):** `python -c "import secrets; print(secrets.token_hex(32))"`
 *   **`session_timeout_minutes`**: The duration (in minutes) for which your login session remains active in the browser dashboard before requiring re-authentication. The default is set to `1440` minutes (exactly 24 hours / 1 day).
 *   **`server_port`**: The port number on which the FastAPI backend web server runs and listens for incoming requests. The default is `8002`.
 *   **`license_key`**: The cryptographically signed license key generated for your account (obtainable from [cloudtraderpro.in](https://cloudtraderpro.in)). This is required to unlock the trading engine and activate automated strategies. If not set in `app_settings.json` beforehand, the user will be prompted to enter the license key in the web dashboard on the first startup of the application.

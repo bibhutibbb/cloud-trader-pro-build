@@ -63,9 +63,25 @@ sudo chmod +x "$INSTALL_DIR/setup.sh"
 
 # Initialize settings file if not exists
 if [ ! -f "$INSTALL_DIR/configs/app_settings.json" ]; then
+    # Generate secure random secrets
+    JWT_SECRET=$(tr -dc 'a-f0-9' < /dev/urandom | head -c 64)
+    DASH_PASSWORD=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 12)
+
     sudo cp "$INSTALL_DIR/configs/app_settings.json.sample" "$INSTALL_DIR/configs/app_settings.json"
-    echo "[!] Configuration template configs/app_settings.json created."
-    echo "    Make sure to edit this file later to add your license key and passwords."
+    
+    # Replace placeholders in configs/app_settings.json
+    sudo sed -i "s/your_secure_web_password/$DASH_PASSWORD/g" "$INSTALL_DIR/configs/app_settings.json"
+    sudo sed -i "s/long_random_string_for_web_tokens/$JWT_SECRET/g" "$INSTALL_DIR/configs/app_settings.json"
+
+    echo "[!] Configuration configs/app_settings.json initialized with secure credentials:"
+    echo "    -----------------------------------------------------"
+    echo "    Dashboard Password : $DASH_PASSWORD"
+    echo "    JWT Secret Key     : (Dynamically generated & configured)"
+    echo "    -----------------------------------------------------"
+    echo "    *(You can modify these credentials anytime in configs/app_settings.json)*"
+    echo ""
+else
+    echo "[*] Existing configs/app_settings.json found. Keeping original settings."
 fi
 
 # Grant ownership of the installation directory to the active user (correctly resolving sudo context)
@@ -86,7 +102,7 @@ else
     echo "========================================================="
     echo "   1. Configure settings:"
     echo "      Open and edit: $INSTALL_DIR/configs/app_settings.json"
-    echo "      Add your API keys, passwords, and license."
+    echo "      Add your API keys and license key."
     echo ""
     echo "   2. Optional - Remote HTTPS Access (Cloudflare Tunnel):"
     echo "      Paste your Docker run command into:"

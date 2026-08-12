@@ -765,14 +765,26 @@
                                     Copy
                                 </button>
                             </div>
-                            <pre><code># Update package list and install prerequisites
+                            <pre><code># Update and install prerequisite tools
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y curl bzip2 tar git
+sudo apt install -y ca-certificates curl bzip2 tar git
 
-# Install Docker Engine and the Compose plugin
-sudo apt install -y docker.io docker-compose-v2
+# Add Docker's official GPG key
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-# Start and enable the service to boot automatically
+# Add Docker's official APT repository
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$UBUNTU_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Install official Docker Engine and Compose plugin
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# Enable and start Docker
 sudo systemctl enable --now docker</code></pre>
                         </div>
                     </div>
@@ -913,7 +925,27 @@ sudo nano configs/app_settings.json</code></pre>
                     </li>
                     <li style="margin-bottom: 0.5rem;"><strong><code>jwt_secret</code>:</strong> A long random secret
                         key used by the backend to sign web tokens (JSON Web Tokens) for the dashboard session. Change
-                        this to a secure random string (e.g. 32 characters) to secure your browser session tokens.</li>
+                        this to a secure random string (e.g. 32 characters) to secure your browser session tokens.
+                        <div style="margin-top: 6px; font-size: 0.85em; color: #aaa; line-height: 1.4;">
+                            <em>Generate a secure key in your terminal using:</em>
+                            <div style="margin-top: 4px; display: flex; flex-direction: column; gap: 4px;">
+                                <div>
+                                    • Linux / macOS / Git Bash:
+                                    <span style="display: inline-flex; align-items: center; gap: 6px; margin: 0; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px;">
+                                        <code style="font-family: monospace; color: #fff;">openssl rand -hex 32</code>
+                                        <button onclick="navigator.clipboard.writeText('openssl rand -hex 32'); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 1500)" style="font-size: 10px; padding: 1px 4px; background: rgba(255,255,255,0.1); border: none; border-radius: 3px; color: #ccc; cursor: pointer;">Copy</button>
+                                    </span>
+                                </div>
+                                <div>
+                                    • Windows (PowerShell / CMD):
+                                    <span style="display: inline-flex; align-items: center; gap: 6px; margin: 0; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px;">
+                                        <code style="font-family: monospace; color: #fff;">python -c "import secrets; print(secrets.token_hex(32))"</code>
+                                        <button onclick="navigator.clipboard.writeText('python -c &quot;import secrets; print(secrets.token_hex(32))&quot;'); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 1500)" style="font-size: 10px; padding: 1px 4px; background: rgba(255,255,255,0.1); border: none; border-radius: 3px; color: #ccc; cursor: pointer;">Copy</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
                     <li style="margin-bottom: 0.5rem;"><strong><code>session_timeout_minutes</code>:</strong> The
                         duration (in minutes) for which your login session remains active in the browser dashboard
                         before requiring re-authentication. The default is set to <code>1440</code> minutes (exactly 24
@@ -926,8 +958,7 @@ sudo nano configs/app_settings.json</code></pre>
                         signed license key generated for your account (obtainable from <a href="https://cloudtraderpro.in" target="_blank">cloudtraderpro.in</a>). This is required to unlock the trading engine and
                         activate automated strategies. If not set in <code>app_settings.json</code> beforehand, the user will be prompted to enter the license key in the web dashboard on the first startup of the application.</li>
                     <li style="margin-bottom: 0;"><strong><code>serve_static_files</code>:</strong> Configures whether
-                        the FastAPI backend serves static files (<code>true</code>) or delegates this entirely to Nginx
-                        (<code>false</code>). Set this to <code>false</code> in production.</li>
+                        the FastAPI backend serves static files (<code>true</code>) or stops serving them when using external frontend hosting (<code>false</code>). Set this to <code>false</code> when using terminal.cloudtraderpro.in.</li>
                 </ul>
 
                 <div class="callout important">

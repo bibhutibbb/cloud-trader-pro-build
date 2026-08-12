@@ -51,9 +51,29 @@ Download-File "configs/upstox_credentials.json.sample" "configs/upstox_credentia
 $settingsFile = "$INSTALL_DIR\configs\app_settings.json"
 $sampleFile = "$INSTALL_DIR\configs\app_settings.json.sample"
 if (-not (Test-Path $settingsFile)) {
+    # Generate secure random secrets
+    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    $dashPassword = -join (1..12 | ForEach-Object { $chars[(Get-Random -Maximum $chars.Length)] })
+    $hexChars = 'abcdef0123456789'
+    $jwtSecret = -join (1..64 | ForEach-Object { $hexChars[(Get-Random -Maximum $hexChars.Length)] })
+
     Copy-Item $sampleFile $settingsFile
-    Write-Host "[!] Configuration template configs/app_settings.json created." -ForegroundColor Yellow
-    Write-Host "    Make sure to edit this file later to add your license key and passwords." -ForegroundColor Yellow
+    
+    # Replace placeholders in configs/app_settings.json
+    $content = Get-Content $settingsFile -Raw
+    $content = $content -replace "your_secure_web_password", $dashPassword
+    $content = $content -replace "long_random_string_for_web_tokens", $jwtSecret
+    Set-Content $settingsFile $content -NoNewline
+    
+    Write-Host "[!] Configuration configs/app_settings.json initialized with secure credentials:" -ForegroundColor Yellow
+    Write-Host "    -----------------------------------------------------" -ForegroundColor Yellow
+    Write-Host "    Dashboard Password : $dashPassword" -ForegroundColor Green
+    Write-Host "    JWT Secret Key     : (Dynamically generated & configured)" -ForegroundColor Green
+    Write-Host "    -----------------------------------------------------" -ForegroundColor Yellow
+    Write-Host "    *(You can modify these credentials anytime in configs/app_settings.json)*" -ForegroundColor Yellow
+    Write-Host ""
+} else {
+    Write-Host "[*] Existing configs/app_settings.json found. Keeping original settings." -ForegroundColor Green
 }
 
 Write-Host ""
@@ -70,7 +90,7 @@ if ($response -match "^[Yy]$") {
     Write-Host "=========================================================" -ForegroundColor Green
     Write-Host "   1. Configure settings:" -ForegroundColor Green
     Write-Host "      Open and edit: $INSTALL_DIR\configs\app_settings.json" -ForegroundColor Green
-    Write-Host "      Add your API keys, passwords, and license." -ForegroundColor Green
+    Write-Host "      Add your API keys and license key." -ForegroundColor Green
     Write-Host "" -ForegroundColor Green
     Write-Host "   2. Optional - Setup Remote Access (Cloudflare Tunnel):" -ForegroundColor Green
     Write-Host "      Paste your Docker run command into cloudflare_tunnel_command.txt" -ForegroundColor Green
