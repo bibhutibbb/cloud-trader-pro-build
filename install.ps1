@@ -90,7 +90,7 @@ if ($response -match "^[Yy]$") {
     Write-Host "=========================================================" -ForegroundColor Green
     Write-Host "   1. Configure settings:" -ForegroundColor Green
     Write-Host "      Open and edit: $INSTALL_DIR\configs\app_settings.json" -ForegroundColor Green
-    Write-Host "      Add your API keys and license key." -ForegroundColor Green
+    Write-Host "      Add your license key." -ForegroundColor Green
     Write-Host "" -ForegroundColor Green
     Write-Host "   2. Optional - Setup Remote Access (Cloudflare Tunnel):" -ForegroundColor Green
     Write-Host "      Paste your Docker run command into cloudflare_tunnel_command.txt" -ForegroundColor Green

@@ -102,7 +102,7 @@ else
     echo "========================================================="
     echo "   1. Configure settings:"
     echo "      Open and edit: $INSTALL_DIR/configs/app_settings.json"
-    echo "      Add your API keys and license key."
+    echo "      Add your license key."
     echo ""
     echo "   2. Optional - Remote HTTPS Access (Cloudflare Tunnel):"
     echo "      Paste your Docker run command into:"
