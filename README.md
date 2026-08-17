@@ -1,6 +1,6 @@
 # Cloud Trader Pro - Terminal Installation Guide
 
-![Version](https://img.shields.io/badge/version-3.3.11-blue)
+![Version](https://img.shields.io/badge/version-3.3.12-blue)
 ![License](https://img.shields.io/badge/license-proprietary-red)
 ![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows-brightgreen)
 
