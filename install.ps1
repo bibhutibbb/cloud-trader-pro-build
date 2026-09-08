@@ -71,6 +71,12 @@ if (-not (Test-Path $settingsFile)) {
     Write-Host "[*] Existing configs/app_settings.json found. Keeping original settings." -ForegroundColor Green
 }
 
+if ($env:GHCR_TOKEN) {
+    Write-Host "[*] Authenticating Docker with GitHub Container Registry (GHCR)..." -ForegroundColor Yellow
+    $env:GHCR_TOKEN | docker login ghcr.io -u "bibhutibbb" --password-stdin | Out-Null
+    Write-Host "[OK] GHCR authentication configured." -ForegroundColor Cyan
+}
+
 Write-Host ""
 Write-Host "[*] Configuration files downloaded successfully." -ForegroundColor Green
 $response = Read-Host "Would you like to run the Cloudflare Tunnel setup helper now? (y/n)"

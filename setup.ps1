@@ -71,8 +71,38 @@ $overrideFile = Join-Path $ScriptDir "docker-compose.override.yml"
 $overrideContent | Out-File -FilePath $overrideFile -Encoding ascii
 Write-Host "[OK] Created docker-compose.override.yml with Cloudflare Tunnel sidecar." -ForegroundColor Cyan
 
+# Authenticate with GitHub Container Registry (GHCR) if private
+$ghcrToken = $env:GHCR_TOKEN
+$envPath = Join-Path $ScriptDir ".env"
+if (-not $ghcrToken -and (Test-Path $envPath)) {
+    $envLines = Get-Content $envPath
+    foreach ($el in $envLines) {
+        if ($el -match '^GHCR_TOKEN=(.*)$') {
+            $ghcrToken = $Matches[1].Trim()
+        }
+    }
+}
+
+if (-not $ghcrToken) {
+    Write-Host ""
+    Write-Host "=========================================================" -ForegroundColor Yellow
+    Write-Host "  Enter GitHub Container Registry Token (ghp_...):" -ForegroundColor Yellow
+    Write-Host "  (Required to pull private Cloud Trader Pro container)" -ForegroundColor Yellow
+    Write-Host "=========================================================" -ForegroundColor Yellow
+    $ghcrToken = Read-Host
+    if ($ghcrToken) {
+        Add-Content -Path $envPath -Value "`r`nGHCR_TOKEN=$ghcrToken`r`nGHCR_USER=bibhutibbb"
+    }
+}
+
+if ($ghcrToken) {
+    Write-Host "[*] Authenticating with GitHub Container Registry (GHCR)..." -ForegroundColor Yellow
+    $ghcrToken | docker login ghcr.io -u "bibhutibbb" --password-stdin | Out-Null
+    Write-Host "[OK] GHCR authentication confirmed." -ForegroundColor Cyan
+}
+
 Write-Host "[*] Starting containers via Docker Compose..." -ForegroundColor Yellow
-Write-Host ""
+echo ""
 
 Set-Location $ScriptDir
 docker compose up -d

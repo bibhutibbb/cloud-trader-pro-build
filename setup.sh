@@ -69,6 +69,33 @@ services:
 EOF
 
 echo "[OK] Created docker-compose.override.yml with Cloudflare Tunnel sidecar."
+
+# Authenticate with GitHub Container Registry (GHCR) if private
+if [ -f .env ] && grep -q "GHCR_TOKEN=" .env; then
+    GHCR_TOKEN=$(grep "^GHCR_TOKEN=" .env | cut -d '=' -f2)
+fi
+
+if [ -z "$GHCR_TOKEN" ]; then
+    echo ""
+    echo "========================================================="
+    echo "  Enter GitHub Container Registry Token (ghp_...):"
+    echo "  (Required to pull private Cloud Trader Pro container)"
+    echo "========================================================="
+    read -r GHCR_TOKEN
+    if [ -n "$GHCR_TOKEN" ]; then
+        echo "GHCR_TOKEN=$GHCR_TOKEN" >> .env
+        echo "GHCR_USER=bibhutibbb" >> .env
+    fi
+fi
+
+if [ -n "$GHCR_TOKEN" ]; then
+    echo "[*] Authenticating with GitHub Container Registry (GHCR)..."
+    echo "$GHCR_TOKEN" | docker login ghcr.io -u "${GHCR_USER:-bibhutibbb}" --password-stdin > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        echo "[OK] GHCR authentication confirmed."
+    fi
+fi
+
 echo "[*] Starting containers via Docker Compose..."
 echo ""
 

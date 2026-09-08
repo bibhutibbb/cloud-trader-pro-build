@@ -83,6 +83,15 @@ fi
 REAL_USER=${SUDO_USER:-$USER}
 sudo chown -R "$REAL_USER":"$REAL_USER" "$INSTALL_DIR"
 
+# Authenticate Docker with GHCR if token is present in environment
+if [ -n "$GHCR_TOKEN" ]; then
+    echo "[*] Authenticating Docker with GitHub Container Registry (GHCR)..."
+    echo "$GHCR_TOKEN" | sudo docker login ghcr.io -u "${GHCR_USER:-bibhutibbb}" --password-stdin > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        echo "[OK] GHCR authentication configured."
+    fi
+fi
+
 echo ""
 echo "[*] Configuration files downloaded successfully."
 read -p "Would you like to run the Cloudflare Tunnel setup helper now? (y/n): " run_setup
