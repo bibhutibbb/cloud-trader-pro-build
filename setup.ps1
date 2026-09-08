@@ -52,9 +52,32 @@ if ([string]::IsNullOrEmpty($token)) {
     Exit
 }
 
-# Write token to the .env file in ASCII encoding to prevent formatting issues
+# Helper to safely save or update a key=value pair in .env
+function Set-EnvVar([string]$filePath, [string]$key, [string]$val) {
+    if (Test-Path $filePath) {
+        $lines = Get-Content $filePath
+        $found = $false
+        $newLines = @()
+        foreach ($line in $lines) {
+            if ($line -match "^$key=") {
+                $newLines += "$key=$val"
+                $found = $true
+            } else {
+                $newLines += $line
+            }
+        }
+        if (-not $found) {
+            $newLines += "$key=$val"
+        }
+        $newLines | Set-Content -Path $filePath -Encoding ascii
+    } else {
+        "$key=$val" | Set-Content -Path $filePath -Encoding ascii
+    }
+}
+
+# Safely save or update TUNNEL_TOKEN in .env without overwriting other variables
 $envFile = Join-Path $ScriptDir ".env"
-"TUNNEL_TOKEN=$token" | Out-File -FilePath $envFile -Encoding ascii
+Set-EnvVar $envFile "TUNNEL_TOKEN" $token
 Write-Host "[OK] Token successfully saved to .env file." -ForegroundColor Cyan
 
 # Create docker-compose.override.yml dynamically to add the cloudflare tunnel sidecar service
@@ -95,11 +118,11 @@ if (-not $ghcrUser -or -not $ghcrToken) {
     Write-Host "=========================================================" -ForegroundColor Yellow
     if (-not $ghcrUser) {
         $ghcrUser = Read-Host "Enter GitHub Username"
-        if ($ghcrUser) { Add-Content -Path $envPath -Value "`r`nGHCR_USER=$ghcrUser" }
+        if ($ghcrUser) { Set-EnvVar $envPath "GHCR_USER" $ghcrUser }
     }
     if (-not $ghcrToken) {
         $ghcrToken = Read-Host "Enter GitHub Token (ghp_...)"
-        if ($ghcrToken) { Add-Content -Path $envPath -Value "`r`nGHCR_TOKEN=$ghcrToken" }
+        if ($ghcrToken) { Set-EnvVar $envPath "GHCR_TOKEN" $ghcrToken }
     }
 }
 

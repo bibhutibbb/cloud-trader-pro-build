@@ -55,8 +55,13 @@ if [ -z "$token" ]; then
     exit 1
 fi
 
-# Write token to the .env file
-echo "TUNNEL_TOKEN=$token" > .env
+# Safely save or update TUNNEL_TOKEN in .env without overwriting other variables
+touch .env
+if grep -q "^TUNNEL_TOKEN=" .env; then
+    sed -i "s/^TUNNEL_TOKEN=.*/TUNNEL_TOKEN=$token/" .env
+else
+    echo "TUNNEL_TOKEN=$token" >> .env
+fi
 echo "[OK] Token successfully saved to .env file."
 
 # Create docker-compose.override.yml dynamically to add the cloudflare tunnel sidecar service
@@ -84,11 +89,19 @@ if [ -z "$GHCR_USER" ] || [ -z "$GHCR_TOKEN" ]; then
     echo "========================================================="
     if [ -z "$GHCR_USER" ]; then
         read -p "Enter GitHub Username: " GHCR_USER
-        echo "GHCR_USER=$GHCR_USER" >> .env
+        if grep -q "^GHCR_USER=" .env; then
+            sed -i "s/^GHCR_USER=.*/GHCR_USER=$GHCR_USER/" .env
+        else
+            echo "GHCR_USER=$GHCR_USER" >> .env
+        fi
     fi
     if [ -z "$GHCR_TOKEN" ]; then
         read -r -p "Enter GitHub Token (ghp_...): " GHCR_TOKEN
-        echo "GHCR_TOKEN=$GHCR_TOKEN" >> .env
+        if grep -q "^GHCR_TOKEN=" .env; then
+            sed -i "s|^GHCR_TOKEN=.*|GHCR_TOKEN=$GHCR_TOKEN|" .env
+        else
+            echo "GHCR_TOKEN=$GHCR_TOKEN" >> .env
+        fi
     fi
 fi
 
