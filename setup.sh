@@ -71,26 +71,30 @@ EOF
 echo "[OK] Created docker-compose.override.yml with Cloudflare Tunnel sidecar."
 
 # Authenticate with GitHub Container Registry (GHCR) if private
-if [ -f .env ] && grep -q "GHCR_TOKEN=" .env; then
-    GHCR_TOKEN=$(grep "^GHCR_TOKEN=" .env | cut -d '=' -f2)
+if [ -f .env ]; then
+    [ -z "$GHCR_USER" ] && GHCR_USER=$(grep "^GHCR_USER=" .env | cut -d '=' -f2)
+    [ -z "$GHCR_TOKEN" ] && GHCR_TOKEN=$(grep "^GHCR_TOKEN=" .env | cut -d '=' -f2)
 fi
 
-if [ -z "$GHCR_TOKEN" ]; then
+if [ -z "$GHCR_USER" ] || [ -z "$GHCR_TOKEN" ]; then
     echo ""
     echo "========================================================="
-    echo "  Enter GitHub Container Registry Token (ghp_...):"
-    echo "  (Required to pull private Cloud Trader Pro container)"
+    echo "  GitHub Container Registry (GHCR) Authentication        "
+    echo "  (Required to pull private Cloud Trader Pro container)  "
     echo "========================================================="
-    read -r GHCR_TOKEN
-    if [ -n "$GHCR_TOKEN" ]; then
+    if [ -z "$GHCR_USER" ]; then
+        read -p "Enter GitHub Username: " GHCR_USER
+        echo "GHCR_USER=$GHCR_USER" >> .env
+    fi
+    if [ -z "$GHCR_TOKEN" ]; then
+        read -r -p "Enter GitHub Token (ghp_...): " GHCR_TOKEN
         echo "GHCR_TOKEN=$GHCR_TOKEN" >> .env
-        echo "GHCR_USER=bibhutibbb" >> .env
     fi
 fi
 
-if [ -n "$GHCR_TOKEN" ]; then
+if [ -n "$GHCR_USER" ] && [ -n "$GHCR_TOKEN" ]; then
     echo "[*] Authenticating with GitHub Container Registry (GHCR)..."
-    echo "$GHCR_TOKEN" | docker login ghcr.io -u "${GHCR_USER:-bibhutibbb}" --password-stdin > /dev/null 2>&1
+    echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin > /dev/null 2>&1
     if [ $? -eq 0 ]; then
         echo "[OK] GHCR authentication confirmed."
     fi

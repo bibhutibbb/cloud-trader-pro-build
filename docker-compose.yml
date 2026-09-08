@@ -23,7 +23,7 @@ services:
     environment:
       - TZ=Asia/Kolkata
       - WATCHTOWER_TOKEN=super-secret-watchtower-token
-      - GHCR_USER=${GHCR_USER:-bibhutibbb}
+      - GHCR_USER=${GHCR_USER:-}
       - GHCR_TOKEN=${GHCR_TOKEN:-}
     logging:
       driver: "json-file"
@@ -41,6 +41,6 @@ services:
       - WATCHTOWER_HTTP_API_TOKEN=super-secret-watchtower-token
       - WATCHTOWER_CLEANUP=true
       - DOCKER_API_VERSION=${DOCKER_API_VERSION:-1.44}
-      - REPO_USER=${GHCR_USER:-bibhutibbb}
+      - REPO_USER=${GHCR_USER:-}
       - REPO_PASS=${GHCR_TOKEN:-}
 

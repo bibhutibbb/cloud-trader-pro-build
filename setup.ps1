@@ -72,32 +72,40 @@ $overrideContent | Out-File -FilePath $overrideFile -Encoding ascii
 Write-Host "[OK] Created docker-compose.override.yml with Cloudflare Tunnel sidecar." -ForegroundColor Cyan
 
 # Authenticate with GitHub Container Registry (GHCR) if private
+$ghcrUser = $env:GHCR_USER
 $ghcrToken = $env:GHCR_TOKEN
 $envPath = Join-Path $ScriptDir ".env"
-if (-not $ghcrToken -and (Test-Path $envPath)) {
+if (Test-Path $envPath) {
     $envLines = Get-Content $envPath
     foreach ($el in $envLines) {
-        if ($el -match '^GHCR_TOKEN=(.*)$') {
+        if (-not $ghcrUser -and $el -match '^GHCR_USER=(.*)$') {
+            $ghcrUser = $Matches[1].Trim()
+        }
+        if (-not $ghcrToken -and $el -match '^GHCR_TOKEN=(.*)$') {
             $ghcrToken = $Matches[1].Trim()
         }
     }
 }
 
-if (-not $ghcrToken) {
+if (-not $ghcrUser -or -not $ghcrToken) {
     Write-Host ""
     Write-Host "=========================================================" -ForegroundColor Yellow
-    Write-Host "  Enter GitHub Container Registry Token (ghp_...):" -ForegroundColor Yellow
-    Write-Host "  (Required to pull private Cloud Trader Pro container)" -ForegroundColor Yellow
+    Write-Host "  GitHub Container Registry (GHCR) Authentication        " -ForegroundColor Yellow
+    Write-Host "  (Required to pull private Cloud Trader Pro container)  " -ForegroundColor Yellow
     Write-Host "=========================================================" -ForegroundColor Yellow
-    $ghcrToken = Read-Host
-    if ($ghcrToken) {
-        Add-Content -Path $envPath -Value "`r`nGHCR_TOKEN=$ghcrToken`r`nGHCR_USER=bibhutibbb"
+    if (-not $ghcrUser) {
+        $ghcrUser = Read-Host "Enter GitHub Username"
+        if ($ghcrUser) { Add-Content -Path $envPath -Value "`r`nGHCR_USER=$ghcrUser" }
+    }
+    if (-not $ghcrToken) {
+        $ghcrToken = Read-Host "Enter GitHub Token (ghp_...)"
+        if ($ghcrToken) { Add-Content -Path $envPath -Value "`r`nGHCR_TOKEN=$ghcrToken" }
     }
 }
 
-if ($ghcrToken) {
+if ($ghcrUser -and $ghcrToken) {
     Write-Host "[*] Authenticating with GitHub Container Registry (GHCR)..." -ForegroundColor Yellow
-    $ghcrToken | docker login ghcr.io -u "bibhutibbb" --password-stdin | Out-Null
+    $ghcrToken | docker login ghcr.io -u "$ghcrUser" --password-stdin | Out-Null
     Write-Host "[OK] GHCR authentication confirmed." -ForegroundColor Cyan
 }
 
