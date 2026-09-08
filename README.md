@@ -1,6 +1,6 @@
 # Cloud Trader Pro - Terminal Installation Guide
 
-![Version](https://img.shields.io/badge/version-3.3.29-blue)
+![Version](https://img.shields.io/badge/version-3.3.30-blue)
 ![License](https://img.shields.io/badge/license-proprietary-red)
 ![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows-brightgreen)
 
@@ -275,7 +275,6 @@ If you run into issues configuring your VPS, static IP, or docker engine, our en
 For setup assistance, questions, or requesting a custom subdomain, contact:
 *   **Official Website:** [cloudtraderpro.in](https://cloudtraderpro.in)
 *   **WhatsApp Support:** [Chat on WhatsApp (+91 7001041694)](https://wa.me/917001041694)
-*   **WhatsApp Channel:** [Join our WhatsApp Channel](https://whatsapp.com/channel/0029Vb8LdceHFxP1LQf0530s)
 
 ---
 
